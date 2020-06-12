@@ -8,25 +8,25 @@ import java.util.LinkedHashSet;
 public class BluetoothDiscoveryImp implements BluetoothDiscovery {
 
     LinkedHashSet<BluetoothDevice> devicesDiscovered;
-    final Object inquiryCompletedEvent;
+    final Object lock;
 
     public BluetoothDiscoveryImp(){
         devicesDiscovered = new LinkedHashSet<BluetoothDevice>();
-        inquiryCompletedEvent = new Object();
+        lock = new Object();
     }
 
     @Override
     public LinkedHashSet<BluetoothDevice> scanForDevices(){
-        //clearing devicesDiscovered Vector data, in case the scan had previously been performed
+        //clearing devicesDiscovered set data, in case the scan had previously been performed
         devicesDiscovered.clear();
-        BluetoothDiscoveryListener listener = new BluetoothDiscoveryListener(inquiryCompletedEvent, devicesDiscovered);
+        BluetoothDiscoveryListener listener = new BluetoothDiscoveryListener(lock, devicesDiscovered);
 
         try {
-            synchronized (inquiryCompletedEvent) {
+            synchronized (lock) {
                 boolean started = LocalDevice.getLocalDevice().getDiscoveryAgent().startInquiry(DiscoveryAgent.GIAC, listener);
                 if (started) {
                     System.out.println("Searching for devices please wait...");
-                    inquiryCompletedEvent.wait();
+                    lock.wait();
                     System.out.println(devicesDiscovered.size() + " device(s) found");
                 }
             }

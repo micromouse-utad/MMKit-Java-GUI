@@ -4,9 +4,7 @@ import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
 import pt.globaltronic.microMouseGUI.models.bluetooth.DiscoveredDevices;
 import pt.globaltronic.microMouseGUI.models.bluetooth.SyncedDevice;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothConnection;
-import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothConnectionImp;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDiscovery;
-import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDiscoveryImp;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 
 import javax.microedition.io.StreamConnection;
@@ -20,17 +18,7 @@ public class WelcomeViewController {
     SyncedDevice syncedDevice;
     MouseInputs mouseInputs;
 
-
-
-    public WelcomeViewController(MouseInputs mouseInputs){
-        this.bluetoothDiscovery = new BluetoothDiscoveryImp();
-        this.bluetoothConnection = new BluetoothConnectionImp();
-        this.discoveredDevices = new DiscoveredDevices();
-        this.syncedDevice = new SyncedDevice();
-        this.mouseInputs = mouseInputs;
-
-
-    }
+    public WelcomeViewController(){}
 
     public LinkedHashSet<BluetoothDevice> getDiscoveredDeviceSet(){
         discoveredDevices.setDiscoveredDevicesSet(bluetoothDiscovery.scanForDevices());
@@ -45,11 +33,13 @@ public class WelcomeViewController {
     public StreamConnection connectToDevice(BluetoothDevice remoteDevice){
         syncedDevice.addDeviceToSyncedSet(remoteDevice);
         syncedDevice.writeSyncedToFile();
-        return bluetoothConnection.connectToDevice(remoteDevice);
-        //probably will have to do some verrification of the connection status.
-        //display that the connection was succesful.
-        //an ok box from the view
-        //and then dispose() of the view and go to the graphical part of the mouse.
+        StreamConnection conn = bluetoothConnection.connectToDevice(remoteDevice);
+        if(conn == null){
+            System.out.println("error, no connection was established");
+        }
+        System.out.println("connection established to:" + remoteDevice.getName());
+        return conn;
+
     }
 
     public void removedSelectedFromSyncedDevices(BluetoothDevice device){
@@ -59,5 +49,25 @@ public class WelcomeViewController {
 
     public MouseInputs getMouseInputs() {
         return mouseInputs;
+    }
+
+    public void setBluetoothConnection(BluetoothConnection bluetoothConnection) {
+        this.bluetoothConnection = bluetoothConnection;
+    }
+
+    public void setBluetoothDiscovery(BluetoothDiscovery bluetoothDiscovery) {
+        this.bluetoothDiscovery = bluetoothDiscovery;
+    }
+
+    public void setDiscoveredDevices(DiscoveredDevices discoveredDevices) {
+        this.discoveredDevices = discoveredDevices;
+    }
+
+    public void setMouseInputs(MouseInputs mouseInputs) {
+        this.mouseInputs = mouseInputs;
+    }
+
+    public void setSyncedDevice(SyncedDevice syncedDevice) {
+        this.syncedDevice = syncedDevice;
     }
 }

@@ -27,6 +27,7 @@ public class MouseInputsReceiver implements Runnable{
                 line = bReader.readLine();
                 if (line != null){
                     mouseInputs.putMouseInput(line);
+                    System.out.println(line);
                 }
             }catch (IOException ex){
                 System.out.println(ex.getMessage());

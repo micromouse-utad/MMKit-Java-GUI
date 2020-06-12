@@ -1,7 +1,5 @@
 package pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls;
 
-import java.awt.*;
-
 public abstract class WallPosition {
 
     int col;

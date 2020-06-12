@@ -1,5 +1,6 @@
 package pt.globaltronic.microMouseGUI;
 import pt.globaltronic.microMouseGUI.controllers.WelcomeViewController;
+import pt.globaltronic.microMouseGUI.models.bluetooth.*;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.services.MouseInputsTranslator;
 import pt.globaltronic.microMouseGUI.views.WelcomeView;
@@ -7,20 +8,13 @@ import pt.globaltronic.microMouseGUI.views.WelcomeView;
 import javax.swing.*;
 
 public class Main {
+
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 
+        Wiring wiring = new Wiring();
+        WelcomeViewController welcomeViewController = new WelcomeViewController();
+        wiring.bootstrap(welcomeViewController);
 
-        //instantiation in welcomeViewController should be done in main and wired in.
-/*
-        Engine engine = new Engine("Mouse Trial", 16,16, 60);
-        engine.start();
-
- */
-
-
-
-        MouseInputs mouseInputs = new MouseInputs();
-        WelcomeViewController welcomeViewController = new WelcomeViewController(mouseInputs);
 
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -30,16 +24,6 @@ public class Main {
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
     }
+
 }

@@ -16,11 +16,11 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
-public class Engine implements Runnable{
+public class Engine2D implements Runnable{
 
     private Display display;
-    String title;
-    StreamConnection connection;
+    private String title;
+    private StreamConnection connection;
     int cols;
     int rows;
     int cellSize;
@@ -30,13 +30,13 @@ public class Engine implements Runnable{
     private boolean running;
 
     private Grid grid;
-    LinkedList<Position> visited;
-    Mouse mouse;
-    MouseInputs mouseInputs;
-    HorizontalWalls[][] hWalls;
-    VerticalWalls[][] vWalls;
+    private LinkedList<Position> visited;
+    private Mouse mouse;
+    private MouseInputs mouseInputs;
+    private HorizontalWalls[][] hWalls;
+    private VerticalWalls[][] vWalls;
 
-    BufferStrategy bs;
+    private BufferStrategy bs;
     private Graphics g;
     private BufferedImage mouseImg;
     private BufferedImage hWallImg;
@@ -45,7 +45,7 @@ public class Engine implements Runnable{
 
 
 
-    public Engine(String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
+    public Engine2D(String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
         this.title = title;
         this.mouseInputs = mouseInputs;
         this.cols = cols;
@@ -158,7 +158,7 @@ public class Engine implements Runnable{
         g.clearRect(0,0, width, height);
 
         visited.forEach((position -> {
-            g.setColor(Color.RED);
+            g.setColor(Color.WHITE);
             if (position.isVisited()) {
                 g.fillRect(grid.colToX(position.getCol()), grid.rowToY(position.getRow()), cellSize, cellSize);
             }
@@ -167,10 +167,12 @@ public class Engine implements Runnable{
         for (int i = 0; i < cols; i++){
             for (int j = 0; j < rows+1; j++){
                 if (hWalls[i][j].isVisible()) {
-                    Image image1 = hWalls[i][j].getImage();
+                    //Image image1 = hWalls[i][j].getImage();
                     int xPixel = grid.colToX(hWalls[i][j].getPosition().getCol());
                     int yPixel = grid.colToX(hWalls[i][j].getPosition().getRow());
-                    g.drawImage(image1, xPixel, yPixel, null);
+                    //g.drawImage(image1, xPixel, yPixel, null);
+                    g.setColor(Color.BLACK);
+                    g.fillRect(xPixel, yPixel, cellSize, 5);
                 }
             }
         }
@@ -178,18 +180,21 @@ public class Engine implements Runnable{
         for (int i = 0; i < cols+1; i++){
             for (int j = 0; j < rows; j++){
                 if(vWalls[i][j].isVisible()) {
-                    Image image2 = vWalls[i][j].getImage();
+                    //Image image2 = vWalls[i][j].getImage();
                     int xPixel = grid.colToX(vWalls[i][j].getPosition().getCol());
                     int yPixel = grid.colToX(vWalls[i][j].getPosition().getRow());
-                    g.drawImage(image2, xPixel, yPixel, null);
+                    //g.drawImage(image2, xPixel, yPixel, null);
+                    g.setColor(Color.BLACK);
+                    g.fillRect(xPixel, yPixel, 5, cellSize);
                 }
             }
         }
 
 
 
-        // render the visited position array only. need an image for positions, mouse and walls.
-        g.drawImage(mouse.getImage(), grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), null);
+
+        //g.drawImage(mouse.getImage(), grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), null);
+        g.fillOval(grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), cellSize, cellSize);
 
         bs.show();
         g.dispose();
@@ -202,6 +207,13 @@ public class Engine implements Runnable{
         for (int i = 0; i < cols; i++){
             for (int j = 0; j < rows+1; j++){
                 hWalls[i][j] = new HorizontalWalls(hWallImg, grid.getHWallPosition(i,j));
+                //always showing side walls.
+                if(j == 0){
+                    hWalls[i][j].setVisible(true);
+                }
+                if(j == rows){
+                    hWalls[i][j].setVisible(true);
+                }
             }
         }
 
@@ -211,6 +223,13 @@ public class Engine implements Runnable{
         for (int i = 0; i < cols+1; i++){
             for (int j = 0; j < rows; j++){
                 vWalls[i][j] = new VerticalWalls(vWallImg, grid.getVWallPosition(i,j));
+                //always showing side walls.
+                if(i == 0){
+                    vWalls[i][j].setVisible(true);
+                }
+                if(i == cols){
+                    vWalls[i][j].setVisible(true);
+                }
             }
         }
     }

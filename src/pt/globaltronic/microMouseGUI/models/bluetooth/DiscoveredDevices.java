@@ -1,7 +1,5 @@
 package pt.globaltronic.microMouseGUI.models.bluetooth;
 
-import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
-
 import java.util.LinkedHashSet;
 
 public class DiscoveredDevices {

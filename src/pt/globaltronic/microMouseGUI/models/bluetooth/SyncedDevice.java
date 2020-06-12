@@ -27,6 +27,18 @@ public class SyncedDevice {
         syncedDeviceSet.remove(device);
     }
 
+    public void writeSyncedToFile(){
+        try {
+            PrintWriter pWriter = new PrintWriter(filePath);
+            syncedDeviceSet.forEach((device) -> {
+                pWriter.println(device.getName() + "%%%" + device.getURL());
+                pWriter.flush();
+            });
+        } catch (IOException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
     public void syncedDevicesFromFile(){
         syncedDeviceSet.clear();
         try{
@@ -48,18 +60,5 @@ public class SyncedDevice {
         }
 
     }
-
-    public void writeSyncedToFile(){
-        try {
-            PrintWriter pWriter = new PrintWriter(filePath);
-            syncedDeviceSet.forEach((device) -> {
-                pWriter.println(device.getName() + "%%%" + device.getURL());
-                pWriter.flush();
-            });
-        } catch (IOException ex){
-            System.out.println(ex.getMessage());
-        }
-    }
-
 
 }

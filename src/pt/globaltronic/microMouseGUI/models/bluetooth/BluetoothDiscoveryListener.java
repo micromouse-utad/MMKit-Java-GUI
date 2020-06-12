@@ -10,10 +10,10 @@ import java.util.LinkedHashSet;
 public class BluetoothDiscoveryListener implements DiscoveryListener {
 
     private LinkedHashSet<BluetoothDevice> devicesDiscovered;
-    private Object inquiryCompletedEvent;
+    private Object lock;
 
-    public BluetoothDiscoveryListener(Object inquiryCompletedEvent, LinkedHashSet<BluetoothDevice> devicesDiscovered){
-        this.inquiryCompletedEvent = inquiryCompletedEvent;
+    public BluetoothDiscoveryListener(Object lock, LinkedHashSet<BluetoothDevice> devicesDiscovered){
+        this.lock = lock;
         this.devicesDiscovered = devicesDiscovered;
 
     }
@@ -46,8 +46,8 @@ public class BluetoothDiscoveryListener implements DiscoveryListener {
     @Override
     public void inquiryCompleted(int i) {
         System.out.println("Device Inquiry completed!");
-        synchronized(inquiryCompletedEvent){
-            inquiryCompletedEvent.notifyAll();
+        synchronized(lock){
+            lock.notifyAll();
         }
     }
 }

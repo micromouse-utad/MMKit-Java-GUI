@@ -1,6 +1,6 @@
 package pt.globaltronic.microMouseGUI.views;
 
-import pt.globaltronic.microMouseGUI.Engine;
+import pt.globaltronic.microMouseGUI.Engine2D;
 import pt.globaltronic.microMouseGUI.controllers.WelcomeViewController;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
 import pt.globaltronic.microMouseGUI.models.bluetooth.services.FriendlyNameGetter;
@@ -152,8 +152,8 @@ public class WelcomeView extends JFrame {
         MouseInputs mouseInputs = welcomeViewController.getMouseInputs();
         MouseInputsReceiver receiver = new MouseInputsReceiver(mouseInputs, connection);
         receiver.start();
-        Engine engine = new Engine("Mouse Trial", mouseInputs, 16,16, 20);
-        engine.start();
+        Engine2D engine2D = new Engine2D("Mouse Trial", mouseInputs, 16,16, 30);
+        engine2D.start();
     }
 
 }
