@@ -194,6 +194,7 @@ public class Engine2D implements Runnable{
 
 
         //g.drawImage(mouse.getImage(), grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), null);
+        g.setColor(Color.BLUE);
         g.fillOval(grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), cellSize, cellSize);
 
         bs.show();
