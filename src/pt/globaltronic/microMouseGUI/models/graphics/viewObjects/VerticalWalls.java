@@ -1,5 +1,6 @@
 package pt.globaltronic.microMouseGUI.models.graphics.viewObjects;
 
+import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Cube;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.HorizontalWallPosition;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.VerticalWallPosition;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.WallPosition;
@@ -15,15 +16,22 @@ public class VerticalWalls extends Walls{
         visible = false;
     }
 
+    public VerticalWalls(WallPosition position) {
+        super(position);
+        visible = false;
+    }
+
     public VerticalWallPosition getPosition(){
         return (VerticalWallPosition) this.position;
     }
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+        this.cube.setVisible(visible);
     }
 
     public boolean isVisible() {
         return visible;
     }
+
 }

@@ -1,5 +1,6 @@
 package pt.globaltronic.microMouseGUI.models.graphics.viewObjects;
 
+import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Pyramid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Position;
 
 import java.awt.*;
@@ -8,6 +9,7 @@ public class Mouse {
 
     Position position;
     Image image;
+    Pyramid mousePyr;
 
 
     public Mouse (Position position, Image image){
@@ -15,8 +17,16 @@ public class Mouse {
         this.image = image;
     }
 
+    public Mouse (Position position, Pyramid mousePyr){
+        this.position = position;
+        this.mousePyr = mousePyr;
+    }
+
+
     public void setPosition(Position position) {
         this.position = position;
+        mousePyr.setX(position.getCol()*10 + 2.5);
+        mousePyr.setY(position.getRow()*10 + 2.5);
     }
 
     public Position getPosition() {
@@ -27,11 +37,7 @@ public class Mouse {
         return image;
     }
 
-    public void move(String direction){
-        switch (direction){
-            case "N":
-
-        }
+    public Pyramid getMousePyr() {
+        return mousePyr;
     }
-
 }
