@@ -26,7 +26,9 @@ public class HorizontalWalls extends Walls {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+        if (this.cube != null){
         this.cube.setVisible(visible);
+        }
     }
 
     public boolean isVisible() {

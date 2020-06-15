@@ -38,7 +38,9 @@ public class Position {
 
     public void setVisited(boolean visited) {
         this.visited = visited;
-        polygon2D.setVisible(visited);
+        if (polygon2D != null) {
+            polygon2D.setVisible(visited);
+        }
     }
 
     public void setPolygon2D(Polygon2D polygon2D) {

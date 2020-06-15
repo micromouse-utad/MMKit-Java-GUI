@@ -19,23 +19,17 @@ public class MouseInputs {
         return mouseInputList;
     }
 
-    public synchronized  String getMouseInput3D(){
-        while(mouseInputQueue.isEmpty()){
-            try{
-                wait();
-            }catch (Exception ex) {}
+    public String getMouseInput3D(){
+        if(mouseInputQueue3D.isEmpty()) {
+            return "";
         }
-        notifyAll();
         return mouseInputQueue3D.poll();
     }
 
-    public synchronized String getMouseInput(){
-        while(mouseInputQueue.isEmpty()){
-            try{
-                wait();
-            }catch (Exception ex) {}
+    public String getMouseInput(){
+        if(mouseInputQueue.isEmpty()){
+            return "";
         }
-        notifyAll();
         return mouseInputQueue.poll();
     }
 

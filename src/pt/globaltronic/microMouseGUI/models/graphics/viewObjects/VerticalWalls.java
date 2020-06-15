@@ -27,7 +27,9 @@ public class VerticalWalls extends Walls{
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+        if (this.cube != null){
         this.cube.setVisible(visible);
+        }
     }
 
     public boolean isVisible() {

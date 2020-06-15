@@ -20,7 +20,6 @@ public class Engine2D implements Runnable{
 
     private Display display;
     private String title;
-    private StreamConnection connection;
     int cols;
     int rows;
     int cellSize;
