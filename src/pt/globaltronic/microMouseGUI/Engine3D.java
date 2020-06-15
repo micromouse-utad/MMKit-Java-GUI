@@ -83,7 +83,6 @@ public class Engine3D implements Runnable{
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
         mouse = new Mouse(grid.getPosition(0,0), new Pyramid(2.5, 2.5, 0, 5, 5, 2, Color.BLUE));
-        new Generate3dObjects();
         createWalls();
         createdPositionsGraphics();
     }
@@ -156,7 +155,7 @@ public class Engine3D implements Runnable{
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(x * Size, y * Size, 0, Size, 0.2, 1, Color.BLACK));
+                hWalls[i][j].setCube(new Cube(x * Size, y * Size, 0, Size, 0.5, 1, Color.BLACK));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
@@ -176,7 +175,7 @@ public class Engine3D implements Runnable{
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(x * Size, y * Size, 0, 0.2, Size, 1, Color.BLACK));
+                vWalls[i][j].setCube(new Cube(x * Size, y * Size, 0, 0.5, Size, 1, Color.BLACK));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
