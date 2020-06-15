@@ -33,14 +33,14 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
     //Used for keeping mouse in center
     Robot r;
-
-    static double[] ViewFrom = new double[] {-100, 140, 60};
-    static double[] ViewTo = new double[] {0, 0, 0};
+    //to play around with the position of the camera, change viewfrom and view to, zoom, horlook, vertlook
+    static double[] ViewFrom = new double[] {81.898, 318.847, 155};
+    static double[] ViewTo = new double[] {81.88396, 318.01312, 154.4482};
     static double[] LightDir = new double[] {1, 1, 1};
 
 
     //The smaller the zoom the more zoomed out you are and visa versa, although altering too far from 1000 will make it look pretty weird
-    static double zoom = 1000;
+    static double zoom = 620;
     static double MinZoom = 500;
     static double MaxZoom = 2500;
     static double MouseX = 0;
@@ -51,7 +51,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     double drawFPS = 0, MaxFPS = 1000, SleepTime = 1000.0/MaxFPS, LastRefresh = 0, StartTime = System.currentTimeMillis(), LastFPSCheck = 0, Checks = 0;
     //VertLook goes from 0.999 to -0.999, minus being looking down and + looking up, HorLook takes any number and goes round in radians
     //aimSight changes the size of the center-cross. The lower HorRotSpeed or VertRotSpeed, the faster the camera will rotate in those directions
-    double VertLook = -0.9, HorLook = 0, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
+    double VertLook = -0.7, HorLook = 4.64, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
 
     //will hold the order that the polygons in the ArrayList DPolygon should be drawn meaning DPolygon.get(NewOrder[0]) gets drawn first
     int[] NewOrder;
@@ -277,6 +277,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         ViewTo[0] = ViewFrom[0] + r * Math.cos(HorLook);
         ViewTo[1] = ViewFrom[1] + r * Math.sin(HorLook);
         ViewTo[2] = ViewFrom[2] + VertLook;
+
     }
 
     void CenterMouse()
