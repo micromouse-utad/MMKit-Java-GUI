@@ -108,7 +108,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         //drawMouseAim(g);
 
         //FPS display
-        g.drawString("FPS: " + (int)drawFPS + " (Benchmark)", 40, 40);
+        //g.drawString("FPS: " + (int)drawFPS + " (Benchmark)", 40, 40);
+        g.drawString("Mouse 3D View", 40, 40);
 
 		//repaintTime = System.currentTimeMillis() - repaintTime;
 		//System.out.println(repaintTime);

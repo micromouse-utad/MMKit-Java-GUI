@@ -21,13 +21,13 @@ public class DisplayView extends JFrame {
         this.setUndecorated(true);
         //setResizable(true);
 
-        setPreferredSize(new Dimension(16*30*2, 16*30 + 80));
-        setMinimumSize(new Dimension(16*30*2, 16*30 + 80));
-        setMaximumSize(new Dimension(16*30*2, 16*30 + 80));
+        setPreferredSize(new Dimension(16*30*2, 16*30));
+        setMinimumSize(new Dimension(16*30*2, 16*30));
+        setMaximumSize(new Dimension(16*30*2, 16*30));
 
-        mainPanel.setPreferredSize(new Dimension(16*30*2, 16*30 +80));
-        mainPanel.setMinimumSize(new Dimension(16*30*2, 16*30 +80));
-        mainPanel.setMaximumSize(new Dimension(16*30*2, 16*30 +80));
+        mainPanel.setPreferredSize(new Dimension(16*30*2, 16*30));
+        mainPanel.setMinimumSize(new Dimension(16*30*2, 16*30));
+        mainPanel.setMaximumSize(new Dimension(16*30*2, 16*30));
 
         add(mainPanel);
         setTitle("Welcome to MicroMouse Views");

@@ -83,7 +83,6 @@ public class Engine3D implements Runnable{
 
     private void init(){
 
-        //display3d = new Display3D(panel, title, width, height);
         screen = new Screen(width, height);
         panel.add(screen);
         panel.setPreferredSize(new Dimension(16*30, 16*30));

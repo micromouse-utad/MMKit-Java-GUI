@@ -10,7 +10,6 @@ import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.HorizontalWalls
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Mouse;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
 
-import javax.microedition.io.StreamConnection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -42,9 +41,6 @@ public class Engine2D implements Runnable{
     private BufferedImage mouseImg;
     private BufferedImage hWallImg;
     private BufferedImage vWallImg;
-
-
-
 
     public Engine2D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
         this.title = title;
@@ -158,9 +154,11 @@ public class Engine2D implements Runnable{
         //initialize the drawing tools, and clearing the screen;
         g = bs.getDrawGraphics();
         g.clearRect(0,0, width, height);
+        g.setColor(new Color(140,180,180));
+        g.fillRect(0,0, width, height);
 
         visited.forEach((position -> {
-            g.setColor(Color.WHITE);
+            g.setColor(Color.GRAY);
             if (position.isVisited()) {
                 g.fillRect(grid.colToX(position.getCol()), grid.rowToY(position.getRow()), cellSize, cellSize);
             }
@@ -192,12 +190,9 @@ public class Engine2D implements Runnable{
             }
         }
 
-
-
-
         //g.drawImage(mouse.getImage(), grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), null);
         g.setColor(Color.BLUE);
-        g.fillOval(grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), cellSize, cellSize);
+        g.fillRect(grid.colToX(mouse.getPosition().getCol()) + cellSize/3, grid.rowToY(mouse.getPosition().getRow()) + cellSize/3, cellSize/2, cellSize/2);
 
         bs.show();
         g.dispose();
