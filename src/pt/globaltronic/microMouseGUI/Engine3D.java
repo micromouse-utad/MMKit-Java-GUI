@@ -92,7 +92,7 @@ public class Engine3D implements Runnable{
         panel.setMaximumSize(new Dimension(16*30, 16*30));
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
-        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(2.5, correction * Size - 2.5, 0, 5, 5, 2, Color.BLUE));
+        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(2.5, correction * Size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, Size);
         createWalls();
         createdPositionsGraphics();
     }
@@ -113,7 +113,7 @@ public class Engine3D implements Runnable{
             Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
             Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
-            screen.setCameraPositionForMouseView(direction, pos, Size);
+            //screen.setCameraPositionForMouseView(direction, pos, Size);
 
             switch (direction) {
                 case "N":
@@ -204,7 +204,7 @@ public class Engine3D implements Runnable{
         Position[][] arr = grid.getPositionsArray();
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                arr[x][y].setPolygon2D(new Polygon2D(new double[]{x * Size, (x +1)* Size , (x+1) *Size, x* Size}, new double[]{(correction - y) * Size, (correction - y)* Size , (correction - (y+1)) *Size, (correction -(y+1))* Size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
+                arr[x][y].setPolygon2D(new Polygon2D(new double[]{x * Size, (x +1)* Size , (x+1) *Size, x* Size}, new double[]{(correction + 1 - y) * Size, (correction +1 - y)* Size , (correction +1 - (y+1)) *Size, (correction +1 -(y+1))* Size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
                 arr[x][y].setVisited(false);
                 Screen.Polygon2DS.add(arr[x][y].getPolygon2D());
 

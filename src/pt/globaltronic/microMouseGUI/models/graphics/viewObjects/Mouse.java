@@ -10,6 +10,8 @@ public class Mouse {
     Position position;
     Image image;
     Pyramid mousePyr;
+    int correction;
+    double cellSize;
 
 
     public Mouse (Position position, Image image){
@@ -17,17 +19,19 @@ public class Mouse {
         this.image = image;
     }
 
-    public Mouse (Position position, Pyramid mousePyr){
+    public Mouse (Position position, Pyramid mousePyr, int correction, double cellSize){
         this.position = position;
         this.mousePyr = mousePyr;
+        this.correction = correction;
+        this.cellSize = cellSize;
     }
 
 
     public void setPosition(Position position) {
         this.position = position;
         if(mousePyr != null) {
-            mousePyr.setX(position.getCol() * 10 + 2.5);
-            mousePyr.setY((15 - position.getRow()) * 10 - 2.5);
+            mousePyr.setX(position.getCol() * cellSize + cellSize/4 );
+            mousePyr.setY((correction - position.getRow()) * cellSize + cellSize/4);
         }
     }
 
