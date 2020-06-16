@@ -113,7 +113,7 @@ public class Engine3D implements Runnable{
             Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
             Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
-            //screen.setCameraPositionForMouseView(direction, pos, Size);
+            screen.setCameraPositionForMouseView(direction, pos, Size);
 
             switch (direction) {
                 case "N":
