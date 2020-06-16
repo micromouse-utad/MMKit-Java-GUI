@@ -10,6 +10,7 @@ import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Mouse;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
 
 import javax.microedition.io.StreamConnection;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.LinkedList;
@@ -17,6 +18,8 @@ import java.util.LinkedList;
 public class Engine3D implements Runnable{
 
     private Display3D display3d;
+    private JPanel panel;
+    private Screen screen;
     private String title;
     private StreamConnection connection;
     int cols;
@@ -40,7 +43,8 @@ public class Engine3D implements Runnable{
     private Graphics g;
 
 
-    public Engine3D(String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
+    public Engine3D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
+        this.panel = panel;
         this.title = title;
         this.mouseInputs = mouseInputs;
         this.cols = cols;
@@ -48,12 +52,12 @@ public class Engine3D implements Runnable{
         this.cellSize = cellSize;
         this.width = cols * cellSize;
         this.height = rows * cellSize;
-
+        init();
     }
 
     @Override
     public void run() {
-        init();
+
         while(running){
             tick();
             render();
@@ -79,7 +83,12 @@ public class Engine3D implements Runnable{
 
     private void init(){
 
-        display3d = new Display3D(title, width, height);
+        //display3d = new Display3D(panel, title, width, height);
+        screen = new Screen(width, height);
+        panel.add(screen);
+        panel.setPreferredSize(new Dimension(16*30, 16*30));
+        panel.setMinimumSize(new Dimension(16*30, 16*30));
+        panel.setMaximumSize(new Dimension(16*30, 16*30));
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
         mouse = new Mouse(grid.getPosition(0,0), new Pyramid(2.5, 2.5, 0, 5, 5, 2, Color.BLUE));
@@ -144,7 +153,8 @@ public class Engine3D implements Runnable{
     }
 
     private void render(){
-        display3d.getScreen().SleepAndRefresh();
+        screen.SleepAndRefresh();
+
     }
 
     private void createWalls(){

@@ -11,6 +11,7 @@ import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Mouse;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
 
 import javax.microedition.io.StreamConnection;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -18,6 +19,7 @@ import java.util.LinkedList;
 
 public class Engine2D implements Runnable{
 
+    private JPanel panel;
     private Display display;
     private String title;
     int cols;
@@ -44,8 +46,9 @@ public class Engine2D implements Runnable{
 
 
 
-    public Engine2D(String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
+    public Engine2D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
         this.title = title;
+        this.panel = panel;
         this.mouseInputs = mouseInputs;
         this.cols = cols;
         this.rows = rows;
@@ -83,7 +86,7 @@ public class Engine2D implements Runnable{
 
     private void init(){
 
-        display = new Display(title, width, height);
+        display = new Display(panel, title, width, height);
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
         mouseImg = ImageLoader.loadImage("/mouse.png");
