@@ -33,6 +33,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
     //Used for keeping mouse in center
     Robot r;
+    boolean rightClickDown = false;
     //to play around with the position of the camera, change viewfrom and view to, zoom, horlook, vertlook
     static double[] ViewFrom = new double[] {81.898, 318.847, 155};
     static double[] ViewTo = new double[] {81.88396, 318.01312, 154.4482};
@@ -321,17 +322,21 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     }
 
     public void mouseDragged(MouseEvent arg0) {
-        MouseMovement(arg0.getX(), arg0.getY());
-        MouseX = arg0.getX();
-        MouseY = arg0.getY();
-        CenterMouse();
+        if(rightClickDown) {
+            MouseMovement(arg0.getX(), arg0.getY());
+            MouseX = arg0.getX();
+            MouseY = arg0.getY();
+            CenterMouse();
+        }
     }
 
     public void mouseMoved(MouseEvent arg0) {
-        MouseMovement(arg0.getX(), arg0.getY());
-        MouseX = arg0.getX();
-        MouseY = arg0.getY();
-        CenterMouse();
+        if(rightClickDown) {
+            MouseMovement(arg0.getX(), arg0.getY());
+            MouseX = arg0.getX();
+            MouseY = arg0.getY();
+            CenterMouse();
+        }
     }
 
     public void mouseClicked(MouseEvent arg0) {
@@ -344,9 +349,15 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     }
 
     public void mousePressed(MouseEvent arg0) {
+        if(arg0.getButton() == MouseEvent.BUTTON3){
+            rightClickDown = true;
+        }
     }
 
     public void mouseReleased(MouseEvent arg0) {
+        if(arg0.getButton() == MouseEvent.BUTTON3){
+            rightClickDown = false;
+        }
     }
 
     public void mouseWheelMoved(MouseWheelEvent arg0) {
