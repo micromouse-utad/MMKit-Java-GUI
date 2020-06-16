@@ -9,7 +9,7 @@ public class testMain {
 
     public static void main(String[] args) {
         JFrame F = new JFrame();
-        Screen ScreenObject = new Screen(Toolkit.getDefaultToolkit().getScreenSize().getWidth(),Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+        Screen ScreenObject = new Screen(Toolkit.getDefaultToolkit().getScreenSize().getWidth(),Toolkit.getDefaultToolkit().getScreenSize().getHeight(), 15);
         F.add(ScreenObject);
         F.setUndecorated(true);
         F.setSize(ScreenSize);

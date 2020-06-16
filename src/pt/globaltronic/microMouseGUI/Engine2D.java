@@ -26,6 +26,7 @@ public class Engine2D implements Runnable{
     int cellSize;
     int width;
     int height;
+    int correction;
     private Thread thread;
     private boolean running;
 
@@ -51,7 +52,7 @@ public class Engine2D implements Runnable{
         this.cellSize = cellSize;
         this.width = cols * cellSize;
         this.height = rows * cellSize;
-
+        this.correction = rows -1;
     }
 
     @Override
@@ -133,11 +134,11 @@ public class Engine2D implements Runnable{
                     break;
                 case "W":
                     //reverse of case east
-                    //left wall will be a vertical wall when facing west, with same position as mouse position
+                    //left wall will be a horizontal wall when facing west, with same position as mouse position
                     hWalls[col][row].setVisible(lWall);
-                    //facing west, front wall will be a vertical wall at current mouse position
+                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
                     vWalls[col][row].setVisible(fWall);
-                    //facing west, right wall will be a horizontal wall at -1 col and +1 row as position
+                    //facing west, right wall will be a horizontal wall at col and +1 row as position
                     hWalls[col][row + 1].setVisible(rWall);
                     break;
             }
@@ -160,7 +161,7 @@ public class Engine2D implements Runnable{
         visited.forEach((position -> {
             g.setColor(Color.GRAY);
             if (position.isVisited()) {
-                g.fillRect(grid.colToX(position.getCol()), grid.rowToY(position.getRow()), cellSize, cellSize);
+                g.fillRect(grid.colToX(position.getCol()), grid.rowToY(correction - position.getRow()), cellSize, cellSize);
             }
         }));
 
@@ -169,7 +170,7 @@ public class Engine2D implements Runnable{
                 if (hWalls[i][j].isVisible()) {
                     //Image image1 = hWalls[i][j].getImage();
                     int xPixel = grid.colToX(hWalls[i][j].getPosition().getCol());
-                    int yPixel = grid.colToX(hWalls[i][j].getPosition().getRow());
+                    int yPixel = grid.rowToY(correction + 1 - hWalls[i][j].getPosition().getRow());
                     //g.drawImage(image1, xPixel, yPixel, null);
                     g.setColor(Color.BLACK);
                     g.fillRect(xPixel, yPixel, cellSize, 5);
@@ -182,7 +183,7 @@ public class Engine2D implements Runnable{
                 if(vWalls[i][j].isVisible()) {
                     //Image image2 = vWalls[i][j].getImage();
                     int xPixel = grid.colToX(vWalls[i][j].getPosition().getCol());
-                    int yPixel = grid.colToX(vWalls[i][j].getPosition().getRow());
+                    int yPixel = grid.colToX(correction - vWalls[i][j].getPosition().getRow());
                     //g.drawImage(image2, xPixel, yPixel, null);
                     g.setColor(Color.BLACK);
                     g.fillRect(xPixel, yPixel, 5, cellSize);
@@ -192,7 +193,7 @@ public class Engine2D implements Runnable{
 
         //g.drawImage(mouse.getImage(), grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), null);
         g.setColor(Color.BLUE);
-        g.fillRect(grid.colToX(mouse.getPosition().getCol()) + cellSize/3, grid.rowToY(mouse.getPosition().getRow()) + cellSize/3, cellSize/2, cellSize/2);
+        g.fillRect(grid.colToX(mouse.getPosition().getCol()) + cellSize/3, grid.rowToY(correction - mouse.getPosition().getRow()) + cellSize/3, cellSize/2, cellSize/2);
 
         bs.show();
         g.dispose();

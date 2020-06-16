@@ -27,7 +27,7 @@ public class Mouse {
         this.position = position;
         if(mousePyr != null) {
             mousePyr.setX(position.getCol() * 10 + 2.5);
-            mousePyr.setY(position.getRow() * 10 + 2.5);
+            mousePyr.setY((15 - position.getRow()) * 10 - 2.5);
         }
     }
 

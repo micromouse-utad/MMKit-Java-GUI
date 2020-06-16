@@ -31,6 +31,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     static String Title;
     static double Width;
     static double Height;
+    static double Correction;
 
 
     //Used for keeping mouse in center
@@ -56,7 +57,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     //aimSight changes the size of the center-cross. The lower HorRotSpeed or VertRotSpeed, the faster the camera will rotate in those directions
     double VertLook = -0.1, HorLook = 0, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
     //default view settings
-    // double VertLook = -0.7, HorLook = 4.64, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
+    //double VertLook = -0.7, HorLook = 4.64, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
 
     //will hold the order that the polygons in the ArrayList DPolygon should be drawn meaning DPolygon.get(NewOrder[0]) gets drawn first
     int[] NewOrder;
@@ -66,10 +67,11 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
     long repaintTime = 0;
 
-    public Screen(double width, double height)
+    public Screen(double width, double height, int correction)
     {
         Width = width;
         Height = height;
+        Correction = correction;
         this.addKeyListener(this);
         setFocusable(true);
 
@@ -388,19 +390,19 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     public void setCameraPositionForMouseView(String direction, Position pos, double size) {
         switch (direction){
             case "N":
-                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((pos.getRow()+ -0.5)*size), 2.5});
-                setHorLook(1.570796);
+                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((Correction - pos.getRow()+ +0.5)*size), 2.5});
+                setHorLook(4.712388);
                 break;
             case "E":
-                setViewFrom(new double[]{((pos.getCol() + 1.5)*size), ((pos.getRow()+ 0.5)*size), 2.5});
+                setViewFrom(new double[]{((pos.getCol() + 1.5)*size), ((Correction - pos.getRow()- 0.5)*size), 2.5});
                 setHorLook(3.141592);
                 break;
             case "S":
-                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((pos.getRow()+ 1.5)*size), 2.5});
-                setHorLook(4.712388);
+                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((Correction - pos.getRow()- 1.5)*size), 2.5});
+                setHorLook(1.570796);
                 break;
             case "W":
-                setViewFrom(new double[]{((pos.getCol() - 0.5)*size), ((pos.getRow()+ 0.5)*size), 2.5});
+                setViewFrom(new double[]{((pos.getCol() - 0.5)*size), ((Correction - pos.getRow()- 0.5)*size), 2.5});
                 setHorLook(0);
                 break;
         }

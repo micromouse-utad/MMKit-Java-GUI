@@ -23,7 +23,7 @@ public class Display3D {
     private void createDisplay(){
         //frame = new JFrame(title);
         //frame.setSize((int)width, (int)height);
-        screen = new Screen(width, height);
+        //screen = new Screen(width, height, 15);
         //frame.add(screen);
         panel.add(screen);
         panel.setPreferredSize(new Dimension(16*30, 16*30));

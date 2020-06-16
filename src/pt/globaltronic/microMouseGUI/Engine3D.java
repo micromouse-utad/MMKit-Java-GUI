@@ -27,6 +27,7 @@ public class Engine3D implements Runnable{
     int cellSize;
     int width;
     int height;
+    int correction;
     double Size = 10;
     private Thread thread;
     private boolean running;
@@ -52,6 +53,7 @@ public class Engine3D implements Runnable{
         this.cellSize = cellSize;
         this.width = cols * cellSize;
         this.height = rows * cellSize;
+        this.correction = rows -1;
         init();
     }
 
@@ -83,14 +85,14 @@ public class Engine3D implements Runnable{
 
     private void init(){
 
-        screen = new Screen(width, height);
+        screen = new Screen(width, height, correction);
         panel.add(screen);
         panel.setPreferredSize(new Dimension(16*30, 16*30));
         panel.setMinimumSize(new Dimension(16*30, 16*30));
         panel.setMaximumSize(new Dimension(16*30, 16*30));
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
-        mouse = new Mouse(grid.getPosition(0,0), new Pyramid(2.5, 2.5, 0, 5, 5, 2, Color.BLUE));
+        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(2.5, correction * Size - 2.5, 0, 5, 5, 2, Color.BLUE));
         createWalls();
         createdPositionsGraphics();
     }
@@ -120,19 +122,19 @@ public class Engine3D implements Runnable{
                     //front wall when facing up is a horizontal wall at col and +1 row than current position
                     hWalls[col][row + 1].setVisible(fWall);
                     //right wall when facing up is a vertical wall at +1 col and same row as position
-                    vWalls[col+1][row].setVisible(rWall);
+                    vWalls[col + 1][row].setVisible(rWall);
                     break;
                 case "E":
                     //facing east left wall will be horizontal wall at same col +1 row from position
                     hWalls[col][row + 1].setVisible(lWall);
                     //facing east front wall will be a vertical wall at +1 col and row as position
-                    vWalls[col+1][row].setVisible(fWall);
+                    vWalls[col + 1][row].setVisible(fWall);
                     //facing east right wall will be a horizontal wall at position same  as mouse position
                     hWalls[col][row].setVisible(rWall);
                     break;
                 case "S":
                     // similar to N facing but reverted left wall will be the right wall
-                    vWalls[col+1][row].setVisible(lWall);
+                    vWalls[col + 1][row].setVisible(lWall);
                     //front wall will be a horizontal wall at same postion as mouse position
                     hWalls[col][row].setVisible(fWall);
                     //right wall will be left wall of N case
@@ -140,11 +142,11 @@ public class Engine3D implements Runnable{
                     break;
                 case "W":
                     //reverse of case east
-                    //left wall will be a vertical wall when facing west, with same position as mouse position
+                    //left wall will be a horizontal wall when facing west, with same position as mouse position
                     hWalls[col][row].setVisible(lWall);
-                    //facing west, front wall will be a vertical wall at current mouse position
+                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
                     vWalls[col][row].setVisible(fWall);
-                    //facing west, right wall will be a horizontal wall at -1 col and +1 row as position
+                    //facing west, right wall will be a horizontal wall at col and +1 row as position
                     hWalls[col][row + 1].setVisible(rWall);
                     break;
             }
@@ -164,7 +166,7 @@ public class Engine3D implements Runnable{
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(x * Size, y * Size, 0, Size, 0.5, 1, Color.BLACK));
+                hWalls[i][j].setCube(new Cube(x * Size, (correction + 1 - y) * Size, 0, Size, 0.5, 1, Color.BLACK));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
@@ -184,7 +186,7 @@ public class Engine3D implements Runnable{
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(x * Size, y * Size, 0, 0.5, Size, 1, Color.BLACK));
+                vWalls[i][j].setCube(new Cube(x * Size, (correction - y) * Size, 0, 0.5, Size, 1, Color.BLACK));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
@@ -202,7 +204,7 @@ public class Engine3D implements Runnable{
         Position[][] arr = grid.getPositionsArray();
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                arr[x][y].setPolygon2D(new Polygon2D(new double[]{x * Size, (x +1)* Size , (x+1) *Size, x* Size}, new double[]{y * Size, y* Size , (y+1) *Size, (y+1)* Size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
+                arr[x][y].setPolygon2D(new Polygon2D(new double[]{x * Size, (x +1)* Size , (x+1) *Size, x* Size}, new double[]{(correction - y) * Size, (correction - y)* Size , (correction - (y+1)) *Size, (correction -(y+1))* Size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
                 arr[x][y].setVisited(false);
                 Screen.Polygon2DS.add(arr[x][y].getPolygon2D());
 
