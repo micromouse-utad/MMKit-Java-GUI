@@ -107,8 +107,6 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         //Calculated all that is general for this camera position
         calculator.SetPrederterminedInfo();
 
-        //adjusting light effects
-        ControlSunAndLight();
 
         //Updates each polygon for this camera position
         for(int i = 0; i < polygon2DS.size(); i++) {
