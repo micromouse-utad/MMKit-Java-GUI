@@ -398,7 +398,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
                 setHorLook(0);
                 break;
             case "S":
-                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((Correction - pos.getRow() - 1.5)*size), 4});
+                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((Correction - pos.getRow() - 0.5)*size), 4});
                 setHorLook(1.570796);
                 break;
             case "W":
