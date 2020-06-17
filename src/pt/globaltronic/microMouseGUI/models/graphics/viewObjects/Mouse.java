@@ -7,11 +7,11 @@ import java.awt.*;
 
 public class Mouse {
 
-    Position position;
-    Image image;
-    Pyramid mousePyr;
-    int correction;
-    double cellSize;
+    private Position position;
+    private Image image;
+    private Pyramid mousePyr;
+    private int correction;
+    private double cellSize;
 
 
     public Mouse (Position position, Image image){

@@ -27,20 +27,20 @@ public class Calculator {
     public double[] getProj(double[] ViewFrom, double[] ViewTo, double x, double y, double z, Plane P) {
         Vector ViewToPoint = new Vector(x - ViewFrom[0], y - ViewFrom[1], z - ViewFrom[2]);
 
-        t = (P.NV.x * P.P[0] + P.NV.y * P.P[1] + P.NV.z * P.P[2]
-                - (P.NV.x * ViewFrom[0] + P.NV.y * ViewFrom[1] + P.NV.z * ViewFrom[2]))
-                / (P.NV.x * ViewToPoint.x + P.NV.y * ViewToPoint.y + P.NV.z * ViewToPoint.z);
+        t = (P.getNV().getX() * P.getP()[0] + P.getNV().getY() * P.getP()[1] + P.getNV().getZ() * P.getP()[2]
+                - (P.getNV().getX() * ViewFrom[0] + P.getNV().getY() * ViewFrom[1] + P.getNV().getZ() * ViewFrom[2]))
+                / (P.getNV().getX() * ViewToPoint.getX() + P.getNV().getY() * ViewToPoint.getY() + P.getNV().getZ() * ViewToPoint.getZ());
 
-        x = ViewFrom[0] + ViewToPoint.x * t;
-        y = ViewFrom[1] + ViewToPoint.y * t;
-        z = ViewFrom[2] + ViewToPoint.z * t;
+        x = ViewFrom[0] + ViewToPoint.getX() * t;
+        y = ViewFrom[1] + ViewToPoint.getY() * t;
+        z = ViewFrom[2] + ViewToPoint.getZ() * t;
 
         return new double[]{x, y, z};
     }
 
     public double[] getDrawP(double x, double y, double z) {
-        double DrawX = W2.x * x + W2.y * y + W2.z * z;
-        double DrawY = W1.x * x + W1.y * y + W1.z * z;
+        double DrawX = W2.getX() * x + W2.getY() * y + W2.getZ() * z;
+        double DrawY = W1.getX() * x + W1.getY() * y + W1.getZ() * z;
         return new double[]{DrawX, DrawY};
     }
 

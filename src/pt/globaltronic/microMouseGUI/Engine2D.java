@@ -21,12 +21,12 @@ public class Engine2D implements Runnable{
     private JPanel panel;
     private Display display;
     private String title;
-    int cols;
-    int rows;
-    int cellSize;
-    int width;
-    int height;
-    int correction;
+    private int cols;
+    private int rows;
+    private int cellSize;
+    private int width;
+    private int height;
+    private int correction;
     private Thread thread;
     private boolean running;
 
@@ -173,6 +173,10 @@ public class Engine2D implements Runnable{
                     int yPixel = grid.rowToY(correction + 1 - hWalls[i][j].getPosition().getRow());
                     //g.drawImage(image1, xPixel, yPixel, null);
                     g.setColor(Color.BLACK);
+                    //making last row of wall fit in the grid
+                    if(j == 0){
+                        g.fillRect(xPixel, yPixel-5, cellSize, 5);
+                    }
                     g.fillRect(xPixel, yPixel, cellSize, 5);
                 }
             }
@@ -184,8 +188,13 @@ public class Engine2D implements Runnable{
                     //Image image2 = vWalls[i][j].getImage();
                     int xPixel = grid.colToX(vWalls[i][j].getPosition().getCol());
                     int yPixel = grid.colToX(correction - vWalls[i][j].getPosition().getRow());
+
                     //g.drawImage(image2, xPixel, yPixel, null);
                     g.setColor(Color.BLACK);
+                    //adjusting the last line of vertical walls to fit in the grid.
+                    if (i == cols){
+                        g.fillRect(xPixel-5, yPixel, 5, cellSize);
+                    }
                     g.fillRect(xPixel, yPixel, 5, cellSize);
                 }
             }

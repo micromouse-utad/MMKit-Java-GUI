@@ -2,8 +2,8 @@ package pt.globaltronic.microMouseGUI.models.bluetooth;
 
 public class BluetoothDevice {
 
-    String name;
-    String URL;
+    private String name;
+    private String URL;
 
     public boolean equals(BluetoothDevice device) {
         if(this.URL.equals(device.URL)){

@@ -5,13 +5,13 @@ import java.awt.Graphics;
 import java.awt.Polygon;
 
 public class PolygonObject {
-    Screen screen;
-    Polygon P;
-    Color c;
-    boolean draw = true;
-    boolean visible = true;
-    boolean seeThrough;
-    double lighting = 1;
+    private Screen screen;
+    private Polygon P;
+    private Color c;
+    private boolean draw = true;
+    private boolean visible = true;
+    private boolean seeThrough;
+    private double lighting = 1;
 
     public PolygonObject(Screen screen, double[] x, double[] y, Color c, int n, boolean seeThrough) {
         this.screen = screen;
@@ -48,5 +48,21 @@ public class PolygonObject {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public double getLighting() {
+        return lighting;
+    }
+
+    public void setLighting(double lighting) {
+        this.lighting = lighting;
+    }
+
+    public boolean isDraw() {
+        return draw;
+    }
+
+    public void setDraw(boolean draw) {
+        this.draw = draw;
     }
 }

@@ -18,13 +18,13 @@ public class Engine3D implements Runnable{
     private JPanel panel;
     private Screen screen;
     private String title;
-    int cols;
-    int rows;
-    int cellSize;
-    int width;
-    int height;
-    int correction;
-    double size = 10;
+    private int cols;
+    private int rows;
+    private int cellSize;
+    private int width;
+    private int height;
+    private int correction;
+    private double size = 10;
     private Thread thread;
     private boolean running;
 

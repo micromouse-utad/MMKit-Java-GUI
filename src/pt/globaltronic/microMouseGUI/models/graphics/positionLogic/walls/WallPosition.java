@@ -2,15 +2,14 @@ package pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls;
 
 public abstract class WallPosition {
 
-    int col;
-    int row;
-    boolean visible;
+    private int col;
+    private int row;
+
 
 
     public WallPosition(int col, int row){
         this.col = col;
         this.row = row;
-        visible = false;
     }
 
     public int getCol() {

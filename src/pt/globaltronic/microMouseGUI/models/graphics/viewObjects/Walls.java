@@ -8,9 +8,9 @@ import java.awt.*;
 
 public abstract class Walls {
 
-    Image image;
-    Cube cube;
-    WallPosition position;
+    private Image image;
+    private Cube cube;
+    private WallPosition position;
 
      public Walls(Image image, WallPosition position){
          this.image = image;
@@ -27,6 +27,10 @@ public abstract class Walls {
 
     public Cube getCube() {
         return cube;
+    }
+
+    public WallPosition getPosition() {
+        return position;
     }
 
     public void setCube(Cube cube) {

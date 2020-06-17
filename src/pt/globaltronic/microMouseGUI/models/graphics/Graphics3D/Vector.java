@@ -1,9 +1,9 @@
 package pt.globaltronic.microMouseGUI.models.graphics.Graphics3D;
 
 public class Vector {
-    double x;
-    double y;
-    double z;
+    private double x;
+    private double y;
+    private double z;
 
     public Vector(double x, double y, double z)
     {
@@ -23,5 +23,17 @@ public class Vector {
                 z * V.x - x * V.z,
                 x * V.y - y * V.x);
         return CrossVector;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
     }
 }

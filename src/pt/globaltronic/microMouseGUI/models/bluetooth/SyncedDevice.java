@@ -8,8 +8,8 @@ import java.util.LinkedHashSet;
 
 public class SyncedDevice {
 
-    LinkedHashSet<BluetoothDevice> syncedDeviceSet;
-    String filePath = "resources\\synced.txt";
+    private LinkedHashSet<BluetoothDevice> syncedDeviceSet;
+    private String filePath = "resources\\synced.txt";
 
     public SyncedDevice(){
         this.syncedDeviceSet = new LinkedHashSet<BluetoothDevice>();

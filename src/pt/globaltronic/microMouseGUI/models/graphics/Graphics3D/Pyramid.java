@@ -3,20 +3,20 @@ import java.awt.Color;
 
 public class Pyramid {
     private Screen screen;
-    double x;
-    double y;
-    double z;
-    double width;
-    double length;
-    double height;
-    double rotation = Math.PI*0.75;
-    double[] RotAdd = new double[4];
-    Color c;
-    double x1, x2, x3, x4, x5;
-    double y1, y2, y3, y4, y5;
-    Polygon2D[] Polys = new Polygon2D[5];
-    double[] angle;
-    boolean visible;
+    private double x;
+    private double y;
+    private double z;
+    private double width;
+    private double length;
+    private double height;
+    private double rotation = Math.PI*0.75;
+    private double[] RotAdd = new double[4];
+    private Color c;
+    private double x1, x2, x3, x4, x5;
+    private double y1, y2, y3, y4, y5;
+    private Polygon2D[] Polys = new Polygon2D[5];
+    private double[] angle;
+    private boolean visible;
 
     public Pyramid(Screen screen, double x, double y, double z, double width, double length, double height, Color c)
     {
@@ -129,25 +129,25 @@ public class Pyramid {
         y4 = y+length*0.5+radius*0.5*Math.sin(rotation + RotAdd[3]);
         y5 = y+length*0.5;
 
-        Polys[0].x = new double[]{x1, x2, x3, x4};
-        Polys[0].y = new double[]{y1, y2, y3, y4};
-        Polys[0].z = new double[]{z, z, z, z};
+        Polys[0].setX(new double[]{x1, x2, x3, x4});
+        Polys[0].setY(new double[]{y1, y2, y3, y4});
+        Polys[0].setZ(new double[]{z, z, z, z});
 
-        Polys[1].x = new double[]{x1, x5, x2};
-        Polys[1].y = new double[]{y1, y5, y2};
-        Polys[1].z = new double[]{z, z+height, z};
+        Polys[1].setX(new double[]{x1, x5, x2});
+        Polys[1].setY(new double[]{y1, y5, y2});
+        Polys[1].setZ(new double[]{z, z+height, z});
 
-        Polys[2].x = new double[]{x3, x2, x5};
-        Polys[2].y = new double[]{y3, y2, y5};
-        Polys[2].z = new double[]{z, z, z+height};
+        Polys[2].setX(new double[]{x3, x2, x5});
+        Polys[2].setY(new double[]{y3, y2, y5});
+        Polys[2].setZ(new double[]{z, z, z+height});
 
-        Polys[3].x = new double[]{x3, x5, x4};
-        Polys[3].y = new double[]{y3, y5, y4};
-        Polys[3].z = new double[]{z, z+height, z};
+        Polys[3].setX(new double[]{x3, x5, x4});
+        Polys[3].setY(new double[]{y3, y5, y4});
+        Polys[3].setZ(new double[]{z, z+height, z});
 
-        Polys[4].x = new double[]{x1, x4, x5};
-        Polys[4].y = new double[]{y1, y4, y5};
-        Polys[4].z = new double[]{z, z, z+height};
+        Polys[4].setX(new double[]{x1, x4, x5});
+        Polys[4].setY(new double[]{y1, y4, y5});
+        Polys[4].setZ(new double[]{z, z, z+height});
 
     }
 

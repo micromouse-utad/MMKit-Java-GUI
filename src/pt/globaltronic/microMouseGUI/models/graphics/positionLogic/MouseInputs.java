@@ -5,9 +5,9 @@ import java.util.Queue;
 
 public class MouseInputs {
 
-    LinkedList<String> mouseInputList;
-    Queue<String> mouseInputQueue3D;
-    Queue<String> mouseInputQueue;
+    private LinkedList<String> mouseInputList;
+    private Queue<String> mouseInputQueue3D;
+    private Queue<String> mouseInputQueue;
 
     public MouseInputs(){
         mouseInputList = new LinkedList<String>();

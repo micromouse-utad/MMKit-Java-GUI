@@ -7,8 +7,8 @@ import java.util.LinkedHashSet;
 
 public class BluetoothDiscoveryImp implements BluetoothDiscovery {
 
-    LinkedHashSet<BluetoothDevice> devicesDiscovered;
-    final Object lock;
+    private LinkedHashSet<BluetoothDevice> devicesDiscovered;
+    private final Object lock;
 
     public BluetoothDiscoveryImp(){
         devicesDiscovered = new LinkedHashSet<BluetoothDevice>();

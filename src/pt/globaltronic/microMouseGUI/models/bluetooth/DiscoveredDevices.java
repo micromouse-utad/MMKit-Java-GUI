@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 
 public class DiscoveredDevices {
 
-    LinkedHashSet<BluetoothDevice> discoveredDevicesSet;
+    private LinkedHashSet<BluetoothDevice> discoveredDevicesSet;
 
     public void setDiscoveredDevicesSet(LinkedHashSet<BluetoothDevice> discoveredDevicesSet) {
         this.discoveredDevicesSet = discoveredDevicesSet;

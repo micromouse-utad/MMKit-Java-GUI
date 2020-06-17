@@ -14,12 +14,12 @@ public class DisplayView extends JFrame {
 
     public DisplayView(MouseInputs mouseInputs){
 
-        mainPanel.setLayout(new GridLayout(1, 2, 1, 0));
-
+        mainPanel.setLayout(new GridLayout(1, 2, 0, 0));
         Panel2D.setLayout(new GridLayout(1, 1));
         Panel3D.setLayout(new GridLayout(1,1, 0, 0));
+
+        //window needs to be unmovable and undecorated because of the way the computer's mouse is centered during mouseLook in 3d
         this.setUndecorated(true);
-        //setResizable(true);
 
         setPreferredSize(new Dimension(16*30*2, 16*30));
         setMinimumSize(new Dimension(16*30*2, 16*30));

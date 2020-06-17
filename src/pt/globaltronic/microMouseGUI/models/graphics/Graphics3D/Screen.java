@@ -120,8 +120,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
         //draw polygons in the Order that is set by the 'setOrder' function
         for(int i = 0; i < polygon2DS.size(); i++){
-            if (polygon2DS.get(i).visible) {
-                polygon2DS.get(i).DrawablePolygon.drawPolygon(g);
+            if (polygon2DS.get(i).isVisible()) {
+                polygon2DS.get(i).getDrawablePolygon().drawPolygon(g);
             }
         }
 
@@ -142,7 +142,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
             Polygon2D key = polygon2DS.get(i);
             int j = i - 1;
 
-            while (j >= 0 && polygon2DS.get(j).AvgDist < key.AvgDist) {
+            while (j >= 0 && polygon2DS.get(j).getAvgDist() < key.getAvgDist()) {
                 polygon2DS.set(j + 1, polygon2DS.get(j));
                 j = j - 1;
             }
@@ -214,34 +214,34 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
         if(Keys[0])
         {
-            xMove += ViewVector.x ;
-            yMove += ViewVector.y ;
-            zMove += ViewVector.z ;
+            xMove += ViewVector.getX() ;
+            yMove += ViewVector.getY() ;
+            zMove += ViewVector.getZ() ;
         }
 
         if(Keys[2])
         {
-            xMove -= ViewVector.x ;
-            yMove -= ViewVector.y ;
-            zMove -= ViewVector.z ;
+            xMove -= ViewVector.getX() ;
+            yMove -= ViewVector.getY() ;
+            zMove -= ViewVector.getZ() ;
         }
 
         if(Keys[1])
         {
-            xMove += SideViewVector.x ;
-            yMove += SideViewVector.y ;
-            zMove += SideViewVector.z ;
+            xMove += SideViewVector.getX() ;
+            yMove += SideViewVector.getY() ;
+            zMove += SideViewVector.getZ() ;
         }
 
         if(Keys[3])
         {
-            xMove -= SideViewVector.x ;
-            yMove -= SideViewVector.y ;
-            zMove -= SideViewVector.z ;
+            xMove -= SideViewVector.getX() ;
+            yMove -= SideViewVector.getY() ;
+            zMove -= SideViewVector.getZ() ;
         }
 
         Vector MoveVector = new Vector(xMove, yMove, zMove);
-        MoveTo(viewFrom[0] + MoveVector.x * MovementSpeed, viewFrom[1] + MoveVector.y * MovementSpeed, viewFrom[2] + MoveVector.z * MovementSpeed);
+        MoveTo(viewFrom[0] + MoveVector.getX() * MovementSpeed, viewFrom[1] + MoveVector.getY() * MovementSpeed, viewFrom[2] + MoveVector.getZ() * MovementSpeed);
     }
 
     void MoveTo(double x, double y, double z)

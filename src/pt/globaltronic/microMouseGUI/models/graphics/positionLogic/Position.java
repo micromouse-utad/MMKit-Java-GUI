@@ -7,7 +7,7 @@ public class Position {
     private int col;
     private int row;
     private boolean visited;
-    Polygon2D polygon2D;
+    private Polygon2D polygon2D;
 
 
     public Position(int col, int row){

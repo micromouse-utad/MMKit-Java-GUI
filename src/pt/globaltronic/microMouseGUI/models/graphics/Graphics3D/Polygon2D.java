@@ -4,18 +4,18 @@ import java.awt.Color;
 public class Polygon2D {
     private Screen screen;
     private Calculator calculator;
-    Color c;
-    double[] x;
-    double[] y;
-    double[] z;
-    boolean draw = true;
-    boolean seeThrough;
-    boolean visible;
-    double[] CalcPos;
-    double[] newX;
-    double[] newY;
-    PolygonObject DrawablePolygon;
-    double AvgDist;
+    private Color c;
+    private double[] x;
+    private double[] y;
+    private double[] z;
+    private boolean draw = true;
+    private boolean seeThrough;
+    private boolean visible;
+    private double[] CalcPos;
+    private double[] newX;
+    private double[] newY;
+    private PolygonObject DrawablePolygon;
+    private double AvgDist;
 
     public Polygon2D(Screen screen, double[] x, double[] y, double[] z, Color c, boolean seeThrough)
     {
@@ -51,7 +51,7 @@ public class Polygon2D {
 
         calcLighting();
 
-        DrawablePolygon.draw = draw;
+        DrawablePolygon.setDraw(draw);
         DrawablePolygon.updatePolygon(newX, newY);
         AvgDist = GetDist();
     }
@@ -59,16 +59,16 @@ public class Polygon2D {
     void calcLighting()
     {
         Plane lightingPlane = new Plane(this);
-        double angle = Math.acos(((lightingPlane.NV.x * screen.getLightDir()[0]) +
-                (lightingPlane.NV.y * screen.getLightDir()[1]) + (lightingPlane.NV.z * screen.getLightDir()[2]))
+        double angle = Math.acos(((lightingPlane.getNV().getX() * screen.getLightDir()[0]) +
+                (lightingPlane.getNV().getY() * screen.getLightDir()[1]) + (lightingPlane.getNV().getZ() * screen.getLightDir()[2]))
                 /(Math.sqrt(screen.getLightDir()[0] * screen.getLightDir()[0] + screen.getLightDir()[1] * screen.getLightDir()[1] + screen.getLightDir()[2] * screen.getLightDir()[2])));
 
-        DrawablePolygon.lighting = 0.2 + 1 - Math.sqrt(Math.toDegrees(angle)/180);
+        DrawablePolygon.setLighting(0.2 + 1 - Math.sqrt(Math.toDegrees(angle)/180));
 
-        if(DrawablePolygon.lighting > 1)
-            DrawablePolygon.lighting = 1;
-        if(DrawablePolygon.lighting < 0)
-            DrawablePolygon.lighting = 0;
+        if(DrawablePolygon.getLighting() > 1)
+            DrawablePolygon.setLighting(1);
+        if(DrawablePolygon.getLighting() < 0)
+            DrawablePolygon.setLighting(0);
     }
 
     double GetDist()
@@ -89,5 +89,41 @@ public class Polygon2D {
     public void setVisible(boolean visible) {
         this.visible = visible;
         DrawablePolygon.setVisible(visible);
+    }
+
+    public double[] getX() {
+        return x;
+    }
+
+    public void setX(double[] x) {
+        this.x = x;
+    }
+
+    public double[] getY() {
+        return y;
+    }
+
+    public void setY(double[] y) {
+        this.y = y;
+    }
+
+    public double[] getZ() {
+        return z;
+    }
+
+    public void setZ(double[] z) {
+        this.z = z;
+    }
+
+    public double getAvgDist() {
+        return AvgDist;
+    }
+
+    public PolygonObject getDrawablePolygon() {
+        return DrawablePolygon;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 }

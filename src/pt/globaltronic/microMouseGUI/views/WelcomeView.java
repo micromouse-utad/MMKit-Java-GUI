@@ -1,7 +1,5 @@
 package pt.globaltronic.microMouseGUI.views;
 
-import pt.globaltronic.microMouseGUI.Engine2D;
-import pt.globaltronic.microMouseGUI.Engine3D;
 import pt.globaltronic.microMouseGUI.controllers.WelcomeViewController;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
 import pt.globaltronic.microMouseGUI.models.bluetooth.services.FriendlyNameGetter;
@@ -157,10 +155,6 @@ public class WelcomeView extends JFrame {
             DisplayView displayView= new DisplayView(mouseInputs);
             displayView.setVisible(true);
         });
-        //Engine2D engine2D = new Engine2D("Mouse Trial", mouseInputs, 16,16, 30);
-        //engine2D.start();
-        //Engine3D engine3D = new Engine3D("Mouse 3d Trials", mouseInputs, 16, 16, 30);
-        //engine3D.start();
     }
 
 }
