@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Polygon;
 
 public class PolygonObject {
+    Screen screen;
     Polygon P;
     Color c;
     boolean draw = true;
@@ -12,7 +13,8 @@ public class PolygonObject {
     boolean seeThrough;
     double lighting = 1;
 
-    public PolygonObject(double[] x, double[] y, Color c, int n, boolean seeThrough) {
+    public PolygonObject(Screen screen, double[] x, double[] y, Color c, int n, boolean seeThrough) {
+        this.screen = screen;
         P = new Polygon();
         for (int i = 0; i < x.length; i++)
             P.addPoint((int) x[i], (int) y[i]);
@@ -37,7 +39,7 @@ public class PolygonObject {
             } else {
                 g.fillPolygon(P);
             }
-            if (Screen.OutLines) {
+            if (screen.isOutLined()) {
                 g.setColor(new Color(0, 0, 0));
                 g.drawPolygon(P);
             }

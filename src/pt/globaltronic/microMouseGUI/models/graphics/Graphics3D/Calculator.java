@@ -1,24 +1,30 @@
 package pt.globaltronic.microMouseGUI.models.graphics.Graphics3D;
 
 public class Calculator {
-    static double t = 0;
-    static Vector W1;
-    static Vector W2;
-    static Vector ViewVector;
-    static Vector RotationVector;
-    static Vector DirectionVector;
-    static Vector PlaneVector1;
-    static Vector PlaneVector2;
-    static Plane P;
-    static double[] CalcFocusPos = new double[2];
 
-    static double[] CalculatePositionP(double[] ViewFrom, double[] ViewTo, double x, double y, double z) {
+    private Screen screen;
+    private double t = 0;
+    private Vector W1;
+    private Vector W2;
+    private Vector ViewVector;
+    private Vector RotationVector;
+    private Vector DirectionVector;
+    private Vector PlaneVector1;
+    private Vector PlaneVector2;
+    private Plane P;
+    private double[] CalcFocusPos = new double[2];
+
+    public Calculator(Screen screen){
+        this.screen = screen;
+    }
+
+    public double[] calculatePositionP(double[] ViewFrom, double[] ViewTo, double x, double y, double z) {
         double[] projP = getProj(ViewFrom, ViewTo, x, y, z, P);
         double[] drawP = getDrawP(projP[0], projP[1], projP[2]);
         return drawP;
     }
 
-    static double[] getProj(double[] ViewFrom, double[] ViewTo, double x, double y, double z, Plane P) {
+    public double[] getProj(double[] ViewFrom, double[] ViewTo, double x, double y, double z, Plane P) {
         Vector ViewToPoint = new Vector(x - ViewFrom[0], y - ViewFrom[1], z - ViewFrom[2]);
 
         t = (P.NV.x * P.P[0] + P.NV.y * P.P[1] + P.NV.z * P.P[2]
@@ -32,13 +38,13 @@ public class Calculator {
         return new double[]{x, y, z};
     }
 
-    static double[] getDrawP(double x, double y, double z) {
+    public double[] getDrawP(double x, double y, double z) {
         double DrawX = W2.x * x + W2.y * y + W2.z * z;
         double DrawY = W1.x * x + W1.y * y + W1.z * z;
         return new double[]{DrawX, DrawY};
     }
 
-    static Vector getRotationVector(double[] ViewFrom, double[] ViewTo) {
+    public Vector getRotationVector(double[] ViewFrom, double[] ViewTo) {
         double dx = Math.abs(ViewFrom[0] - ViewTo[0]);
         double dy = Math.abs(ViewFrom[1] - ViewTo[1]);
         double xRot, yRot;
@@ -54,20 +60,27 @@ public class Calculator {
         return V;
     }
 
-    static void SetPrederterminedInfo(Screen screen) {
+    public void SetPrederterminedInfo() {
         ViewVector = new Vector(screen.getViewTo()[0] - screen.getViewFrom()[0], screen.getViewTo()[1] - screen.getViewFrom()[1], screen.getViewTo()[2] - screen.getViewFrom()[2]);
         DirectionVector = new Vector(1, 1, 1);
         PlaneVector1 = ViewVector.CrossProduct(DirectionVector);
         PlaneVector2 = ViewVector.CrossProduct(PlaneVector1);
         P = new Plane(PlaneVector1, PlaneVector2, screen.getViewTo());
 
-        RotationVector = Calculator.getRotationVector(screen.getViewFrom(), screen.getViewTo());
+        RotationVector = getRotationVector(screen.getViewFrom(), screen.getViewTo());
         W1 = ViewVector.CrossProduct(RotationVector);
         W2 = ViewVector.CrossProduct(W1);
 
-        CalcFocusPos = Calculator.CalculatePositionP(screen.getViewFrom(), screen.getViewTo(), screen.getViewTo()[0], screen.getViewTo()[1], screen.getViewTo()[2]);
-        CalcFocusPos[0] = Screen.zoom * CalcFocusPos[0];
-        CalcFocusPos[1] = Screen.zoom * CalcFocusPos[1];
+        CalcFocusPos = calculatePositionP(screen.getViewFrom(), screen.getViewTo(), screen.getViewTo()[0], screen.getViewTo()[1], screen.getViewTo()[2]);
+        CalcFocusPos[0] = screen.getZoom() * CalcFocusPos[0];
+        CalcFocusPos[1] = screen.getZoom() * CalcFocusPos[1];
     }
 
+    public double[] getCalcFocusPos() {
+        return CalcFocusPos;
+    }
+
+    public double getT() {
+        return t;
+    }
 }

@@ -24,9 +24,10 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
     //ArrayList of all the 3D polygons - each 3D polygon has a 2D 'PolygonObject' inside called 'DrawablePolygon'
     private ArrayList<Polygon2D> polygon2DS;
-
     private ArrayList<Cube> cubes;
     private ArrayList<Pyramid> pyramids;
+
+    private Calculator calculator;
 
     private double Width;
     private double Height;
@@ -44,23 +45,34 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
 
     //The smaller the zoom the more zoomed out you are and visa versa, although altering too far from 1000 will make it look pretty weird
-    static double zoom = 620;
-    static double MinZoom = 500;
-    static double MaxZoom = 2500;
-    static double MouseX = 0;
-    static double MouseY = 0;
-    static double MovementSpeed = 0.5;
+    private double zoom = 620;
+    private double MinZoom = 500;
+    private double MaxZoom = 2500;
+    private double MouseX = 0;
+    private double MouseY = 0;
+    private double MovementSpeed = 0.5;
 
     //FPS is a bit primitive, you can set the MaxFPS as high as u want
-    double drawFPS = 0, MaxFPS = 1000, SleepTime = 1000.0/MaxFPS, LastRefresh = 0, StartTime = System.currentTimeMillis(), LastFPSCheck = 0, Checks = 0;
+    private double drawFPS = 0;
+    private double MaxFPS = 1000;
+    private double SleepTime = 1000.0/MaxFPS;
+    private double LastRefresh = 0;
+    private double StartTime = System.currentTimeMillis();
+    private double LastFPSCheck = 0;
+    private double Checks = 0;
     //VertLook goes from 0.999 to -0.999, minus being looking down and + looking up, HorLook takes any number and goes round in radians
     //aimSight changes the size of the center-cross. The lower HorRotSpeed or VertRotSpeed, the faster the camera will rotate in those directions
-    double VertLook = -0.2, HorLook = 0, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
+    private double VertLook = -0.2;
+    private double HorLook = 0;
+    private double aimSight = 4;
+    private double HorRotSpeed = 900;
+    private double VertRotSpeed = 2200;
+    private double SunPos = 0;
     //default view settings
     //double VertLook = -0.7, HorLook = 4.64, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
 
-    static boolean OutLines = true;
-    boolean[] Keys = new boolean[4];
+    private boolean OutLines = true;
+    private boolean[] Keys = new boolean[4];
 
     public Screen(double width, double height, int correction)
     {
@@ -68,6 +80,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         cubes = new ArrayList<Cube>();
         pyramids = new ArrayList<Pyramid>();
 
+        this.calculator = new Calculator(this);
 
         Width = width;
         Height = height;
@@ -92,7 +105,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         CameraMovement();
 
         //Calculated all that is general for this camera position
-        Calculator.SetPrederterminedInfo(this);
+        calculator.SetPrederterminedInfo();
 
         //adjusting light effects
         ControlSunAndLight();
@@ -422,5 +435,17 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
     public double[] getLightDir() {
         return lightDir;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public boolean isOutLined() {
+        return OutLines;
+    }
+
+    public Calculator getCalculator() {
+        return calculator;
     }
 }

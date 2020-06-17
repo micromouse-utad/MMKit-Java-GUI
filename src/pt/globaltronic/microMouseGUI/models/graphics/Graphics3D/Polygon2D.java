@@ -3,6 +3,7 @@ import java.awt.Color;
 
 public class Polygon2D {
     private Screen screen;
+    private Calculator calculator;
     Color c;
     double[] x;
     double[] y;
@@ -19,6 +20,7 @@ public class Polygon2D {
     public Polygon2D(Screen screen, double[] x, double[] y, double[] z, Color c, boolean seeThrough)
     {
         this.screen = screen;
+        this.calculator = screen.getCalculator();
         this.x = x;
         this.y = y;
         this.z = z;
@@ -30,7 +32,7 @@ public class Polygon2D {
 
     void createPolygon()
     {
-        DrawablePolygon = new PolygonObject(new double[x.length], new double[x.length], c, screen.getPolygon2DS().size(), seeThrough);
+        DrawablePolygon = new PolygonObject(screen, new double[x.length], new double[x.length], c, screen.getPolygon2DS().size(), seeThrough);
     }
 
     void updatePolygon()
@@ -40,10 +42,10 @@ public class Polygon2D {
         draw = true;
         for(int i=0; i<x.length; i++)
         {
-            CalcPos = Calculator.CalculatePositionP(screen.getViewFrom(), screen.getViewTo(), x[i], y[i], z[i]);
-            newX[i] = (screen.getScreenWidth()/2 - Calculator.CalcFocusPos[0]) + CalcPos[0] * screen.zoom;
-            newY[i] = (screen.getScreenHeight()/2 - Calculator.CalcFocusPos[1]) + CalcPos[1] * screen.zoom;
-            if(Calculator.t < 0)
+            CalcPos = calculator.calculatePositionP(screen.getViewFrom(), screen.getViewTo(), x[i], y[i], z[i]);
+            newX[i] = (screen.getScreenWidth()/2 - calculator.getCalcFocusPos()[0]) + CalcPos[0] * screen.getZoom();
+            newY[i] = (screen.getScreenHeight()/2 - calculator.getCalcFocusPos()[1]) + CalcPos[1] * screen.getZoom();
+            if(calculator.getT() < 0)
                 draw = false;
         }
 
