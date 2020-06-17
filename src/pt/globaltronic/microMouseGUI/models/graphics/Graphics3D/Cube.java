@@ -2,10 +2,17 @@ package pt.globaltronic.microMouseGUI.models.graphics.Graphics3D;
 import java.awt.Color;
 
 public class Cube {
-    double x, y, z, width, length, height, rotation = Math.PI*0.75;
+    double x;
+    double y;
+    double z;
+    double width;
+    double length;
+    double height;
+    double rotation = Math.PI*0.75;
     double[] RotAdd = new double[4];
     Color c;
-    double x1, x2, x3, x4, y1, y2, y3, y4;
+    double x1, x2, x3, x4;
+    double y1, y2, y3, y4;
     Polygon2D[] Polys = new Polygon2D[6];
     Boolean visible;
     double[] angle;
@@ -47,8 +54,9 @@ public class Cube {
 
         angle[0] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[0] += Math.PI;
+        }
 
 /////////
         xdif = width/2 + 0.00001;
@@ -56,16 +64,18 @@ public class Cube {
 
         angle[1] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[1] += Math.PI;
+        }
 /////////
         xdif = width/2 + 0.00001;
         ydif = length/2 + 0.00001;
 
         angle[2] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[2] += Math.PI;
+        }
 
 /////////
         xdif = - width/2 + 0.00001;
@@ -73,8 +83,9 @@ public class Cube {
 
         angle[3] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[3] += Math.PI;
+        }
 
         RotAdd[0] = angle[0] + 0.25 * Math.PI;
         RotAdd[1] =	angle[1] + 0.25 * Math.PI;
@@ -85,6 +96,8 @@ public class Cube {
 
     void updatePoly()
     {
+        //using a speciality of the arrayList to add and remove the Polygons of the cube, remove() removes the first instance found in the list,
+        // the recently added will be at the end. The older instances will be deleted
         for(int i = 0; i < 6; i++)
         {
             Screen.Polygon2DS.add(Polys[i]);

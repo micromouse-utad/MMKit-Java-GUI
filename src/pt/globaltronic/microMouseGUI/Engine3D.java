@@ -9,26 +9,22 @@ import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.HorizontalWalls
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Mouse;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
 
-import javax.microedition.io.StreamConnection;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 import java.util.LinkedList;
 
 public class Engine3D implements Runnable{
 
-    private Display3D display3d;
     private JPanel panel;
     private Screen screen;
     private String title;
-    private StreamConnection connection;
     int cols;
     int rows;
     int cellSize;
     int width;
     int height;
     int correction;
-    double Size = 10;
+    double size = 10;
     private Thread thread;
     private boolean running;
 
@@ -39,12 +35,7 @@ public class Engine3D implements Runnable{
     private HorizontalWalls[][] hWalls;
     private VerticalWalls[][] vWalls;
 
-
-    private BufferStrategy bs;
-    private Graphics g;
-
-
-    public Engine3D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
+    public Engine3D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize, double Size){
         this.panel = panel;
         this.title = title;
         this.mouseInputs = mouseInputs;
@@ -59,7 +50,7 @@ public class Engine3D implements Runnable{
 
     @Override
     public void run() {
-
+        //basic run loop, update with the tick method and render the graphics.
         while(running){
             tick();
             render();
@@ -67,14 +58,18 @@ public class Engine3D implements Runnable{
     }
 
     public synchronized void start(){
-        if(running){return;}
-
+        //preventing thread to start if it is already running
+        if(running){
+            return;
+        }
+        //create the thread and set running to true
         thread = new Thread(this);
         running = true;
         thread.start();
     }
 
     public synchronized void stop(){
+
         if (!running){return;}
         try{
             thread.join();
@@ -92,28 +87,37 @@ public class Engine3D implements Runnable{
         panel.setMaximumSize(new Dimension(16*30, 16*30));
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
-        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(2.5, correction * Size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, Size);
+        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(2.5, correction * size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, size);
         createWalls();
-        createdPositionsGraphics();
+        createPositionsGraphics();
     }
 
     private void tick(){
+        //get the mouse inputs from the 3d queue
         String inputs = mouseInputs.getMouseInput3D();
+
+        //checking that we actual got a result and that it matches the length we need before we try to parse and extract data
         if (inputs != null && (inputs.length() > 9)) {
             int col = MouseInputsTranslator.parseCol(inputs);
             int row = MouseInputsTranslator.parseRow(inputs);
+
+            //getting the mouse current position
             Position pos = grid.getPosition(col, row);
             pos.setVisited(true);
             visited.add(pos);
+            //updating mouse position and its graphics
             mouse.setPosition(pos);
             mouse.getMousePyr().setRotAdd();
             mouse.getMousePyr().updatePoly();
 
+            //parsing the direction for "first person" camera view, and wall positioning
             String direction = MouseInputsTranslator.parseDirection(inputs);
+
+            screen.setCameraPositionForMouseView(direction, pos, size);
+
             Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
             Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
-            screen.setCameraPositionForMouseView(direction, pos, Size);
 
             switch (direction) {
                 case "N":
@@ -154,11 +158,13 @@ public class Engine3D implements Runnable{
     }
 
     private void render(){
+        //invoke the screen paint behavior
         screen.SleepAndRefresh();
-
     }
 
+    //initiate the walls and show the outskirts of the grid
     private void createWalls(){
+        //for the horizontal walls we need +1 row because to have 16squares you need 17 lines to close them.
         hWalls = new HorizontalWalls[cols][rows+1];
 
         for (int i = 0; i < cols; i++){
@@ -166,7 +172,7 @@ public class Engine3D implements Runnable{
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(x * Size, (correction + 1 - y) * Size, 0, Size, 0.5, 1, Color.BLACK));
+                hWalls[i][j].setCube(new Cube(x * size, (correction + 1 - y) * size, 0, size, 0.5, 1, Color.BLACK));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
@@ -179,6 +185,7 @@ public class Engine3D implements Runnable{
             }
         }
 
+        //likewise for the Vertical walls we need +1 col.
         vWalls = new VerticalWalls[cols+1][rows];
 
         for (int i = 0; i < cols+1; i++){
@@ -186,7 +193,7 @@ public class Engine3D implements Runnable{
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(x * Size, (correction - y) * Size, 0, 0.5, Size, 1, Color.BLACK));
+                vWalls[i][j].setCube(new Cube(x * size, (correction - y) * size, 0, 0.5, size, 1, Color.BLACK));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
@@ -200,14 +207,15 @@ public class Engine3D implements Runnable{
         }
     }
 
-    public void createdPositionsGraphics(){
+    public void createPositionsGraphics(){
+        //creating the 2d polygons for the grid, and adding them to the screen's polygon arraylist to be drawn
+        //we set the default position to be false, so that they will not be drawn on the screen right away
         Position[][] arr = grid.getPositionsArray();
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                arr[x][y].setPolygon2D(new Polygon2D(new double[]{x * Size, (x +1)* Size , (x+1) *Size, x* Size}, new double[]{(correction + 1 - y) * Size, (correction +1 - y)* Size , (correction +1 - (y+1)) *Size, (correction +1 -(y+1))* Size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
+                arr[x][y].setPolygon2D(new Polygon2D(new double[]{x * size, (x +1)* size, (x+1) * size, x* size}, new double[]{(correction + 1 - y) * size, (correction +1 - y)* size, (correction +1 - (y+1)) * size, (correction +1 -(y+1))* size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
                 arr[x][y].setVisited(false);
-                Screen.Polygon2DS.add(arr[x][y].getPolygon2D());
-
+                screen.Polygon2DS.add(arr[x][y].getPolygon2D());
             }
         }
 

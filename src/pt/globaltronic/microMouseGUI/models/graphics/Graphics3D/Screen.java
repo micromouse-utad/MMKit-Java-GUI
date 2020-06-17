@@ -90,12 +90,14 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         g.setColor(new Color(140, 180, 180));
         g.fillRect(0, 0, (int)Width, (int)Height);
 
+        //adjust the cammera
         CameraMovement();
 
         //Calculated all that is general for this camera position
         Calculator.SetPrederterminedInfo();
 
-        //ControlSunAndLight();
+        //adjusting light effects
+        ControlSunAndLight();
 
         //Updates each polygon for this camera position
         for(int i = 0; i < Polygon2DS.size(); i++) {
@@ -103,7 +105,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         }
 
         //Set drawing order so closest polygons gets drawn last
-        setOrder2();
+        setOrder();
 
         //draw polygons in the Order that is set by the 'setOrder' function
         for(int i = 0; i < Polygon2DS.size(); i++){
@@ -111,19 +113,19 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
                 Polygon2DS.get(i).DrawablePolygon.drawPolygon(g);
             }
         }
+
         //draw the cross in the center of the screen
         //drawMouseAim(g);
 
         //FPS display
         //g.drawString("FPS: " + (int)drawFPS + " (Benchmark)", 40, 40);
-        g.drawString("Mouse 3D View", 40, 40);
 
-		//repaintTime = System.currentTimeMillis() - repaintTime;
-		//System.out.println(repaintTime);
         SleepAndRefresh();
     }
 
-    void setOrder2(){
+    //set the order of the polygons to be drawn, based on their distance from the "view" the furthest away get sorted to the beginnign of the list
+    //insertion sort.
+    void setOrder(){
         int n = Polygon2DS.size();
         for (int i = 1; i < n; ++i) {
             Polygon2D key = Polygon2DS.get(i);
@@ -138,33 +140,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
 
     }
-    void setOrder()
-    {
-        double[] k = new double[Polygon2DS.size()];
-        NewOrder = new int[Polygon2DS.size()];
 
-        for(int i = 0; i< Polygon2DS.size(); i++)
-        {
-            k[i] = Polygon2DS.get(i).AvgDist;
-            NewOrder[i] = i;
-        }
-
-        double temp;
-        int tempr;
-        for (int a = 0; a < k.length-1; a++)
-            for (int b = 0; b < k.length-1; b++)
-                if(k[b] < k[b + 1])
-                {
-                    temp = k[b];
-                    tempr = NewOrder[b];
-                    NewOrder[b] = NewOrder[b + 1];
-                    k[b] = k[b + 1];
-
-                    NewOrder[b + 1] = tempr;
-                    k[b + 1] = temp;
-                }
-    }
-
+    //make the toolkit mouse skin disappear when moused over the 3d Jpanel.
     void invisibleMouse()
     {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -173,6 +150,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         setCursor(invisibleCursor);
     }
 
+    //draw a mouse crosshair at screen center.
     void drawMouseAim(Graphics g)
     {
         g.setColor(Color.black);
@@ -180,6 +158,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         g.drawLine((int)(Width/2), (int)(Height/2 - aimSight), (int)(Width/2), (int)(Height/2 + aimSight));
     }
 
+    //limiting fps to maxFPS preset and repainting
     public void SleepAndRefresh()
     {
         long timeSLU = (long) (System.currentTimeMillis() - LastRefresh);
@@ -209,7 +188,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     void ControlSunAndLight()
     {
         SunPos += 0.005;
-        double mapSize = Generate3dObjects.mapSize * Generate3dObjects.Size;
+        double mapSize = Width;
         LightDir[0] = mapSize/2 - (mapSize/2 + Math.cos(SunPos) * mapSize * 10);
         LightDir[1] = mapSize/2 - (mapSize/2 + Math.sin(SunPos) * mapSize * 10);
         LightDir[2] = -200;

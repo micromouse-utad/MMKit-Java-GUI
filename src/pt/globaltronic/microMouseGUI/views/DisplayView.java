@@ -40,7 +40,7 @@ public class DisplayView extends JFrame {
         mainPanel.setVisible(true);
         setVisible(true);
 
-        Engine3D engine3D = new Engine3D(Panel3D,"Mouse 3d Trials", mouseInputs, 16, 16, 30);
+        Engine3D engine3D = new Engine3D(Panel3D,"Mouse 3d Trials", mouseInputs, 16, 16, 30, 10);
         Engine2D engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, 16,16, 30);
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
