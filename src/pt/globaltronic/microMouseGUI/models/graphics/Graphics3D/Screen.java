@@ -68,6 +68,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     private double HorRotSpeed = 900;
     private double VertRotSpeed = 2200;
     private double SunPos = 0;
+
+
     //default view settings
     //double VertLook = -0.7, HorLook = 4.64, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
 
@@ -265,7 +267,6 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         if(VertLook<-0.999) {
             VertLook = -0.999;
         }
-
         updateView();
     }
 
@@ -275,16 +276,16 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         viewTo[0] = viewFrom[0] + r * Math.cos(HorLook);
         viewTo[1] = viewFrom[1] + r * Math.sin(HorLook);
         viewTo[2] = viewFrom[2] + VertLook;
-
     }
 
-    void CenterMouse()
+    void CenterMouse(MouseEvent e)
     {
+        //centering on the absolute position of the window
         try {
             r = new Robot();
-            r.mouseMove((int)Width/2, (int)Height/2);
-        } catch (AWTException e) {
-            e.printStackTrace();
+            r.mouseMove((int)(e.getComponent().getLocationOnScreen().getX() + (Width)/2), (int)(e.getComponent().getLocationOnScreen().getY() + (Height)/2));
+        } catch (AWTException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -322,7 +323,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
             MouseMovement(arg0.getX(), arg0.getY());
             MouseX = arg0.getX();
             MouseY = arg0.getY();
-            CenterMouse();
+            CenterMouse(arg0);
         }
     }
 
@@ -331,7 +332,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
             MouseMovement(arg0.getX(), arg0.getY());
             MouseX = arg0.getX();
             MouseY = arg0.getY();
-            CenterMouse();
+            CenterMouse(arg0);
         }
     }
 
