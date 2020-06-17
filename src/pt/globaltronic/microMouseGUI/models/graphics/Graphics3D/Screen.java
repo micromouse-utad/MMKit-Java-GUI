@@ -23,24 +23,24 @@ import javax.swing.JPanel;
 public class Screen extends JPanel implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener{
 
     //ArrayList of all the 3D polygons - each 3D polygon has a 2D 'PolygonObject' inside called 'DrawablePolygon'
-    public static ArrayList<Polygon2D> Polygon2DS = new ArrayList<Polygon2D>();
+    private ArrayList<Polygon2D> polygon2DS;
 
-    static ArrayList<Cube> Cubes = new ArrayList<Cube>();
-    static ArrayList<Pyramid> Pyramids = new ArrayList<Pyramid>();
+    private ArrayList<Cube> cubes;
+    private ArrayList<Pyramid> pyramids;
 
-    static String Title;
-    static double Width;
-    static double Height;
-    static double Correction;
+    private double Width;
+    private double Height;
+    private double correction;
 
 
     //Used for keeping mouse in center
-    Robot r;
-    boolean rightClickDown = false;
+    private Robot r;
+    //used to allow free camera look (cursor look)
+    private boolean rightClickDown = false;
     //to play around with the position of the camera, change viewfrom and view to, zoom, horlook, vertlook
-    static double[] ViewFrom = new double[] {81.898, 318.847, 155};
-    static double[] ViewTo = new double[] {81.88396, 318.01312, 154.4482};
-    static double[] LightDir = new double[] {1, 1, 1};
+    private double[] viewFrom = new double[] {81.898, 318.847, 155};
+    private double[] viewTo = new double[] {81.88396, 318.01312, 154.4482};
+    private double[] lightDir = new double[] {1, 1, 1};
 
 
     //The smaller the zoom the more zoomed out you are and visa versa, although altering too far from 1000 will make it look pretty weird
@@ -59,19 +59,19 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     //default view settings
     //double VertLook = -0.7, HorLook = 4.64, aimSight = 4, HorRotSpeed = 900, VertRotSpeed = 2200, SunPos = 0;
 
-    //will hold the order that the polygons in the ArrayList DPolygon should be drawn meaning DPolygon.get(NewOrder[0]) gets drawn first
-    int[] NewOrder;
-
     static boolean OutLines = true;
     boolean[] Keys = new boolean[4];
 
-    long repaintTime = 0;
-
     public Screen(double width, double height, int correction)
     {
+        polygon2DS = new ArrayList<Polygon2D>();
+        cubes = new ArrayList<Cube>();
+        pyramids = new ArrayList<Pyramid>();
+
+
         Width = width;
         Height = height;
-        Correction = correction;
+        this.correction = correction;
         this.addKeyListener(this);
         setFocusable(true);
 
@@ -80,8 +80,6 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         this.addMouseWheelListener(this);
 
         invisibleMouse();
-
-        //new Generate3dObjects();
     }
 
     public void paintComponent(Graphics g)
@@ -94,23 +92,23 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         CameraMovement();
 
         //Calculated all that is general for this camera position
-        Calculator.SetPrederterminedInfo();
+        Calculator.SetPrederterminedInfo(this);
 
         //adjusting light effects
         ControlSunAndLight();
 
         //Updates each polygon for this camera position
-        for(int i = 0; i < Polygon2DS.size(); i++) {
-            Polygon2DS.get(i).updatePolygon();
+        for(int i = 0; i < polygon2DS.size(); i++) {
+            polygon2DS.get(i).updatePolygon();
         }
 
         //Set drawing order so closest polygons gets drawn last
         setOrder();
 
         //draw polygons in the Order that is set by the 'setOrder' function
-        for(int i = 0; i < Polygon2DS.size(); i++){
-            if (Polygon2DS.get(i).visible) {
-                Polygon2DS.get(i).DrawablePolygon.drawPolygon(g);
+        for(int i = 0; i < polygon2DS.size(); i++){
+            if (polygon2DS.get(i).visible) {
+                polygon2DS.get(i).DrawablePolygon.drawPolygon(g);
             }
         }
 
@@ -126,16 +124,16 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     //set the order of the polygons to be drawn, based on their distance from the "view" the furthest away get sorted to the beginnign of the list
     //insertion sort.
     void setOrder(){
-        int n = Polygon2DS.size();
+        int n = polygon2DS.size();
         for (int i = 1; i < n; ++i) {
-            Polygon2D key = Polygon2DS.get(i);
+            Polygon2D key = polygon2DS.get(i);
             int j = i - 1;
 
-            while (j >= 0 && Polygon2DS.get(j).AvgDist < key.AvgDist) {
-                Polygon2DS.set(j + 1, Polygon2DS.get(j));
+            while (j >= 0 && polygon2DS.get(j).AvgDist < key.AvgDist) {
+                polygon2DS.set(j + 1, polygon2DS.get(j));
                 j = j - 1;
             }
-            Polygon2DS.set(j + 1, key);
+            polygon2DS.set(j + 1, key);
         }
 
 
@@ -189,14 +187,14 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     {
         SunPos += 0.005;
         double mapSize = Width;
-        LightDir[0] = mapSize/2 - (mapSize/2 + Math.cos(SunPos) * mapSize * 10);
-        LightDir[1] = mapSize/2 - (mapSize/2 + Math.sin(SunPos) * mapSize * 10);
-        LightDir[2] = -200;
+        lightDir[0] = mapSize/2 - (mapSize/2 + Math.cos(SunPos) * mapSize * 10);
+        lightDir[1] = mapSize/2 - (mapSize/2 + Math.sin(SunPos) * mapSize * 10);
+        lightDir[2] = -200;
     }
 
     void CameraMovement()
     {
-        Vector ViewVector = new Vector(ViewTo[0] - ViewFrom[0], ViewTo[1] - ViewFrom[1], ViewTo[2] - ViewFrom[2]);
+        Vector ViewVector = new Vector(viewTo[0] - viewFrom[0], viewTo[1] - viewFrom[1], viewTo[2] - viewFrom[2]);
         double xMove = 0, yMove = 0, zMove = 0;
         Vector VerticalVector = new Vector (0, 0, 1);
         Vector SideViewVector = ViewVector.CrossProduct(VerticalVector);
@@ -230,14 +228,14 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         }
 
         Vector MoveVector = new Vector(xMove, yMove, zMove);
-        MoveTo(ViewFrom[0] + MoveVector.x * MovementSpeed, ViewFrom[1] + MoveVector.y * MovementSpeed, ViewFrom[2] + MoveVector.z * MovementSpeed);
+        MoveTo(viewFrom[0] + MoveVector.x * MovementSpeed, viewFrom[1] + MoveVector.y * MovementSpeed, viewFrom[2] + MoveVector.z * MovementSpeed);
     }
 
     void MoveTo(double x, double y, double z)
     {
-        ViewFrom[0] = x;
-        ViewFrom[1] = y;
-        ViewFrom[2] = z;
+        viewFrom[0] = x;
+        viewFrom[1] = y;
+        viewFrom[2] = z;
         updateView();
     }
 
@@ -249,11 +247,13 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         VertLook -= difY  / VertRotSpeed;
         HorLook += difX / HorRotSpeed;
 
-        if(VertLook>0.999)
+        if(VertLook>0.999) {
             VertLook = 0.999;
+        }
 
-        if(VertLook<-0.999)
+        if(VertLook<-0.999) {
             VertLook = -0.999;
+        }
 
         updateView();
     }
@@ -261,9 +261,9 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     void updateView()
     {
         double r = Math.sqrt(1 - (VertLook * VertLook));
-        ViewTo[0] = ViewFrom[0] + r * Math.cos(HorLook);
-        ViewTo[1] = ViewFrom[1] + r * Math.sin(HorLook);
-        ViewTo[2] = ViewFrom[2] + VertLook;
+        viewTo[0] = viewFrom[0] + r * Math.cos(HorLook);
+        viewTo[1] = viewFrom[1] + r * Math.sin(HorLook);
+        viewTo[2] = viewFrom[2] + VertLook;
 
     }
 
@@ -358,8 +358,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         }
     }
 
-    public static void setViewFrom(double[] viewFrom) {
-        ViewFrom = viewFrom;
+    public void setViewFrom(double[] viewFrom) {
+        this.viewFrom = viewFrom;
     }
 
     public void setHorLook(double horLook) {
@@ -369,22 +369,58 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     public void setCameraPositionForMouseView(String direction, Position pos, double size) {
         switch (direction){
             case "N":
-                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((Correction - pos.getRow() + 1.5)*size), 4});
+                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((correction - pos.getRow() + 1.5)*size), 4});
                 setHorLook(4.712388);
                 break;
             case "E":
-                setViewFrom(new double[]{((pos.getCol() - 0.5)*size), ((Correction - pos.getRow() + 0.5)*size), 4});
+                setViewFrom(new double[]{((pos.getCol() - 0.5)*size), ((correction - pos.getRow() + 0.5)*size), 4});
                 setHorLook(0);
                 break;
             case "S":
-                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((Correction - pos.getRow() - 0.5)*size), 4});
+                setViewFrom(new double[]{((pos.getCol()+ 0.5)*size), ((correction - pos.getRow() - 0.5)*size), 4});
                 setHorLook(1.570796);
                 break;
             case "W":
-                setViewFrom(new double[]{((pos.getCol() + 1.5)*size), ((Correction - pos.getRow() + 0.5)*size), 4});
+                setViewFrom(new double[]{((pos.getCol() + 1.5)*size), ((correction - pos.getRow() + 0.5)*size), 4});
                 setHorLook(3.141592);
                 break;
         }
         updateView();
+    }
+
+    public ArrayList<Polygon2D> getPolygon2DS() {
+        return polygon2DS;
+    }
+
+    public ArrayList<Pyramid> getPyramids() {
+        return pyramids;
+    }
+
+    public ArrayList<Cube> getCubes() {
+        return cubes;
+    }
+
+    public double getScreenWidth() {
+        return Width;
+    }
+
+    public double getScreenHeight() {
+        return Height;
+    }
+
+    public double getCorrection() {
+        return correction;
+    }
+
+    public double[] getViewFrom() {
+        return viewFrom;
+    }
+
+    public double[] getViewTo() {
+        return viewTo;
+    }
+
+    public double[] getLightDir() {
+        return lightDir;
     }
 }

@@ -2,6 +2,7 @@ package pt.globaltronic.microMouseGUI.models.graphics.Graphics3D;
 import java.awt.Color;
 
 public class Cube {
+    private Screen screen;
     double x;
     double y;
     double z;
@@ -18,20 +19,21 @@ public class Cube {
     double[] angle;
 
 
-    public Cube(double x, double y, double z, double width, double length, double height, Color c)
+    public Cube(Screen screen, double x, double y, double z, double width, double length, double height, Color c)
     {
-        Polys[0] = new Polygon2D(new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z, z, z, z}, c, false);
-        Screen.Polygon2DS.add(Polys[0]);
-        Polys[1] = new Polygon2D(new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z+height, z+height, z+height, z+height}, c, false);
-        Screen.Polygon2DS.add(Polys[1]);
-        Polys[2] = new Polygon2D(new double[]{x, x, x+width, x+width}, new double[]{y, y, y, y},  new double[]{z, z+height, z+height, z}, c, false);
-        Screen.Polygon2DS.add(Polys[2]);
-        Polys[3] = new Polygon2D(new double[]{x+width, x+width, x+width, x+width}, new double[]{y, y, y+length, y+length},  new double[]{z, z+height, z+height, z}, c, false);
-        Screen.Polygon2DS.add(Polys[3]);
-        Polys[4] = new Polygon2D(new double[]{x, x, x+width, x+width}, new double[]{y+length, y+length, y+length, y+length},  new double[]{z, z+height, z+height, z}, c, false);
-        Screen.Polygon2DS.add(Polys[4]);
-        Polys[5] = new Polygon2D(new double[]{x, x, x, x}, new double[]{y, y, y+length, y+length},  new double[]{z, z+height, z+height, z}, c, false);
-        Screen.Polygon2DS.add(Polys[5]);
+        this.screen = screen;
+        Polys[0] = new Polygon2D(screen, new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z, z, z, z}, c, false);
+        screen.getPolygon2DS().add(Polys[0]);
+        Polys[1] = new Polygon2D(screen, new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z+height, z+height, z+height, z+height}, c, false);
+        screen.getPolygon2DS().add(Polys[1]);
+        Polys[2] = new Polygon2D(screen, new double[]{x, x, x+width, x+width}, new double[]{y, y, y, y},  new double[]{z, z+height, z+height, z}, c, false);
+        screen.getPolygon2DS().add(Polys[2]);
+        Polys[3] = new Polygon2D(screen, new double[]{x+width, x+width, x+width, x+width}, new double[]{y, y, y+length, y+length},  new double[]{z, z+height, z+height, z}, c, false);
+        screen.getPolygon2DS().add(Polys[3]);
+        Polys[4] = new Polygon2D(screen, new double[]{x, x, x+width, x+width}, new double[]{y+length, y+length, y+length, y+length},  new double[]{z, z+height, z+height, z}, c, false);
+        screen.getPolygon2DS().add(Polys[4]);
+        Polys[5] = new Polygon2D(screen, new double[]{x, x, x, x}, new double[]{y, y, y+length, y+length},  new double[]{z, z+height, z+height, z}, c, false);
+        screen.getPolygon2DS().add(Polys[5]);
 
         this.c = c;
         this.x = x;
@@ -58,7 +60,6 @@ public class Cube {
             angle[0] += Math.PI;
         }
 
-/////////
         xdif = width/2 + 0.00001;
         ydif = - length/2 + 0.00001;
 
@@ -67,7 +68,7 @@ public class Cube {
         if(xdif<0) {
             angle[1] += Math.PI;
         }
-/////////
+
         xdif = width/2 + 0.00001;
         ydif = length/2 + 0.00001;
 
@@ -77,7 +78,6 @@ public class Cube {
             angle[2] += Math.PI;
         }
 
-/////////
         xdif = - width/2 + 0.00001;
         ydif = length/2 + 0.00001;
 
@@ -100,8 +100,8 @@ public class Cube {
         // the recently added will be at the end. The older instances will be deleted
         for(int i = 0; i < 6; i++)
         {
-            Screen.Polygon2DS.add(Polys[i]);
-            Screen.Polygon2DS.remove(Polys[i]);
+            screen.getPolygon2DS().add(Polys[i]);
+            screen.getPolygon2DS().remove(Polys[i]);
         }
 
         double radius = Math.sqrt(width*width + length*length);
@@ -145,8 +145,8 @@ public class Cube {
     void removeCube()
     {
         for(int i = 0; i < 6; i ++) {
-            Screen.Polygon2DS.remove(Polys[i]);
-            Screen.Cubes.remove(this);
+            screen.getPolygon2DS().remove(Polys[i]);
+            screen.getCubes().remove(this);
         }
     }
 

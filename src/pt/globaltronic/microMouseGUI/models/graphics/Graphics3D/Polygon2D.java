@@ -2,6 +2,7 @@ package pt.globaltronic.microMouseGUI.models.graphics.Graphics3D;
 import java.awt.Color;
 
 public class Polygon2D {
+    private Screen screen;
     Color c;
     double[] x;
     double[] y;
@@ -15,8 +16,9 @@ public class Polygon2D {
     PolygonObject DrawablePolygon;
     double AvgDist;
 
-    public Polygon2D(double[] x, double[] y, double[] z, Color c, boolean seeThrough)
+    public Polygon2D(Screen screen, double[] x, double[] y, double[] z, Color c, boolean seeThrough)
     {
+        this.screen = screen;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -28,7 +30,7 @@ public class Polygon2D {
 
     void createPolygon()
     {
-        DrawablePolygon = new PolygonObject(new double[x.length], new double[x.length], c, Screen.Polygon2DS.size(), seeThrough);
+        DrawablePolygon = new PolygonObject(new double[x.length], new double[x.length], c, screen.getPolygon2DS().size(), seeThrough);
     }
 
     void updatePolygon()
@@ -38,9 +40,9 @@ public class Polygon2D {
         draw = true;
         for(int i=0; i<x.length; i++)
         {
-            CalcPos = Calculator.CalculatePositionP(Screen.ViewFrom, Screen.ViewTo, x[i], y[i], z[i]);
-            newX[i] = (Screen.Width/2 - Calculator.CalcFocusPos[0]) + CalcPos[0] * Screen.zoom;
-            newY[i] = (Screen.Height/2 - Calculator.CalcFocusPos[1]) + CalcPos[1] * Screen.zoom;
+            CalcPos = Calculator.CalculatePositionP(screen.getViewFrom(), screen.getViewTo(), x[i], y[i], z[i]);
+            newX[i] = (screen.getScreenWidth()/2 - Calculator.CalcFocusPos[0]) + CalcPos[0] * screen.zoom;
+            newY[i] = (screen.getScreenHeight()/2 - Calculator.CalcFocusPos[1]) + CalcPos[1] * screen.zoom;
             if(Calculator.t < 0)
                 draw = false;
         }
@@ -55,9 +57,9 @@ public class Polygon2D {
     void calcLighting()
     {
         Plane lightingPlane = new Plane(this);
-        double angle = Math.acos(((lightingPlane.NV.x * Screen.LightDir[0]) +
-                (lightingPlane.NV.y * Screen.LightDir[1]) + (lightingPlane.NV.z * Screen.LightDir[2]))
-                /(Math.sqrt(Screen.LightDir[0] * Screen.LightDir[0] + Screen.LightDir[1] * Screen.LightDir[1] + Screen.LightDir[2] * Screen.LightDir[2])));
+        double angle = Math.acos(((lightingPlane.NV.x * screen.getLightDir()[0]) +
+                (lightingPlane.NV.y * screen.getLightDir()[1]) + (lightingPlane.NV.z * screen.getLightDir()[2]))
+                /(Math.sqrt(screen.getLightDir()[0] * screen.getLightDir()[0] + screen.getLightDir()[1] * screen.getLightDir()[1] + screen.getLightDir()[2] * screen.getLightDir()[2])));
 
         DrawablePolygon.lighting = 0.2 + 1 - Math.sqrt(Math.toDegrees(angle)/180);
 
@@ -77,9 +79,9 @@ public class Polygon2D {
 
     double GetDistanceToP(int i)
     {
-        return Math.sqrt((Screen.ViewFrom[0]-x[i])*(Screen.ViewFrom[0]-x[i]) +
-                (Screen.ViewFrom[1]-y[i])*(Screen.ViewFrom[1]-y[i]) +
-                (Screen.ViewFrom[2]-z[i])*(Screen.ViewFrom[2]-z[i]));
+        return Math.sqrt((screen.getViewFrom()[0]-x[i])*(screen.getViewFrom()[0]-x[i]) +
+                (screen.getViewFrom()[1]-y[i])*(screen.getViewFrom()[1]-y[i]) +
+                (screen.getViewFrom()[2]-z[i])*(screen.getViewFrom()[2]-z[i]));
     }
 
     public void setVisible(boolean visible) {

@@ -2,26 +2,35 @@ package pt.globaltronic.microMouseGUI.models.graphics.Graphics3D;
 import java.awt.Color;
 
 public class Pyramid {
-    double x, y, z, width, length, height, rotation = Math.PI*0.75;
+    private Screen screen;
+    double x;
+    double y;
+    double z;
+    double width;
+    double length;
+    double height;
+    double rotation = Math.PI*0.75;
     double[] RotAdd = new double[4];
     Color c;
-    double x1, x2, x3, x4, x5, y1, y2, y3, y4, y5;
+    double x1, x2, x3, x4, x5;
+    double y1, y2, y3, y4, y5;
     Polygon2D[] Polys = new Polygon2D[5];
     double[] angle;
     boolean visible;
 
-    public Pyramid(double x, double y, double z, double width, double length, double height, Color c)
+    public Pyramid(Screen screen, double x, double y, double z, double width, double length, double height, Color c)
     {
-        Polys[0] = new Polygon2D(new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z, z, z, z}, c, false);
-        Screen.Polygon2DS.add(Polys[0]);
-        Polys[1] = new Polygon2D(new double[]{x, x, x+width}, new double[]{y, y, y, y},  new double[]{z, z+height, z+height}, c, false);
-        Screen.Polygon2DS.add(Polys[1]);
-        Polys[2] = new Polygon2D(new double[]{x+width, x+width, x+width}, new double[]{y, y, y+length},  new double[]{z, z+height, z+height}, c, false);
-        Screen.Polygon2DS.add(Polys[2]);
-        Polys[3] = new Polygon2D(new double[]{x, x, x+width}, new double[]{y+length, y+length, y+length},  new double[]{z, z+height, z+height}, c, false);
-        Screen.Polygon2DS.add(Polys[3]);
-        Polys[4] = new Polygon2D(new double[]{x, x, x}, new double[]{y, y, y+length},  new double[]{z, z+height, z+height}, c, false);
-        Screen.Polygon2DS.add(Polys[4]);
+        this.screen = screen;
+        Polys[0] = new Polygon2D(screen, new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z, z, z, z}, c, false);
+        screen.getPolygon2DS().add(Polys[0]);
+        Polys[1] = new Polygon2D(screen, new double[]{x, x, x+width}, new double[]{y, y, y, y},  new double[]{z, z+height, z+height}, c, false);
+        screen.getPolygon2DS().add(Polys[1]);
+        Polys[2] = new Polygon2D(screen, new double[]{x+width, x+width, x+width}, new double[]{y, y, y+length},  new double[]{z, z+height, z+height}, c, false);
+        screen.getPolygon2DS().add(Polys[2]);
+        Polys[3] = new Polygon2D(screen, new double[]{x, x, x+width}, new double[]{y+length, y+length, y+length},  new double[]{z, z+height, z+height}, c, false);
+        screen.getPolygon2DS().add(Polys[3]);
+        Polys[4] = new Polygon2D(screen, new double[]{x, x, x}, new double[]{y, y, y+length},  new double[]{z, z+height, z+height}, c, false);
+        screen.getPolygon2DS().add(Polys[4]);
 
         this.c = c;
         this.x = x;
@@ -44,34 +53,38 @@ public class Pyramid {
 
         angle[0] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[0] += Math.PI;
+        }
 
-/////////
+
         xdif = width + 0.00001;
         ydif = - length + 0.00001;
 
         angle[1] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[1] += Math.PI;
-/////////
+        }
+
         xdif = width + 0.00001;
         ydif = length + 0.00001;
 
         angle[2] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[2] += Math.PI;
+        }
 
-/////////
+
         xdif = - width + 0.00001;
         ydif = length + 0.00001;
 
         angle[3] = Math.atan(ydif/xdif);
 
-        if(xdif<0)
+        if(xdif<0) {
             angle[3] += Math.PI;
+        }
 
         RotAdd[0] = angle[0] + 0.25 * Math.PI;
         RotAdd[1] =	angle[1] + 0.25 * Math.PI;
@@ -95,10 +108,11 @@ public class Pyramid {
 
     public void updatePoly()
     {
+        //using arraylist add and remove properties, add puts a new instance at the end of the list, remove removes the first instance found at the smallest index
         for(int i = 0; i < 5; i++)
         {
-            Screen.Polygon2DS.add(Polys[i]);
-            Screen.Polygon2DS.remove(Polys[i]);
+            screen.getPolygon2DS().add(Polys[i]);
+            screen.getPolygon2DS().remove(Polys[i]);
         }
 
         double radius = Math.sqrt(width*width + length*length);
@@ -140,8 +154,8 @@ public class Pyramid {
     void removePyramid()
     {
         for(int i = 0; i < 5; i ++)
-            Screen.Polygon2DS.remove(Polys[i]);
-        Screen.Pyramids.remove(this);
+            screen.getPolygon2DS().remove(Polys[i]);
+            screen.getPyramids().remove(this);
     }
 
     public void setX(double x) {

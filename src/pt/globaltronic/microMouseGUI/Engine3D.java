@@ -45,6 +45,7 @@ public class Engine3D implements Runnable{
         this.width = cols * cellSize;
         this.height = rows * cellSize;
         this.correction = rows -1;
+        screen = new Screen(width, height, correction);
         init();
     }
 
@@ -80,14 +81,13 @@ public class Engine3D implements Runnable{
 
     private void init(){
 
-        screen = new Screen(width, height, correction);
         panel.add(screen);
         panel.setPreferredSize(new Dimension(16*30, 16*30));
         panel.setMinimumSize(new Dimension(16*30, 16*30));
         panel.setMaximumSize(new Dimension(16*30, 16*30));
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
-        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(2.5, correction * size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, size);
+        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(screen,2.5, correction * size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, size);
         createWalls();
         createPositionsGraphics();
     }
@@ -172,7 +172,7 @@ public class Engine3D implements Runnable{
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(x * size, (correction + 1 - y) * size, 0, size, 0.5, 1, Color.BLACK));
+                hWalls[i][j].setCube(new Cube(screen,x * size, (correction + 1 - y) * size, 0, size, 0.5, 1, Color.BLACK));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
@@ -193,7 +193,7 @@ public class Engine3D implements Runnable{
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(x * size, (correction - y) * size, 0, 0.5, size, 1, Color.BLACK));
+                vWalls[i][j].setCube(new Cube(screen,x * size, (correction - y) * size, 0, 0.5, size, 1, Color.BLACK));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
@@ -213,9 +213,9 @@ public class Engine3D implements Runnable{
         Position[][] arr = grid.getPositionsArray();
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                arr[x][y].setPolygon2D(new Polygon2D(new double[]{x * size, (x +1)* size, (x+1) * size, x* size}, new double[]{(correction + 1 - y) * size, (correction +1 - y)* size, (correction +1 - (y+1)) * size, (correction +1 -(y+1))* size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
+                arr[x][y].setPolygon2D(new Polygon2D(screen, new double[]{x * size, (x +1)* size, (x+1) * size, x* size}, new double[]{(correction + 1 - y) * size, (correction +1 - y)* size, (correction +1 - (y+1)) * size, (correction +1 -(y+1))* size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
                 arr[x][y].setVisited(false);
-                screen.Polygon2DS.add(arr[x][y].getPolygon2D());
+                screen.getPolygon2DS().add(arr[x][y].getPolygon2D());
             }
         }
 
