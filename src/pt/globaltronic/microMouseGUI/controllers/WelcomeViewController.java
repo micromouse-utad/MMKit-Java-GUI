@@ -6,8 +6,11 @@ import pt.globaltronic.microMouseGUI.models.bluetooth.SyncedDevice;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothConnection;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDiscovery;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
+import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputsReceiver;
+import pt.globaltronic.microMouseGUI.views.DisplayView;
 
 import javax.microedition.io.StreamConnection;
+import javax.swing.*;
 import java.util.LinkedHashSet;
 
 public class WelcomeViewController {
@@ -17,6 +20,7 @@ public class WelcomeViewController {
     DiscoveredDevices discoveredDevices;
     SyncedDevice syncedDevice;
     MouseInputs mouseInputs;
+    DisplayViewController displayViewController;
 
     public WelcomeViewController(){}
 
@@ -39,7 +43,15 @@ public class WelcomeViewController {
         }
         System.out.println("connection established to:" + remoteDevice.getName());
         return conn;
+    }
 
+    public void startDisplayView(StreamConnection connection, BluetoothDevice selectedDevice){
+        MouseInputs mouseInputs = this.getMouseInputs();
+        MouseInputsReceiver receiver = new MouseInputsReceiver(mouseInputs, connection);
+        receiver.start();
+        displayViewController.setConnection(connection);
+        displayViewController.setMouseInputsReceiver(receiver);
+        displayViewController.startView(selectedDevice);
     }
 
     public void removedSelectedFromSyncedDevices(BluetoothDevice device){
@@ -69,5 +81,9 @@ public class WelcomeViewController {
 
     public void setSyncedDevice(SyncedDevice syncedDevice) {
         this.syncedDevice = syncedDevice;
+    }
+
+    public void setDisplayViewController(DisplayViewController displayViewController) {
+        this.displayViewController = displayViewController;
     }
 }

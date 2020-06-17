@@ -54,7 +54,10 @@ public class MouseInputsReceiver implements Runnable{
     public synchronized void stop(){
         if (!running){return;}
         try{
+            running = false;
+            bReader.close();
             thread.join();
+
         }catch (Exception ex){
             System.out.println(ex.getMessage());
         }

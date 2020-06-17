@@ -75,6 +75,7 @@ public class Engine2D implements Runnable{
     public synchronized void stop(){
         if (!running){return;}
         try{
+            running = false;
             thread.join();
         }catch (Exception ex){
             System.out.println(ex.getMessage());

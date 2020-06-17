@@ -3,8 +3,6 @@ package pt.globaltronic.microMouseGUI.views;
 import pt.globaltronic.microMouseGUI.controllers.WelcomeViewController;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
 import pt.globaltronic.microMouseGUI.models.bluetooth.services.FriendlyNameGetter;
-import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
-import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputsReceiver;
 
 import javax.microedition.io.StreamConnection;
 import javax.swing.*;
@@ -31,15 +29,6 @@ public class WelcomeView extends JFrame {
     private WelcomeViewController welcomeViewController;
     private LinkedHashSet<BluetoothDevice> bluetoothDevices;
     private StreamConnection connection;
-
-    public void setBluetoothDevices(LinkedHashSet<BluetoothDevice> bluetoothDevices) {
-        this.bluetoothDevices = bluetoothDevices;
-
-    }
-
-    public LinkedHashSet<BluetoothDevice> getBluetoothDevices(){
-        return bluetoothDevices;
-    }
 
     public WelcomeView(WelcomeViewController welcomeViewController){
         this.welcomeViewController = welcomeViewController;
@@ -148,13 +137,16 @@ public class WelcomeView extends JFrame {
             System.out.println("Failed to connect try again");
             return;
         }
-        MouseInputs mouseInputs = welcomeViewController.getMouseInputs();
-        MouseInputsReceiver receiver = new MouseInputsReceiver(mouseInputs, connection);
-        receiver.start();
-        SwingUtilities.invokeLater(() -> {
-            DisplayView displayView= new DisplayView(mouseInputs);
-            displayView.setVisible(true);
-        });
+        welcomeViewController.startDisplayView(connection, selectedDevice);
+    }
+
+    public void setBluetoothDevices(LinkedHashSet<BluetoothDevice> bluetoothDevices) {
+        this.bluetoothDevices = bluetoothDevices;
+
+    }
+
+    public LinkedHashSet<BluetoothDevice> getBluetoothDevices(){
+        return bluetoothDevices;
     }
 
 }

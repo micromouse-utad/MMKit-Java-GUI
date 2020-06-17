@@ -1,5 +1,6 @@
 package pt.globaltronic.microMouseGUI;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.*;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Grid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
@@ -11,6 +12,8 @@ import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.LinkedList;
 
 public class Engine3D implements Runnable{
@@ -27,6 +30,7 @@ public class Engine3D implements Runnable{
     private double size = 10;
     private Thread thread;
     private boolean running;
+    private boolean firstPersonView = true;
 
     private Grid grid;
     private LinkedList<Position> visited;
@@ -35,7 +39,8 @@ public class Engine3D implements Runnable{
     private HorizontalWalls[][] hWalls;
     private VerticalWalls[][] vWalls;
 
-    public Engine3D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize, double Size){
+    public Engine3D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize, double size){
+        this.size = size;
         this.panel = panel;
         this.title = title;
         this.mouseInputs = mouseInputs;
@@ -46,6 +51,18 @@ public class Engine3D implements Runnable{
         this.height = rows * cellSize;
         this.correction = rows -1;
         screen = new Screen(width, height, correction);
+
+        //add to implement because lost focus would not register.
+        screen.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                e.getComponent().requestFocus();
+            }
+        });
         init();
     }
 
@@ -73,6 +90,7 @@ public class Engine3D implements Runnable{
 
         if (!running){return;}
         try{
+            running = false;
             thread.join();
         }catch (Exception ex){
             System.out.println(ex.getMessage());
@@ -113,7 +131,9 @@ public class Engine3D implements Runnable{
             //parsing the direction for "first person" camera view, and wall positioning
             String direction = MouseInputsTranslator.parseDirection(inputs);
 
-            screen.setCameraPositionForMouseView(direction, pos, size);
+            if(firstPersonView) {
+                screen.setCameraPositionForMouseView(direction, pos, size);
+            }
 
             Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
@@ -172,7 +192,7 @@ public class Engine3D implements Runnable{
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(screen,x * size, (correction + 1 - y) * size, 0, size, 0.5, 1, Color.BLACK));
+                hWalls[i][j].setCube(new Cube(screen,x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.BLACK));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
@@ -193,7 +213,7 @@ public class Engine3D implements Runnable{
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(screen,x * size, (correction - y) * size, 0, 0.5, size, 1, Color.BLACK));
+                vWalls[i][j].setCube(new Cube(screen,x * size, (correction - y) * size, 0, 1, size, 1.5, Color.BLACK));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
@@ -220,4 +240,25 @@ public class Engine3D implements Runnable{
         }
 
     }
+
+    public void setFirstPersonView(boolean firstPersonView) {
+        this.firstPersonView = firstPersonView;
+    }
+
+    public Screen getScreen() {
+        return screen;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
 }

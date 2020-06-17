@@ -447,4 +447,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     public Calculator getCalculator() {
         return calculator;
     }
+
+    public void setVertLook(double vertLook) {
+        VertLook = vertLook;
+    }
 }
