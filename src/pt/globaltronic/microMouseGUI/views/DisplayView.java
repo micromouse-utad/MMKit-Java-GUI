@@ -18,9 +18,8 @@ public class DisplayView extends JFrame {
         Panel2D.setLayout(new GridLayout(1, 1));
         Panel3D.setLayout(new GridLayout(1,1, 0, 0));
 
-        //window needs to be unmovable and undecorated because of the way the computer's mouse is centered during mouseLook in 3d
-        //
-        //this.setUndecorated(true);
+        //drawing on the 3d jpanel bleeds out if it is stretched.
+        this.setResizable(false);
 
         setPreferredSize(new Dimension(16*30*2, 16*30));
         setMinimumSize(new Dimension(16*30*2, 16*30));
