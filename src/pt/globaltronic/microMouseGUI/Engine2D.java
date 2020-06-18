@@ -276,6 +276,12 @@ public class Engine2D implements Runnable{
         replay = true;
     }
 
+    public void reReplay(Queue<String> replayInputs){
+        clear();
+        cleared = false;
+        this.replayInputs = replayInputs;
+    }
+
     void clear(){
         visited.forEach(position -> position.setVisited(false));
         visited.clear();

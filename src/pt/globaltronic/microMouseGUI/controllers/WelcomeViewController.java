@@ -54,6 +54,10 @@ public class WelcomeViewController {
         displayViewController.startView(selectedDevice);
     }
 
+    public void replayDisplayView(String filePath){
+
+    }
+
     public void removedSelectedFromSyncedDevices(BluetoothDevice device){
         syncedDevice.removeDeviceFromSyncedSet(device);
         syncedDevice.writeSyncedToFile();
@@ -86,4 +90,5 @@ public class WelcomeViewController {
     public void setDisplayViewController(DisplayViewController displayViewController) {
         this.displayViewController = displayViewController;
     }
+
 }

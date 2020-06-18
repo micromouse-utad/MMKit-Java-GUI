@@ -74,14 +74,14 @@ public class Engine3D implements Runnable {
     public void run() {
         //basic run loop, update with the tick method and render the graphics.
         while (running) {
+            if (!cleared) {
+                clear();
+                cleared = true;
+            }
             if (!replay) {
                 tick();
                 render();
                 continue;
-            }
-            if (!cleared) {
-                clear();
-                cleared = true;
             }
             replayTick();
             replayRender();
@@ -198,14 +198,7 @@ public class Engine3D implements Runnable {
         screen.SleepAndRefresh();
     }
 
-    private void replayRender() {
-        screen.SleepAndRefresh();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
+
 
     //initiate the walls and show the outskirts of the grid
     private void createWalls() {
@@ -276,6 +269,12 @@ public class Engine3D implements Runnable {
 
     public void replay(Queue<String> replayInputs) {
         replay = true;
+        this.replayInputs = replayInputs;
+    }
+
+    public void reReplay(Queue<String> replayInputs){
+        clear();
+        cleared = false;
         this.replayInputs = replayInputs;
     }
 
@@ -389,6 +388,15 @@ public class Engine3D implements Runnable {
                     hWalls[col][row + 1].setVisible(rWall);
                     break;
             }
+        }
+    }
+
+    private void replayRender() {
+        screen.SleepAndRefresh();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 

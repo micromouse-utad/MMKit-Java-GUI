@@ -64,7 +64,7 @@ public class DisplayView extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        label3D.setText("3D View of " + currentDevice.getName() + " on the course.");
+        label3D.setText("3D View of " + (currentDevice.getName() != ""?currentDevice.getName(): "replay"));
         label2D.setText("Top down 2D View of " + currentDevice.getName());
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);

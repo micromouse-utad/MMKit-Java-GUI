@@ -26,6 +26,7 @@ public class DisplayViewController {
     private Engine3D engine3D;
     private boolean disconnected = false;
     private Queue<String> History;
+    private boolean replayed = false;
 
     public DisplayViewController(){
     }
@@ -34,6 +35,12 @@ public class DisplayViewController {
         SwingUtilities.invokeLater(() -> {
             displayView = new DisplayView(mouseInputs, selectedDevice, this);
             displayView.setVisible(true);
+        });
+    }
+
+    public void startReplayView(String filePath){
+        SwingUtilities.invokeLater(() -> {
+
         });
     }
 
@@ -90,11 +97,20 @@ public class DisplayViewController {
     }
 
     public void replay() {
-        Queue<String> mouseInputHistory3D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-        Queue<String> mouseInputHistory2D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-        History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-        engine3D.replay(mouseInputHistory3D);
-        engine2D.replay(mouseInputHistory2D);
+        if(!replayed) {
+            Queue<String> mouseInputHistory3D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+            Queue<String> mouseInputHistory2D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+            History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+            engine3D.replay(mouseInputHistory3D);
+            engine2D.replay(mouseInputHistory2D);
+            replayed = true;
+        }
+        if(replayed){
+            Queue<String> mouseInputHistory3D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+            Queue<String> mouseInputHistory2D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+            engine3D.reReplay(mouseInputHistory3D);
+            engine2D.reReplay(mouseInputHistory2D);
+        }
     }
 
     public boolean isDisconnected(){
