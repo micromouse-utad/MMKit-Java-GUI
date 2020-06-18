@@ -69,7 +69,7 @@ public class Engine2D implements Runnable{
                 continue;
             }
             replayTick();
-            replayRender();
+            render();
         }
     }
 
@@ -271,15 +271,12 @@ public class Engine2D implements Runnable{
         }
     }
 
-    public void replay(Queue<String> Inputs){
-        replayInputs = Inputs;
+    public void replay(){
         replay = true;
     }
 
-    public void reReplay(Queue<String> replayInputs){
-        clear();
+    public void reReplay(){
         cleared = false;
-        this.replayInputs = replayInputs;
     }
 
     void clear(){
@@ -321,8 +318,7 @@ public class Engine2D implements Runnable{
             cleared = true;
         }
 
-        String inputs = getReplayInput();
-        System.out.println(inputs);
+        String inputs = mouseInputs.getMouseInput();
         if (inputs != null && (inputs.length() > 9)) {
             int col = MouseInputsTranslator.parseCol(inputs);
             int row = MouseInputsTranslator.parseRow(inputs);

@@ -84,7 +84,7 @@ public class Engine3D implements Runnable {
                 continue;
             }
             replayTick();
-            replayRender();
+            render();
         }
 
     }
@@ -267,15 +267,12 @@ public class Engine3D implements Runnable {
 
     }
 
-    public void replay(Queue<String> replayInputs) {
+    public void replay() {
         replay = true;
-        this.replayInputs = replayInputs;
     }
 
-    public void reReplay(Queue<String> replayInputs){
-        clear();
+    public void reReplay(){
         cleared = false;
-        this.replayInputs = replayInputs;
     }
 
     void clear() {
@@ -326,7 +323,7 @@ public class Engine3D implements Runnable {
     }
 
     void replayTick() {
-        String inputs = getReplayInput();
+        String inputs = mouseInputs.getMouseInput3D();
 
         //checking that we actual got a result and that it matches the length we need before we try to parse and extract data
         if (inputs != null && (inputs.length() > 9)) {
@@ -388,15 +385,6 @@ public class Engine3D implements Runnable {
                     hWalls[col][row + 1].setVisible(rWall);
                     break;
             }
-        }
-    }
-
-    private void replayRender() {
-        screen.SleepAndRefresh();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-            System.out.println(ex.getMessage());
         }
     }
 

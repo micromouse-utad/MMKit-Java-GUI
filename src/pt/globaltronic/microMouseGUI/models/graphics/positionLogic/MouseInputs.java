@@ -40,6 +40,11 @@ public class MouseInputs {
         notifyAll();
     }
 
+    public void replayPut(String replayInput){
+        mouseInputQueue3D.offer(replayInput);
+        mouseInputQueue.offer(replayInput);
+    }
+
     public Queue<String> getMouseInputQueue() {
         return mouseInputQueue;
     }

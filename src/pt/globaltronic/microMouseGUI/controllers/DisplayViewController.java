@@ -5,6 +5,7 @@ import pt.globaltronic.microMouseGUI.Engine3D;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputsReceiver;
+import pt.globaltronic.microMouseGUI.models.graphics.services.ReplayInputFeeder;
 import pt.globaltronic.microMouseGUI.views.DisplayView;
 
 import javax.microedition.io.StreamConnection;
@@ -27,6 +28,7 @@ public class DisplayViewController {
     private boolean disconnected = false;
     private Queue<String> History;
     private boolean replayed = false;
+    private ReplayInputFeeder replayInputFeeder;
 
     public DisplayViewController(){
     }
@@ -61,6 +63,9 @@ public class DisplayViewController {
                 receiver.stop();
                 connection.close();
                 disconnected = true;
+                if(replayInputFeeder != null){
+                    replayInputFeeder.stop();
+                }
 
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
@@ -98,18 +103,18 @@ public class DisplayViewController {
 
     public void replay() {
         if(!replayed) {
-            Queue<String> mouseInputHistory3D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-            Queue<String> mouseInputHistory2D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
             History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-            engine3D.replay(mouseInputHistory3D);
-            engine2D.replay(mouseInputHistory2D);
+            replayInputFeeder = new ReplayInputFeeder(mouseInputs, History);
+            engine3D.replay();
+            engine2D.replay();
             replayed = true;
+            replayInputFeeder.start();
         }
         if(replayed){
-            Queue<String> mouseInputHistory3D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-            Queue<String> mouseInputHistory2D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-            engine3D.reReplay(mouseInputHistory3D);
-            engine2D.reReplay(mouseInputHistory2D);
+            History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+            engine2D.reReplay();
+            engine3D.reReplay();
+            replayInputFeeder.reStart(History);
         }
     }
 
@@ -121,7 +126,7 @@ public class DisplayViewController {
         History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
         String pathWithoutTxt = "resources/backup";
         boolean created = false;
-        int i = 0;
+        int i = 1;
         File backupFile = null;
         while (!created) {
             backupFile = new File(pathWithoutTxt + i++ + ".txt");
