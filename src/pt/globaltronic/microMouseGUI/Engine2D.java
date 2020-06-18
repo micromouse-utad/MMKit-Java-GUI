@@ -227,16 +227,6 @@ public class Engine2D implements Runnable{
         g.dispose();
     }
 
-    private void replayRender(){
-        render();
-        try{
-            Thread.sleep(3000);
-        }
-        catch(InterruptedException ex){
-            System.out.println(ex.getMessage());
-        }
-    }
-
     private void createWalls(){
         hWalls = new HorizontalWalls[cols][rows+1];
         hWallImg = ImageLoader.loadImage("/wallhorizontal.png");
@@ -369,13 +359,6 @@ public class Engine2D implements Runnable{
                     break;
             }
         }
-    }
-
-    String getReplayInput(){
-        if (replayInputs.isEmpty()){
-            return "";
-        }
-        return replayInputs.poll();
     }
 
 }

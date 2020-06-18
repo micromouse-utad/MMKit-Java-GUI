@@ -8,7 +8,9 @@ import javax.microedition.io.StreamConnection;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.LinkedHashSet;
+import java.util.Vector;
 
 public class WelcomeView extends JFrame {
     private JPanel mainPanel;
@@ -25,10 +27,15 @@ public class WelcomeView extends JFrame {
     private JButton deletedSelected;
     private JList syncedDevicesList;
     private JButton loadDevicesButton;
+    private JList replayList;
+    private JButton playReplayButton;
+    private JButton refresh;
+    private JButton deleteReplayButton;
 
     private WelcomeViewController welcomeViewController;
     private LinkedHashSet<BluetoothDevice> bluetoothDevices;
     private StreamConnection connection;
+
 
     public WelcomeView(WelcomeViewController welcomeViewController){
         this.welcomeViewController = welcomeViewController;
@@ -121,10 +128,46 @@ public class WelcomeView extends JFrame {
                 populateSyncedDeviceList(welcomeViewController.getSyncedDeviceSet());
             }
         });
+        playReplayButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = replayList.getSelectedIndex();
+                LinkedHashSet<File> replaySet = welcomeViewController.getReplaysSet();
+                File[] fileArray = new File[replaySet.size()];
+                replaySet.toArray(fileArray);
+                File selectedReplay = fileArray[selectedIndex];
+
+                welcomeViewController.startReplay(selectedReplay);
+            }
+        });
+        deleteReplayButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = replayList.getSelectedIndex();
+                LinkedHashSet<File> replaySet = welcomeViewController.getReplaysSet();
+                File[] fileArray = new File[replaySet.size()];
+
+                replaySet.toArray(fileArray);
+                File selectedReplay = fileArray[selectedIndex];
+
+                welcomeViewController.removeReplayFile(selectedReplay);
+                populateReplayList(welcomeViewController.getReplaysStringVector());
+            }
+        });
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                populateReplayList(welcomeViewController.getReplaysStringVector());
+            }
+        });
     }
 
     public void populateDiscoveredDeviceList(LinkedHashSet<BluetoothDevice> discoveredDevices){
         discoveredDeviceList.setListData(FriendlyNameGetter.getFriendlyName(discoveredDevices));
+    }
+
+    public void populateReplayList(Vector<String> replayNamesVector){
+        replayList.setListData(replayNamesVector);
     }
 
     public void populateSyncedDeviceList(LinkedHashSet<BluetoothDevice> syncedDevices){

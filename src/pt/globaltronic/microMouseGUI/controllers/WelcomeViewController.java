@@ -7,11 +7,15 @@ import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothConnection;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDiscovery;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputsReceiver;
+import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Replays;
 import pt.globaltronic.microMouseGUI.views.DisplayView;
 
 import javax.microedition.io.StreamConnection;
 import javax.swing.*;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.LinkedHashSet;
+import java.util.Vector;
 
 public class WelcomeViewController {
 
@@ -21,6 +25,7 @@ public class WelcomeViewController {
     SyncedDevice syncedDevice;
     MouseInputs mouseInputs;
     DisplayViewController displayViewController;
+    Replays replays;
 
     public WelcomeViewController(){}
 
@@ -32,6 +37,32 @@ public class WelcomeViewController {
     public LinkedHashSet<BluetoothDevice> getSyncedDeviceSet(){
         syncedDevice.syncedDevicesFromFile();
         return syncedDevice.getSyncedDeviceSet();
+    }
+
+    public LinkedHashSet<File> getReplaysSet(){
+        replays.lookForReplays();
+        return replays.getReplaysSet();
+    }
+
+    public Vector<File> getReplaysVector(){
+        replays.lookForReplays();
+        return replays.getReplaysSetVector();
+
+    }
+
+    public Vector<String> getReplaysStringVector(){
+        replays.lookForReplays();
+        Vector<String> replayNames = new Vector<String>();
+        LinkedHashSet<File> replaysSet = replays.getReplaysSet();
+
+        replaysSet.forEach(file -> replayNames.addElement(file.getName()));
+        System.out.println(replayNames.size());
+
+        return replayNames;
+    }
+
+    public void removeReplayFile(File replay){
+        replays.removeFile(replay);
     }
 
     public StreamConnection connectToDevice(BluetoothDevice remoteDevice){
@@ -54,9 +85,11 @@ public class WelcomeViewController {
         displayViewController.startView(selectedDevice);
     }
 
-    public void replayDisplayView(String filePath){
+    public void startReplay(File selectedReplay){
 
     }
+
+
 
     public void removedSelectedFromSyncedDevices(BluetoothDevice device){
         syncedDevice.removeDeviceFromSyncedSet(device);
@@ -91,4 +124,7 @@ public class WelcomeViewController {
         this.displayViewController = displayViewController;
     }
 
+    public void setReplays(Replays replays) {
+        this.replays = replays;
+    }
 }

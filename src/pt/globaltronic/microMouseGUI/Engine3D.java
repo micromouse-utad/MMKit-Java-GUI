@@ -259,7 +259,7 @@ public class Engine3D implements Runnable {
         Position[][] arr = grid.getPositionsArray();
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                arr[x][y].setPolygon2D(new Polygon2D(screen, new double[]{x * size, (x + 1) * size, (x + 1) * size, x * size}, new double[]{(correction + 1 - y) * size, (correction + 1 - y) * size, (correction + 1 - (y + 1)) * size, (correction + 1 - (y + 1)) * size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
+                arr[x][y].setPolygon2D(new Polygon2D(screen, new double[]{x * size, (x + 1) * size, (x + 1) * size, x * size}, new double[]{(correction + 1 - y) * size, (correction + 1 - y) * size, (correction + 1 - (y + 1)) * size, (correction + 1 - (y + 1)) * size}, new double[]{0, 0, 0, 0}, Color.lightGray, false));
                 arr[x][y].setVisited(false);
                 screen.getPolygon2DS().add(arr[x][y].getPolygon2D());
             }
