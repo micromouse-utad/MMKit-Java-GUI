@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class Engine2D implements Runnable{
 
@@ -29,6 +30,9 @@ public class Engine2D implements Runnable{
     private int correction;
     private Thread thread;
     private boolean running;
+    private boolean cleared;
+    private boolean replay = false;
+    private Queue<String> replayInputs;
 
     private Grid grid;
     private LinkedList<Position> visited;
@@ -58,9 +62,14 @@ public class Engine2D implements Runnable{
     @Override
     public void run() {
         init();
-        while(running){
-            tick();
-            render();
+        while (running) {
+            if (!replay) {
+                tick();
+                render();
+                continue;
+            }
+            replayTick();
+            replayRender();
         }
     }
 
@@ -176,7 +185,11 @@ public class Engine2D implements Runnable{
                     g.setColor(Color.BLACK);
                     //making last row of wall fit in the grid
                     if(j == 0){
+                        g.setColor(Color.RED);
                         g.fillRect(xPixel, yPixel-5, cellSize, 5);
+                    }
+                    if(j == rows){
+                        g.setColor(Color.RED);
                     }
                     g.fillRect(xPixel, yPixel, cellSize, 5);
                 }
@@ -191,10 +204,15 @@ public class Engine2D implements Runnable{
                     int yPixel = grid.colToX(correction - vWalls[i][j].getPosition().getRow());
 
                     //g.drawImage(image2, xPixel, yPixel, null);
-                    g.setColor(Color.BLACK);
                     //adjusting the last line of vertical walls to fit in the grid.
+                    g.setColor(Color.BLACK);
                     if (i == cols){
+                        g.setColor(Color.RED);
                         g.fillRect(xPixel-5, yPixel, 5, cellSize);
+                        continue;
+                    }
+                    if (i == 0){
+                        g.setColor(Color.RED);
                     }
                     g.fillRect(xPixel, yPixel, 5, cellSize);
                 }
@@ -207,6 +225,16 @@ public class Engine2D implements Runnable{
 
         bs.show();
         g.dispose();
+    }
+
+    private void replayRender(){
+        render();
+        try{
+            Thread.sleep(3000);
+        }
+        catch(InterruptedException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void createWalls(){
@@ -241,6 +269,111 @@ public class Engine2D implements Runnable{
                 }
             }
         }
+    }
+
+    public void replay(Queue<String> Inputs){
+        replayInputs = Inputs;
+        replay = true;
+    }
+
+    void clear(){
+        visited.forEach(position -> position.setVisited(false));
+        visited.clear();
+        for (int i = 0; i < cols; i++){
+            for (int j = 0; j < rows+1; j++){
+                //leaving side walls up.
+                if(j == 0){
+                    hWalls[i][j].setVisible(true);
+                    continue;
+                }
+                if(j == rows){
+                    hWalls[i][j].setVisible(true);
+                    continue;
+                }
+                hWalls[i][j].setVisible(false);
+            }
+        }
+        for (int i = 0; i < cols+1; i++){
+            for (int j = 0; j < rows; j++){
+                //leaving side walls up
+                if(i == 0){
+                    vWalls[i][j].setVisible(true);
+                    continue;
+                }
+                if(i == cols){
+                    vWalls[i][j].setVisible(true);
+                    continue;
+                }
+                vWalls[i][j].setVisible(false);
+            }
+        }
+    }
+
+    void replayTick(){
+        if (!cleared) {
+            clear();
+            cleared = true;
+        }
+
+        String inputs = getReplayInput();
+        System.out.println(inputs);
+        if (inputs != null && (inputs.length() > 9)) {
+            int col = MouseInputsTranslator.parseCol(inputs);
+            int row = MouseInputsTranslator.parseRow(inputs);
+            Position pos = grid.getPosition(col, row);
+            pos.setVisited(true);
+            visited.add(pos);
+            mouse.setPosition(pos);
+
+            String direction = MouseInputsTranslator.parseDirection(inputs);
+            Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
+            Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
+            Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
+
+
+            switch (direction) {
+                case "N":
+                    //left wall when facing up is a vertical wall with its position same as mouse position
+                    vWalls[col][row].setVisible(lWall);
+                    //front wall when facing up is a horizontal wall at col and +1 row than current position
+                    hWalls[col][row + 1].setVisible(fWall);
+                    //right wall when facing up is a vertical wall at +1 col and same row as position
+                    vWalls[col+1][row].setVisible(rWall);
+                    break;
+                case "E":
+                    //facing east left wall will be horizontal wall at same col +1 row from position
+                    hWalls[col][row + 1].setVisible(lWall);
+                    //facing east front wall will be a vertical wall at +1 col and row as position
+                    vWalls[col+1][row].setVisible(fWall);
+                    //facing east right wall will be a horizontal wall at position same  as mouse position
+                    hWalls[col][row].setVisible(rWall);
+                    break;
+                case "S":
+                    // similar to N facing but reverted left wall will be the right wall
+                    vWalls[col+1][row].setVisible(lWall);
+                    //front wall will be a horizontal wall at same postion as mouse position
+                    hWalls[col][row].setVisible(fWall);
+                    //right wall will be left wall of N case
+                    vWalls[col][row].setVisible(rWall);
+                    break;
+                case "W":
+                    //reverse of case east
+                    //left wall will be a horizontal wall when facing west, with same position as mouse position
+                    hWalls[col][row].setVisible(lWall);
+                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
+                    vWalls[col][row].setVisible(fWall);
+                    //facing west, right wall will be a horizontal wall at col and +1 row as position
+                    hWalls[col][row + 1].setVisible(rWall);
+                    break;
+            }
+        }
+    }
+
+    String getReplayInput(){
+        if (replayInputs.isEmpty()){
+            return "";
+        }
+        return replayInputs.poll();
     }
 
 }

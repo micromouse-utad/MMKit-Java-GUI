@@ -15,8 +15,9 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.LinkedList;
+import java.util.Queue;
 
-public class Engine3D implements Runnable{
+public class Engine3D implements Runnable {
 
     private JPanel panel;
     private Screen screen;
@@ -30,7 +31,10 @@ public class Engine3D implements Runnable{
     private double size = 10;
     private Thread thread;
     private boolean running;
+    private boolean replay = false;
+    private boolean cleared = false;
     private boolean firstPersonView = true;
+    private Queue<String> replayInputs;
 
     private Grid grid;
     private LinkedList<Position> visited;
@@ -39,7 +43,7 @@ public class Engine3D implements Runnable{
     private HorizontalWalls[][] hWalls;
     private VerticalWalls[][] vWalls;
 
-    public Engine3D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize, double size){
+    public Engine3D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize, double size) {
         this.size = size;
         this.panel = panel;
         this.title = title;
@@ -49,7 +53,7 @@ public class Engine3D implements Runnable{
         this.cellSize = cellSize;
         this.width = cols * cellSize;
         this.height = rows * cellSize;
-        this.correction = rows -1;
+        this.correction = rows - 1;
         screen = new Screen(width, height, correction);
 
         //add to implement because lost focus would not register.
@@ -69,15 +73,25 @@ public class Engine3D implements Runnable{
     @Override
     public void run() {
         //basic run loop, update with the tick method and render the graphics.
-        while(running){
-            tick();
-            render();
+        while (running) {
+            if (!replay) {
+                tick();
+                render();
+                continue;
+            }
+            if (!cleared) {
+                clear();
+                cleared = true;
+            }
+            replayTick();
+            replayRender();
         }
+
     }
 
-    public synchronized void start(){
+    public synchronized void start() {
         //preventing thread to start if it is already running
-        if(running){
+        if (running) {
             return;
         }
         //create the thread and set running to true
@@ -86,31 +100,33 @@ public class Engine3D implements Runnable{
         thread.start();
     }
 
-    public synchronized void stop(){
+    public synchronized void stop() {
 
-        if (!running){return;}
-        try{
+        if (!running) {
+            return;
+        }
+        try {
             running = false;
             thread.join();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    private void init(){
+    private void init() {
 
         panel.add(screen);
-        panel.setPreferredSize(new Dimension(16*30, 16*30));
-        panel.setMinimumSize(new Dimension(16*30, 16*30));
-        panel.setMaximumSize(new Dimension(16*30, 16*30));
+        panel.setPreferredSize(new Dimension(16 * 30, 16 * 30));
+        panel.setMinimumSize(new Dimension(16 * 30, 16 * 30));
+        panel.setMaximumSize(new Dimension(16 * 30, 16 * 30));
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
-        mouse = new Mouse(grid.getPosition(0,correction), new Pyramid(screen,2.5, correction * size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, size);
+        mouse = new Mouse(grid.getPosition(0, correction), new Pyramid(screen, 2.5, correction * size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, size);
         createWalls();
         createPositionsGraphics();
     }
 
-    private void tick(){
+    private void tick() {
         //get the mouse inputs from the 3d queue
         String inputs = mouseInputs.getMouseInput3D();
 
@@ -131,7 +147,7 @@ public class Engine3D implements Runnable{
             //parsing the direction for "first person" camera view, and wall positioning
             String direction = MouseInputsTranslator.parseDirection(inputs);
 
-            if(firstPersonView) {
+            if (firstPersonView) {
                 screen.setCameraPositionForMouseView(direction, pos, size);
             }
 
@@ -177,68 +193,203 @@ public class Engine3D implements Runnable{
         }
     }
 
-    private void render(){
+    private void render() {
         //invoke the screen paint behavior
         screen.SleepAndRefresh();
     }
 
-    //initiate the walls and show the outskirts of the grid
-    private void createWalls(){
-        //for the horizontal walls we need +1 row because to have 16squares you need 17 lines to close them.
-        hWalls = new HorizontalWalls[cols][rows+1];
+    private void replayRender() {
+        screen.SleepAndRefresh();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
-        for (int i = 0; i < cols; i++){
-            for (int j = 0; j < rows+1; j++){
-                hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
+    //initiate the walls and show the outskirts of the grid
+    private void createWalls() {
+        //for the horizontal walls we need +1 row because to have 16squares you need 17 lines to close them.
+        hWalls = new HorizontalWalls[cols][rows + 1];
+
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows + 1; j++) {
+                hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i, j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(screen,x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.BLACK));
+                hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.BLACK));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
-                if(j == 0){
+                if (j == 0) {
+                    hWalls[i][j].getCube().removeCube();
+                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.RED));
                     hWalls[i][j].setVisible(true);
                 }
-                if(j == rows){
+                if (j == rows) {
+                    hWalls[i][j].getCube().removeCube();
+                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.RED));
                     hWalls[i][j].setVisible(true);
                 }
             }
         }
 
         //likewise for the Vertical walls we need +1 col.
-        vWalls = new VerticalWalls[cols+1][rows];
+        vWalls = new VerticalWalls[cols + 1][rows];
 
-        for (int i = 0; i < cols+1; i++){
-            for (int j = 0; j < rows; j++){
-                vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
+        for (int i = 0; i < cols + 1; i++) {
+            for (int j = 0; j < rows; j++) {
+                vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i, j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(screen,x * size, (correction - y) * size, 0, 1, size, 1.5, Color.BLACK));
+                vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.BLACK));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
-                if(i == 0){
+                if (i == 0) {
+                    vWalls[i][j].getCube().removeCube();
+                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.RED));
                     vWalls[i][j].setVisible(true);
                 }
-                if(i == cols){
+                if (i == cols) {
+                    vWalls[i][j].getCube().removeCube();
+                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.RED));
                     vWalls[i][j].setVisible(true);
                 }
             }
         }
     }
 
-    public void createPositionsGraphics(){
+    public void createPositionsGraphics() {
         //creating the 2d polygons for the grid, and adding them to the screen's polygon arraylist to be drawn
         //we set the default position to be false, so that they will not be drawn on the screen right away
         Position[][] arr = grid.getPositionsArray();
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                arr[x][y].setPolygon2D(new Polygon2D(screen, new double[]{x * size, (x +1)* size, (x+1) * size, x* size}, new double[]{(correction + 1 - y) * size, (correction +1 - y)* size, (correction +1 - (y+1)) * size, (correction +1 -(y+1))* size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
+                arr[x][y].setPolygon2D(new Polygon2D(screen, new double[]{x * size, (x + 1) * size, (x + 1) * size, x * size}, new double[]{(correction + 1 - y) * size, (correction + 1 - y) * size, (correction + 1 - (y + 1)) * size, (correction + 1 - (y + 1)) * size}, new double[]{0, 0, 0, 0}, Color.GRAY, false));
                 arr[x][y].setVisited(false);
                 screen.getPolygon2DS().add(arr[x][y].getPolygon2D());
             }
         }
 
+    }
+
+    public void replay(Queue<String> replayInputs) {
+        replay = true;
+        this.replayInputs = replayInputs;
+    }
+
+    void clear() {
+        for (int x = 0; x < cols; x++) {
+            for (int y = 0; y < rows; y++) {
+                Position pos = grid.getPosition(x, y);
+                pos.setVisited(false);
+            }
+        }
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows + 1; j++) {
+                int x = hWalls[i][j].getPosition().getCol();
+                int y = hWalls[i][j].getPosition().getRow();
+                hWalls[i][j].setVisible(false);
+                //always showing side walls.
+
+                if (j == 0) {
+                    hWalls[i][j].setVisible(true);
+                }
+                if (j == rows) {
+                    hWalls[i][j].setVisible(true);
+                }
+            }
+        }
+
+        for (int i = 0; i < cols + 1; i++) {
+            for (int j = 0; j < rows; j++) {
+                int x = vWalls[i][j].getPosition().getCol();
+                int y = vWalls[i][j].getPosition().getRow();
+                vWalls[i][j].setVisible(false);
+
+                //always showing side walls.
+                if (i == 0) {
+                    vWalls[i][j].setVisible(true);
+                }
+                if (i == cols) {
+                    vWalls[i][j].setVisible(true);
+                }
+            }
+        }
+    }
+
+    String getReplayInput() {
+        if (replayInputs.isEmpty()) {
+            return "";
+        }
+        return replayInputs.poll();
+    }
+
+    void replayTick() {
+        String inputs = getReplayInput();
+
+        //checking that we actual got a result and that it matches the length we need before we try to parse and extract data
+        if (inputs != null && (inputs.length() > 9)) {
+            int col = MouseInputsTranslator.parseCol(inputs);
+            int row = MouseInputsTranslator.parseRow(inputs);
+
+            //getting the mouse current position
+            Position pos = grid.getPosition(col, row);
+            pos.setVisited(true);
+            visited.add(pos);
+            //updating mouse position and its graphics
+            mouse.setPosition(pos);
+            mouse.getMousePyr().setRotAdd();
+            mouse.getMousePyr().updatePoly();
+
+            //parsing the direction for "first person" camera view, and wall positioning
+            String direction = MouseInputsTranslator.parseDirection(inputs);
+
+            if (firstPersonView) {
+                screen.setCameraPositionForMouseView(direction, pos, size);
+            }
+
+            Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
+            Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
+            Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
+
+            switch (direction) {
+                case "N":
+                    //left wall when facing up is a vertical wall with its position same as mouse position
+                    vWalls[col][row].setVisible(lWall);
+                    //front wall when facing up is a horizontal wall at col and +1 row than current position
+                    hWalls[col][row + 1].setVisible(fWall);
+                    //right wall when facing up is a vertical wall at +1 col and same row as position
+                    vWalls[col + 1][row].setVisible(rWall);
+                    break;
+                case "E":
+                    //facing east left wall will be horizontal wall at same col +1 row from position
+                    hWalls[col][row + 1].setVisible(lWall);
+                    //facing east front wall will be a vertical wall at +1 col and row as position
+                    vWalls[col + 1][row].setVisible(fWall);
+                    //facing east right wall will be a horizontal wall at position same  as mouse position
+                    hWalls[col][row].setVisible(rWall);
+                    break;
+                case "S":
+                    // similar to N facing but reverted left wall will be the right wall
+                    vWalls[col + 1][row].setVisible(lWall);
+                    //front wall will be a horizontal wall at same postion as mouse position
+                    hWalls[col][row].setVisible(fWall);
+                    //right wall will be left wall of N case
+                    vWalls[col][row].setVisible(rWall);
+                    break;
+                case "W":
+                    //reverse of case east
+                    //left wall will be a horizontal wall when facing west, with same position as mouse position
+                    hWalls[col][row].setVisible(lWall);
+                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
+                    vWalls[col][row].setVisible(fWall);
+                    //facing west, right wall will be a horizontal wall at col and +1 row as position
+                    hWalls[col][row + 1].setVisible(rWall);
+                    break;
+            }
+        }
     }
 
     public void setFirstPersonView(boolean firstPersonView) {

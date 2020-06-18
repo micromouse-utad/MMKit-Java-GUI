@@ -142,7 +142,7 @@ public class Cube {
 
     }
 
-    void removeCube()
+    public void removeCube()
     {
         for(int i = 0; i < 6; i ++) {
             screen.getPolygon2DS().remove(Polys[i]);
@@ -155,5 +155,9 @@ public class Cube {
         for (int i = 0; i < Polys.length; i++){
             Polys[i].setVisible(visible);
         }
+    }
+
+    public void setColor(Color c) {
+        this.c = c;
     }
 }

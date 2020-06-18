@@ -9,7 +9,12 @@ import pt.globaltronic.microMouseGUI.views.DisplayView;
 
 import javax.microedition.io.StreamConnection;
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class DisplayViewController {
 
@@ -19,6 +24,8 @@ public class DisplayViewController {
     private MouseInputs mouseInputs;
     private Engine2D engine2D;
     private Engine3D engine3D;
+    private boolean disconnected = false;
+    private Queue<String> History;
 
     public DisplayViewController(){
     }
@@ -46,6 +53,7 @@ public class DisplayViewController {
             try {
                 receiver.stop();
                 connection.close();
+                disconnected = true;
 
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
@@ -79,5 +87,49 @@ public class DisplayViewController {
         engine3D.getScreen().setVertLook(-0.999);
         engine3D.getScreen().setHorLook(3*Math.PI/2);
         engine3D.getScreen().setViewFrom(new double[]{engine3D.getCols() * engine3D.getSize() / 2, ((engine3D.getRows() * engine3D.getSize()) + engine3D.getScreen().getCorrection()) / 2, 350});
+    }
+
+    public void replay() {
+        Queue<String> mouseInputHistory3D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+        Queue<String> mouseInputHistory2D = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+        History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+        engine3D.replay(mouseInputHistory3D);
+        engine2D.replay(mouseInputHistory2D);
+    }
+
+    public boolean isDisconnected(){
+        return disconnected;
+    }
+
+    public int backupRunToFile(){
+        History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
+        String pathWithoutTxt = "resources/backup";
+        boolean created = false;
+        int i = 0;
+        File backupFile = null;
+        while (!created) {
+            backupFile = new File(pathWithoutTxt + i++ + ".txt");
+            try{
+                if (tryToCreateFile(backupFile)) {
+                    created = true;
+                }
+            } catch(IOException ex){
+                System.out.println(ex.getMessage());
+            }
+        }
+        try {
+            PrintWriter pWriter = new PrintWriter(backupFile.getAbsoluteFile());
+            History.forEach((input) -> {
+                pWriter.println(input);
+                pWriter.flush();
+            });
+        } catch (IOException ex){
+            System.out.println(ex.getMessage());
+        }
+        return i-1;
+    }
+
+    public boolean tryToCreateFile(File file) throws IOException{
+        return file.createNewFile();
     }
 }

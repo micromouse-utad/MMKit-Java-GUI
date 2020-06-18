@@ -105,21 +105,34 @@ public class DisplayView extends JFrame {
         replay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if(!controller.isDisconnected()) {
+                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating replay sequence");
+                }
+                if(controller.isDisconnected()) {
+                    controller.replay();
+                }
             }
         });
 
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if(!controller.isDisconnected()) {
+                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating save sequence");
+                }
+                int x;
+                if(controller.isDisconnected()) {
+                    if ((x = controller.backupRunToFile()) > -1) {
+                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved to the backup" +x+".txt file int he resources folder of this app, please make a copy");
+                    }
+                }
             }
         });
 
         help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                //controller.showHelp();
             }
         });
     }

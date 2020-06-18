@@ -5,18 +5,18 @@ import java.util.Queue;
 
 public class MouseInputs {
 
-    private LinkedList<String> mouseInputList;
+    private Queue<String> mouseInputHistory;
     private Queue<String> mouseInputQueue3D;
     private Queue<String> mouseInputQueue;
 
     public MouseInputs(){
-        mouseInputList = new LinkedList<String>();
+        mouseInputHistory = new LinkedList<String>();
         mouseInputQueue = new LinkedList<String>();
         mouseInputQueue3D = new LinkedList<String>();
     }
 
-    public LinkedList<String> getMouseInputList() {
-        return mouseInputList;
+    public Queue<String> getMouseInputHistory() {
+        return mouseInputHistory;
     }
 
     public String getMouseInput3D(){
@@ -36,7 +36,7 @@ public class MouseInputs {
     public synchronized void putMouseInput(String mouseInput){
         mouseInputQueue.offer(mouseInput);
         mouseInputQueue3D.offer(mouseInput);
-        mouseInputList.offer(mouseInput);
+        mouseInputHistory.offer(mouseInput);
         notifyAll();
     }
 
