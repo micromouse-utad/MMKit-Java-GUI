@@ -100,8 +100,8 @@ public class Cube {
         // the recently added will be at the end. The older instances will be deleted
         for(int i = 0; i < 6; i++)
         {
-            screen.getPolygon2DS().add(Polys[i]);
             screen.getPolygon2DS().remove(Polys[i]);
+            screen.getPolygon2DS().add(Polys[i]);
         }
 
         double radius = Math.sqrt(width*width + length*length);

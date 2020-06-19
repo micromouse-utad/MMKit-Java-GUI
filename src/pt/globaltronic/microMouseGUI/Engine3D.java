@@ -13,8 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Engine3D implements Runnable {
 
@@ -344,8 +342,8 @@ public class Engine3D implements Runnable {
         double yAngleIncrement;
         double xDif = xFinal - xInitial;
         double yDif = yFinal - yInitial;
-        double xIncrement = xDif / 30;
-        double yIncrement = yDif / 30;
+        double xIncrement = xDif / 90;
+        double yIncrement = yDif / 90;
         Pyramid mousePyr = mouse.getMousePyr();
         double x = xInitial;
         double y = yInitial;
@@ -353,7 +351,7 @@ public class Engine3D implements Runnable {
         double incrementedYAngle = oldYAngle;
 
         if (mousePyr != null) {
-
+            /*
             yAngleIncrement = calculateYRotationAngle(direction) / 60;
             for (int i = 0; i < 60; i++) {
                 incrementedYAngle += yAngleIncrement;
@@ -362,7 +360,7 @@ public class Engine3D implements Runnable {
                 }
                 mousePyr.setRotation(yAngleIncrement);
                 mousePyr.updatePoly();
-                render();
+                repaint();
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException ex) {
@@ -371,7 +369,9 @@ public class Engine3D implements Runnable {
             }
 
 
-            for (int i = 0; i < 30; i++) {
+             */
+
+            for (int i = 0; i < 90; i++) {
                 x += xIncrement;
                 y += yIncrement;
                 mousePyr.setX(x + 0.25 + size / 4);
@@ -389,7 +389,7 @@ public class Engine3D implements Runnable {
                 if (firstPersonView) {
                     screen.setCameraPositionForAnimatedMouseView(direction, x, y, size);
                 }
-                render();
+                repaint();
             }
         }
     }
@@ -415,5 +415,9 @@ public class Engine3D implements Runnable {
 
     public void setOldYAngle(double oldYAngle) {
         this.oldYAngle = oldYAngle;
+    }
+
+    public void repaint(){
+        screen.repaint();
     }
 }
