@@ -1,5 +1,6 @@
 package pt.globaltronic.microMouseGUI;
 import pt.globaltronic.microMouseGUI.controllers.DisplayViewController;
+import pt.globaltronic.microMouseGUI.controllers.ReplayViewController;
 import pt.globaltronic.microMouseGUI.controllers.WelcomeViewController;
 import pt.globaltronic.microMouseGUI.models.bluetooth.*;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
@@ -15,7 +16,8 @@ public class Main {
         Wiring wiring = new Wiring();
         WelcomeViewController welcomeViewController = new WelcomeViewController();
         DisplayViewController displayViewController = new DisplayViewController();
-        wiring.bootstrap(welcomeViewController, displayViewController);
+        ReplayViewController replayViewController = new ReplayViewController();
+        wiring.bootstrap(welcomeViewController, displayViewController, replayViewController);
 
 
 

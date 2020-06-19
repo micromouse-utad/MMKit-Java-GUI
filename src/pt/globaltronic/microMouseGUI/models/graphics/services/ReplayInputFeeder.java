@@ -30,6 +30,11 @@ public class ReplayInputFeeder implements Runnable {
                     System.out.println(ex.getMessage());
                 }
             }
+            try {
+                Thread.sleep(50);
+            }catch (InterruptedException ex){
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -41,9 +46,11 @@ public class ReplayInputFeeder implements Runnable {
         thread.start();
     }
 
-    public void reStart(Queue<String> history){
-        replayHistory = history;
+    public void reStart(Queue<String> replay){
+        replayHistory = replay;
     }
 
-    public synchronized void stop(){}
+    public synchronized void stop(){
+        replayHistory.clear();
+    }
 }

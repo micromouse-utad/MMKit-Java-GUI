@@ -35,14 +35,8 @@ public class DisplayViewController {
 
     public void startView(BluetoothDevice selectedDevice){
         SwingUtilities.invokeLater(() -> {
-            displayView = new DisplayView(mouseInputs, selectedDevice, this);
+            displayView = new DisplayView(selectedDevice, this);
             displayView.setVisible(true);
-        });
-    }
-
-    public void startReplayView(String filePath){
-        SwingUtilities.invokeLater(() -> {
-
         });
     }
 

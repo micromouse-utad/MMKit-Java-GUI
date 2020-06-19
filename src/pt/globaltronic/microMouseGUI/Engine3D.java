@@ -83,7 +83,7 @@ public class Engine3D implements Runnable {
                 render();
                 continue;
             }
-            replayTick();
+            tick();
             render();
         }
 
@@ -311,79 +311,6 @@ public class Engine3D implements Runnable {
                 if (i == cols) {
                     vWalls[i][j].setVisible(true);
                 }
-            }
-        }
-    }
-
-    String getReplayInput() {
-        if (replayInputs.isEmpty()) {
-            return "";
-        }
-        return replayInputs.poll();
-    }
-
-    void replayTick() {
-        String inputs = mouseInputs.getMouseInput3D();
-
-        //checking that we actual got a result and that it matches the length we need before we try to parse and extract data
-        if (inputs != null && (inputs.length() > 9)) {
-            int col = MouseInputsTranslator.parseCol(inputs);
-            int row = MouseInputsTranslator.parseRow(inputs);
-
-            //getting the mouse current position
-            Position pos = grid.getPosition(col, row);
-            pos.setVisited(true);
-            visited.add(pos);
-            //updating mouse position and its graphics
-            mouse.setPosition(pos);
-            mouse.getMousePyr().setRotAdd();
-            mouse.getMousePyr().updatePoly();
-
-            //parsing the direction for "first person" camera view, and wall positioning
-            String direction = MouseInputsTranslator.parseDirection(inputs);
-
-            if (firstPersonView) {
-                screen.setCameraPositionForMouseView(direction, pos, size);
-            }
-
-            Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
-            Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
-            Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
-
-            switch (direction) {
-                case "N":
-                    //left wall when facing up is a vertical wall with its position same as mouse position
-                    vWalls[col][row].setVisible(lWall);
-                    //front wall when facing up is a horizontal wall at col and +1 row than current position
-                    hWalls[col][row + 1].setVisible(fWall);
-                    //right wall when facing up is a vertical wall at +1 col and same row as position
-                    vWalls[col + 1][row].setVisible(rWall);
-                    break;
-                case "E":
-                    //facing east left wall will be horizontal wall at same col +1 row from position
-                    hWalls[col][row + 1].setVisible(lWall);
-                    //facing east front wall will be a vertical wall at +1 col and row as position
-                    vWalls[col + 1][row].setVisible(fWall);
-                    //facing east right wall will be a horizontal wall at position same  as mouse position
-                    hWalls[col][row].setVisible(rWall);
-                    break;
-                case "S":
-                    // similar to N facing but reverted left wall will be the right wall
-                    vWalls[col + 1][row].setVisible(lWall);
-                    //front wall will be a horizontal wall at same postion as mouse position
-                    hWalls[col][row].setVisible(fWall);
-                    //right wall will be left wall of N case
-                    vWalls[col][row].setVisible(rWall);
-                    break;
-                case "W":
-                    //reverse of case east
-                    //left wall will be a horizontal wall when facing west, with same position as mouse position
-                    hWalls[col][row].setVisible(lWall);
-                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
-                    vWalls[col][row].setVisible(fWall);
-                    //facing west, right wall will be a horizontal wall at col and +1 row as position
-                    hWalls[col][row + 1].setVisible(rWall);
-                    break;
             }
         }
     }

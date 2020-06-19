@@ -137,7 +137,7 @@ public class WelcomeView extends JFrame {
                 replaySet.toArray(fileArray);
                 File selectedReplay = fileArray[selectedIndex];
 
-                welcomeViewController.startReplay(selectedReplay);
+                welcomeViewController.startReplayView(selectedReplay);
             }
         });
         deleteReplayButton.addActionListener(new ActionListener() {

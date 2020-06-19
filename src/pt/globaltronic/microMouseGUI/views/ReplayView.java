@@ -1,15 +1,15 @@
 package pt.globaltronic.microMouseGUI.views;
 
 import pt.globaltronic.microMouseGUI.controllers.DisplayViewController;
-import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
-import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
+import pt.globaltronic.microMouseGUI.controllers.ReplayViewController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
-public class DisplayView extends JFrame {
+public class ReplayView extends JFrame {
     private JPanel mainPanel;
     private JPanel Panel2D;
     private JPanel Panel3D;
@@ -17,16 +17,15 @@ public class DisplayView extends JFrame {
     private JButton roamingView;
     private JButton help;
     private JButton disconnect;
-    private JButton save;
     private JButton firstPersonView;
     private JButton replay;
     private JButton TopDown;
     private JLabel label3D;
     private JLabel label2D;
 
-    private DisplayViewController controller;
+    private ReplayViewController controller;
 
-    public DisplayView(BluetoothDevice currentDevice, DisplayViewController controller){
+    public ReplayView(File file, ReplayViewController controller){
 
         this.controller = controller;
         mainPanel.setLayout(new GridBagLayout());
@@ -64,8 +63,8 @@ public class DisplayView extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        label3D.setText("3D View of " + (currentDevice.getName() != ""?currentDevice.getName(): "replay"));
-        label2D.setText("Top down 2D View of " + currentDevice.getName());
+        label3D.setText("3D View of " + (file.getName() != ""?file.getName(): "replay"));
+        label2D.setText("Top down 2D View of " + (file.getName() != ""?file.getName(): "replay"));
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);
@@ -105,27 +104,7 @@ public class DisplayView extends JFrame {
         replay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!controller.isDisconnected()) {
-                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating replay sequence");
-                }
-                if(controller.isDisconnected()) {
-                    controller.replay();
-                }
-            }
-        });
-
-        save.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!controller.isDisconnected()) {
-                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating save sequence");
-                }
-                int x;
-                if(controller.isDisconnected()) {
-                    if ((x = controller.backupRunToFile()) > -1) {
-                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved to the backup" +x+".txt file int he resources folder of this app, please make a copy");
-                    }
-                }
+                controller.restartReplay();
             }
         });
 
@@ -138,8 +117,8 @@ public class DisplayView extends JFrame {
                         '"'+ "First Person View" +'"' + " default view that follows the MicroMouse around\n" +
                         '"'+ "TopDown View" +'"' + " to replicate a 2d view\n\n" +
                         "Use the " + '"' + "End / Disconnect button" + '"' +" to shut down the feed\n" +
-                        "Use the " + '"' + "Off-line replay" +'"'+" button once disconnected to re-trace the steps of the mouse\n" +
-                        "Use the " + '"' + "Save to Drive button"+ '"' + " to create a file containing the MicroMouse outputs of this run");
+                        "Use the " + '"' + "Off-line replay" +'"'+" button once disconnected to re-trace the steps of the mouse\n"
+                        );
 
             }
         });
@@ -158,3 +137,4 @@ public class DisplayView extends JFrame {
     }
 
 }
+
