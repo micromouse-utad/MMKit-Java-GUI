@@ -1,6 +1,5 @@
 package pt.globaltronic.microMouseGUI.controllers;
 
-import pt.globaltronic.microMouseGUI.Engine3D;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
 import pt.globaltronic.microMouseGUI.models.bluetooth.DiscoveredDevices;
 import pt.globaltronic.microMouseGUI.models.bluetooth.SyncedDevice;
@@ -9,27 +8,22 @@ import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDiscovery;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputsReceiver;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Replays;
-import pt.globaltronic.microMouseGUI.models.graphics.services.ReplayInputFeeder;
-import pt.globaltronic.microMouseGUI.views.DisplayView;
 
 import javax.microedition.io.StreamConnection;
-import javax.swing.*;
 import java.io.File;
-import java.nio.file.Files;
 import java.util.LinkedHashSet;
-import java.util.Queue;
 import java.util.Vector;
 
 public class WelcomeViewController {
 
-    BluetoothDiscovery bluetoothDiscovery;
-    BluetoothConnection bluetoothConnection;
-    DiscoveredDevices discoveredDevices;
-    SyncedDevice syncedDevice;
-    MouseInputs mouseInputs;
-    DisplayViewController displayViewController;
-    ReplayViewController replayViewController;
-    Replays replays;
+    private BluetoothDiscovery bluetoothDiscovery;
+    private BluetoothConnection bluetoothConnection;
+    private DiscoveredDevices discoveredDevices;
+    private SyncedDevice syncedDevice;
+    private MouseInputs mouseInputs;
+    private DisplayViewController displayViewController;
+    private ReplayViewController replayViewController;
+    private Replays replays;
 
     public WelcomeViewController(){}
 

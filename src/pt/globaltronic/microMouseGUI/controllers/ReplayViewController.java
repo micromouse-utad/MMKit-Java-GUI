@@ -13,12 +13,12 @@ import java.util.Queue;
 
 public class ReplayViewController {
 
-    ReplayInputFeeder replayInputFeeder;
-    MouseInputs mouseInputs;
-    ReplayView replayView;
-    Engine3D engine3D;
-    Engine2D engine2D;
-    File file;
+    private ReplayInputFeeder replayInputFeeder;
+    private MouseInputs mouseInputs;
+    private ReplayView replayView;
+    private Engine3D engine3D;
+    private Engine2D engine2D;
+    private File file;
     boolean replayed = false;
 
     public void startView(File selectedReplay) {
