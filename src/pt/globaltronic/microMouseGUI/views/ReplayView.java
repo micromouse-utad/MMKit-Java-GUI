@@ -111,13 +111,13 @@ public class ReplayView extends JFrame {
         help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(rootPane, "The display will continue to draw until the device is disconnected \n\n" +
+                JOptionPane.showMessageDialog(rootPane, "The display will continue to draw until the feed is ended \n\n" +
                         "While running you can switch camera styles by clicking on the buttons \n"+
                         '"'+ "Roaming View"+'"'+" use keys WASD to move and hold right-click to cursor pan\n" +
                         '"'+ "First Person View" +'"' + " default view that follows the MicroMouse around\n" +
                         '"'+ "TopDown View" +'"' + " to replicate a 2d view\n\n" +
-                        "Use the " + '"' + "End / Disconnect button" + '"' +" to shut down the feed\n" +
-                        "Use the " + '"' + "Off-line replay" +'"'+" button once disconnected to re-trace the steps of the mouse\n"
+                        "Use the " + '"' + "End button" + '"' +" to shut down the feed\n" +
+                        "Use the " + '"' + "Restart Replay" +'"'+" button once disconnected to re-trace the steps of the mouse\n"
                         );
 
             }
