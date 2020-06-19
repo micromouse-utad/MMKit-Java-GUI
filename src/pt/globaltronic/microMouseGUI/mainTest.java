@@ -1,30 +1,23 @@
 package pt.globaltronic.microMouseGUI;
 
 import pt.globaltronic.microMouseGUI.controllers.WelcomeViewController;
+import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Replays;
 import pt.globaltronic.microMouseGUI.views.WelcomeView;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.LinkedHashSet;
 
 public class mainTest {
 
     public static void main(String[] args) {
-        Replays replays = new Replays();
-        replays.lookForReplays();
 
-        WelcomeViewController wv = new WelcomeViewController();
+        JPanel panel = new JPanel();
+        Engine3D engine3D = new Engine3D (panel,"Mouse 3d Trials", new MouseInputs(), 16, 16, 30, 10);
 
-        wv.setReplays(replays);
-
-        System.out.println(wv.getReplaysVector().get(1).getName());
-
-        File file = new File("resources/");
-        File[] arr = file.listFiles();
-
-        for(int i = 0; i < arr.length; i++) {
-            System.out.println(arr[i].getName());
-        }
+        engine3D.setOldYAngle(Math.PI);
+        System.out.println(engine3D.calculateYRotationAngle("S"));
 
 
     }

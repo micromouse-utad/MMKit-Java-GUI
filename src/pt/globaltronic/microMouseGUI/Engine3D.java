@@ -1,6 +1,5 @@
 package pt.globaltronic.microMouseGUI;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.*;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Grid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
@@ -34,10 +33,9 @@ public class Engine3D implements Runnable {
     private boolean replay = false;
     private boolean cleared = false;
     private boolean firstPersonView = true;
-    private Queue<String> replayInputs;
+    private double oldYAngle = 0;
 
     private Grid grid;
-    private LinkedList<Position> visited;
     private Mouse mouse;
     private MouseInputs mouseInputs;
     private HorizontalWalls[][] hWalls;
@@ -119,9 +117,8 @@ public class Engine3D implements Runnable {
         panel.setPreferredSize(new Dimension(16 * 30, 16 * 30));
         panel.setMinimumSize(new Dimension(16 * 30, 16 * 30));
         panel.setMaximumSize(new Dimension(16 * 30, 16 * 30));
-        visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
-        mouse = new Mouse(grid.getPosition(0, correction), new Pyramid(screen, 2.5, correction * size - 2.5, 0, 5, 5, 2, Color.BLUE), correction, size);
+        mouse = new Mouse(grid.getPosition(0, correction), new Pyramid(screen, 2.5, correction * size - 2.5, 1, 5, 5, 2, Color.BLUE), correction, size);
         createWalls();
         createPositionsGraphics();
     }
@@ -139,15 +136,8 @@ public class Engine3D implements Runnable {
             Position pos = grid.getPosition(col, row);
             Position oldMousePosition = mouse.getPosition();
             pos.setVisited(true);
-            visited.add(pos);
             //updating mouse position and its graphics
             mouse.setPosition(pos);
-
-            /*
-            mouse.getMousePyr().setRotAdd();
-            mouse.getMousePyr().updatePoly();
-
-             */
 
             //parsing the direction for "first person" camera view, and wall positioning
             String direction = MouseInputsTranslator.parseDirection(inputs);
@@ -159,16 +149,13 @@ public class Engine3D implements Runnable {
             }
 
  */
-
-
-
-
-            Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
-            Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
-            Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
+            boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
+            boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
+            boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
 
             switch (direction) {
                 case "N":
+                    oldYAngle = 3 * Math.PI / 2;
                     //left wall when facing up is a vertical wall with its position same as mouse position
                     vWalls[col][row].setVisible(lWall);
                     //front wall when facing up is a horizontal wall at col and +1 row than current position
@@ -177,6 +164,7 @@ public class Engine3D implements Runnable {
                     vWalls[col + 1][row].setVisible(rWall);
                     break;
                 case "E":
+                    oldYAngle = 0;
                     //facing east left wall will be horizontal wall at same col +1 row from position
                     hWalls[col][row + 1].setVisible(lWall);
                     //facing east front wall will be a vertical wall at +1 col and row as position
@@ -185,6 +173,7 @@ public class Engine3D implements Runnable {
                     hWalls[col][row].setVisible(rWall);
                     break;
                 case "S":
+                    oldYAngle = Math.PI / 2;
                     // similar to N facing but reverted left wall will be the right wall
                     vWalls[col + 1][row].setVisible(lWall);
                     //front wall will be a horizontal wall at same postion as mouse position
@@ -193,6 +182,7 @@ public class Engine3D implements Runnable {
                     vWalls[col][row].setVisible(rWall);
                     break;
                 case "W":
+                    oldYAngle = Math.PI;
                     //reverse of case east
                     //left wall will be a horizontal wall when facing west, with same position as mouse position
                     hWalls[col][row].setVisible(lWall);
@@ -351,6 +341,7 @@ public class Engine3D implements Runnable {
         double yInitial = initialPos.getRow() * size;
         double xFinal = finalPos.getCol() * size;
         double yFinal = finalPos.getRow() * size;
+        double yAngleIncrement;
         double xDif = xFinal - xInitial;
         double yDif = yFinal - yInitial;
         double xIncrement = xDif / 30;
@@ -358,19 +349,39 @@ public class Engine3D implements Runnable {
         Pyramid mousePyr = mouse.getMousePyr();
         double x = xInitial;
         double y = yInitial;
+
+        double incrementedYAngle = oldYAngle;
+
         if (mousePyr != null) {
+
+            yAngleIncrement = calculateYRotationAngle(direction) / 60;
+            for (int i = 0; i < 60; i++) {
+                incrementedYAngle += yAngleIncrement;
+                if (firstPersonView) {
+                    screen.setHorLook(incrementedYAngle);
+                }
+                mousePyr.setRotation(yAngleIncrement);
+                mousePyr.updatePoly();
+                render();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+
 
             for (int i = 0; i < 30; i++) {
                 x += xIncrement;
                 y += yIncrement;
-                mousePyr.setX(x + 0.25 + size/4);
-                mousePyr.setY((correction) * size - y +0.25 +size/4);
+                mousePyr.setX(x + 0.25 + size / 4);
+                mousePyr.setY((correction) * size - y + 0.25 + size / 4);
                 mousePyr.setRotAdd();
                 mousePyr.updatePoly();
 
                 try {
                     Thread.sleep(10);
-                } catch (InterruptedException ex){
+                } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
 
@@ -383,4 +394,26 @@ public class Engine3D implements Runnable {
         }
     }
 
+    public double calculateYRotationAngle(String direction) {
+        double yAngleInitial = oldYAngle;
+        double yAngleFinal = (direction.equals("E")) ? 0 : (direction.equals("S")) ? Math.PI / 2 : (direction.equals("W")) ? Math.PI : 3 * Math.PI / 2;
+
+        if (yAngleFinal > yAngleInitial) {
+            if ((yAngleFinal - yAngleInitial) > Math.PI) {
+                return (-1) * (yAngleFinal - yAngleInitial - Math.PI);
+            }
+            return yAngleFinal - yAngleInitial;
+        }
+        if (yAngleFinal < yAngleInitial) {
+            if ((yAngleInitial - yAngleFinal) > Math.PI) {
+                return (yAngleInitial - yAngleFinal - Math.PI);
+            }
+            return yAngleFinal - yAngleInitial;
+        }
+        return yAngleInitial - yAngleFinal;
+    }
+
+    public void setOldYAngle(double oldYAngle) {
+        this.oldYAngle = oldYAngle;
+    }
 }

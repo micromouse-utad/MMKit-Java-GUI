@@ -172,4 +172,8 @@ public class Pyramid {
             Polys[i].setVisible(visible);
         }
     }
+
+    public void setRotation(double rotation) {
+        this.rotation += rotation;
+    }
 }
