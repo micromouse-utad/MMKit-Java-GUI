@@ -137,19 +137,31 @@ public class Engine3D implements Runnable {
 
             //getting the mouse current position
             Position pos = grid.getPosition(col, row);
+            Position oldMousePosition = mouse.getPosition();
             pos.setVisited(true);
             visited.add(pos);
             //updating mouse position and its graphics
             mouse.setPosition(pos);
+
+            /*
             mouse.getMousePyr().setRotAdd();
             mouse.getMousePyr().updatePoly();
+
+             */
 
             //parsing the direction for "first person" camera view, and wall positioning
             String direction = MouseInputsTranslator.parseDirection(inputs);
 
+            mouseAnimation(oldMousePosition, pos, direction);
+/*
             if (firstPersonView) {
                 screen.setCameraPositionForMouseView(direction, pos, size);
             }
+
+ */
+
+
+
 
             Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
@@ -199,7 +211,6 @@ public class Engine3D implements Runnable {
     }
 
 
-
     //initiate the walls and show the outskirts of the grid
     private void createWalls() {
         //for the horizontal walls we need +1 row because to have 16squares you need 17 lines to close them.
@@ -210,18 +221,18 @@ public class Engine3D implements Runnable {
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i, j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.BLACK));
+                hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.WHITE));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
                 if (j == 0) {
                     hWalls[i][j].getCube().removeCube();
-                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.RED));
+                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.WHITE));
                     hWalls[i][j].setVisible(true);
                 }
                 if (j == rows) {
                     hWalls[i][j].getCube().removeCube();
-                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.RED));
+                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.WHITE));
                     hWalls[i][j].setVisible(true);
                 }
             }
@@ -235,18 +246,18 @@ public class Engine3D implements Runnable {
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i, j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.BLACK));
+                vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.WHITE));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
                 if (i == 0) {
                     vWalls[i][j].getCube().removeCube();
-                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.RED));
+                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.WHITE));
                     vWalls[i][j].setVisible(true);
                 }
                 if (i == cols) {
                     vWalls[i][j].getCube().removeCube();
-                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.RED));
+                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.WHITE));
                     vWalls[i][j].setVisible(true);
                 }
             }
@@ -271,7 +282,7 @@ public class Engine3D implements Runnable {
         replay = true;
     }
 
-    public void reReplay(){
+    public void reReplay() {
         cleared = false;
     }
 
@@ -333,6 +344,43 @@ public class Engine3D implements Runnable {
 
     public double getSize() {
         return size;
+    }
+
+    public void mouseAnimation(Position initialPos, Position finalPos, String direction) {
+        double xInitial = initialPos.getCol() * size;
+        double yInitial = initialPos.getRow() * size;
+        double xFinal = finalPos.getCol() * size;
+        double yFinal = finalPos.getRow() * size;
+        double xDif = xFinal - xInitial;
+        double yDif = yFinal - yInitial;
+        double xIncrement = xDif / 30;
+        double yIncrement = yDif / 30;
+        Pyramid mousePyr = mouse.getMousePyr();
+        double x = xInitial;
+        double y = yInitial;
+        if (mousePyr != null) {
+
+            for (int i = 0; i < 30; i++) {
+                x += xIncrement;
+                y += yIncrement;
+                mousePyr.setX(x + 0.25 + size/4);
+                mousePyr.setY((correction) * size - y +0.25 +size/4);
+                mousePyr.setRotAdd();
+                mousePyr.updatePoly();
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex){
+                    System.out.println(ex.getMessage());
+                }
+
+
+                if (firstPersonView) {
+                    screen.setCameraPositionForAnimatedMouseView(direction, x, y, size);
+                }
+                render();
+            }
+        }
     }
 
 }

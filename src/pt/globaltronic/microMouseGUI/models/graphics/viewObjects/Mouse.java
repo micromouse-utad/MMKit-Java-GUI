@@ -29,10 +29,13 @@ public class Mouse {
 
     public void setPosition(Position position) {
         this.position = position;
+        /*
         if(mousePyr != null) {
             mousePyr.setX(position.getCol() * cellSize + cellSize/4 );
             mousePyr.setY((correction - position.getRow()) * cellSize + cellSize/4);
         }
+
+         */
     }
 
     public Position getPosition() {

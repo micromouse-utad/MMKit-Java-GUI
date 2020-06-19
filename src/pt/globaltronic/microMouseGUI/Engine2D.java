@@ -165,11 +165,12 @@ public class Engine2D implements Runnable{
         //initialize the drawing tools, and clearing the screen;
         g = bs.getDrawGraphics();
         g.clearRect(0,0, width, height);
-        g.setColor(new Color(140,180,180));
+        g.setColor(Color.GRAY);
+        //g.setColor(new Color(140,180,180));
         g.fillRect(0,0, width, height);
 
         visited.forEach((position -> {
-            g.setColor(Color.GRAY);
+            g.setColor(Color.lightGray);
             if (position.isVisited()) {
                 g.fillRect(grid.colToX(position.getCol()), grid.rowToY(correction - position.getRow()), cellSize, cellSize);
             }

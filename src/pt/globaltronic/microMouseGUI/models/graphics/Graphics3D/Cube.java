@@ -24,7 +24,7 @@ public class Cube {
         this.screen = screen;
         Polys[0] = new Polygon2D(screen, new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z, z, z, z}, c, false);
         screen.getPolygon2DS().add(Polys[0]);
-        Polys[1] = new Polygon2D(screen, new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z+height, z+height, z+height, z+height}, c, false);
+        Polys[1] = new Polygon2D(screen, new double[]{x, x+width, x+width, x}, new double[]{y, y, y+length, y+length},  new double[]{z+height, z+height, z+height, z+height}, Color.RED, false);
         screen.getPolygon2DS().add(Polys[1]);
         Polys[2] = new Polygon2D(screen, new double[]{x, x, x+width, x+width}, new double[]{y, y, y, y},  new double[]{z, z+height, z+height, z}, c, false);
         screen.getPolygon2DS().add(Polys[2]);

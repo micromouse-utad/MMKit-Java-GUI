@@ -2,6 +2,8 @@ package pt.globaltronic.microMouseGUI.models.graphics.positionLogic;
 
 import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Polygon2D;
 
+import java.awt.*;
+
 public class Position {
 
     private int col;
@@ -39,7 +41,12 @@ public class Position {
     public void setVisited(boolean visited) {
         this.visited = visited;
         if (polygon2D != null) {
-            polygon2D.setVisible(visited);
+            if(visited){
+                polygon2D.setC(Color.lightGray);
+            }
+            if(!visited){
+                polygon2D.setC(Color.darkGray);
+            }
         }
     }
 

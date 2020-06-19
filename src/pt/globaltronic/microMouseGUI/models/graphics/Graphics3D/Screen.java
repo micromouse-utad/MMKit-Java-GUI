@@ -378,6 +378,28 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
         HorLook = horLook;
     }
 
+    public void setCameraPositionForAnimatedMouseView(String direction, double x, double y, double size){
+        switch (direction){
+            case "N":
+                setViewFrom(new double[]{x + (0.5*size), ((correction+ 1.5)*size - y), 4});
+                setHorLook(4.712388);
+                break;
+            case "E":
+                setViewFrom(new double[]{(x - (0.5)*size), ((correction + 0.5)*size - y), 4});
+                setHorLook(0);
+                break;
+            case "S":
+                setViewFrom(new double[]{x + (0.5)*size, ((correction - 0.5)*size) - y, 4});
+                setHorLook(1.570796);
+                break;
+            case "W":
+                setViewFrom(new double[]{x + (1.5)*size, ((correction + 0.5)*size -y), 4});
+                setHorLook(3.141592);
+                break;
+        }
+        updateView();
+    }
+
     public void setCameraPositionForMouseView(String direction, Position pos, double size) {
         switch (direction){
             case "N":

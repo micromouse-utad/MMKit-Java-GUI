@@ -126,4 +126,9 @@ public class Polygon2D {
     public boolean isVisible() {
         return visible;
     }
+
+    public void setC(Color c) {
+        this.c = c;
+        DrawablePolygon.setC(c);
+    }
 }

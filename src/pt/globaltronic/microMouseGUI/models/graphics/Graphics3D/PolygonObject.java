@@ -58,11 +58,12 @@ public class PolygonObject {
         this.lighting = lighting;
     }
 
-    public boolean isDraw() {
-        return draw;
+    public void setC(Color c) {
+        this.c = c;
     }
 
     public void setDraw(boolean draw) {
         this.draw = draw;
     }
+
 }
