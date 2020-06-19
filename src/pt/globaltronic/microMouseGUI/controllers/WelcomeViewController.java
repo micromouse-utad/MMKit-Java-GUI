@@ -92,15 +92,9 @@ public class WelcomeViewController {
         replayViewController.startView(selectedReplay);
     }
 
-
-
     public void removedSelectedFromSyncedDevices(BluetoothDevice device){
         syncedDevice.removeDeviceFromSyncedSet(device);
         syncedDevice.writeSyncedToFile();
-    }
-
-    public MouseInputs getMouseInputs() {
-        return mouseInputs;
     }
 
     public void setBluetoothConnection(BluetoothConnection bluetoothConnection) {

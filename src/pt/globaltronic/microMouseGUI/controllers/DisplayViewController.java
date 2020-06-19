@@ -118,7 +118,7 @@ public class DisplayViewController {
 
     public int backupRunToFile(){
         History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-        String pathWithoutTxt = "resources/backup";
+        String pathWithoutTxt = "resources/backups/backup";
         boolean created = false;
         int i = 1;
         File backupFile = null;

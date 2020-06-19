@@ -8,7 +8,7 @@ import java.util.Vector;
 
 public class Replays {
     private LinkedHashSet<File> replaysSet;
-    private String filePath = "resources/backup";
+    private String filePath = "resources/backups/";
     private Vector<File> replaysSetVector;
 
     public Replays(){
@@ -17,13 +17,17 @@ public class Replays {
     }
 
     public void lookForReplays(){
-        boolean running = true;
-        int i = 0;
-
-        while (running){
-            File backupFile = new File(filePath + ++i + ".txt");
+        File file = new File(filePath);
+        if (!file.isDirectory()) {
+            System.out.println("Error with path to backups, path does not point to a directory");
+            return;
+        }
+        File[] arr = file.listFiles();
+        // a little crude, but it will look for replays from 1 to 200
+        for(int i = 0; i < arr.length; ++i){
+            File backupFile = arr[i];
             if(!backupFile.isFile()){
-                return;
+                continue;
             }
             replaysSet.add(backupFile);
             replaysSetVector.add(backupFile);
