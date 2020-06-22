@@ -23,6 +23,17 @@ public class DisplayView extends JFrame {
     private JButton TopDown;
     private JLabel label3D;
     private JLabel label2D;
+    private JMenuBar MenuBar;
+    private JMenu fileMenu;
+    private JMenu viewMenu;
+    private JMenu helpMenu;
+    private JMenuItem Disconnect;
+    private JMenuItem Replay;
+    private JMenuItem Save;
+    private JMenuItem FirstPerson;
+    private JMenuItem Roaming;
+    private JMenuItem TopDownView;
+    private JMenuItem Help;
 
     private DisplayViewController controller;
 
@@ -30,11 +41,41 @@ public class DisplayView extends JFrame {
 
         this.controller = controller;
         mainPanel.setLayout(new GridBagLayout());
+        MenuBar = new JMenuBar();
+        this.setJMenuBar(MenuBar);
+        fileMenu = new JMenu("File");
+        viewMenu = new JMenu("View");
+        helpMenu = new JMenu("Help");
+
+        Disconnect = new JMenuItem("Disconnect");
+        Replay = new JMenuItem("Replay");
+        Save = new JMenuItem("Save");
+
+        FirstPerson = new JMenuItem("First Person");
+        Roaming = new JMenuItem("Free Roaming");
+        TopDownView = new JMenuItem("Top Down");
+
+        Help = new JMenuItem("Help");
+
+        fileMenu.add(Disconnect);
+        fileMenu.add(Replay);
+        fileMenu.add(Save);
+
+        viewMenu.add(FirstPerson);
+        viewMenu.add(Roaming);
+        viewMenu.add(TopDownView);
+
+        helpMenu.add(Help);
+
+        MenuBar.add(fileMenu);
+        MenuBar.add(viewMenu);
+        MenuBar.add(helpMenu);
 
         Panel2D.setLayout(new GridLayout(1, 1));
         Panel3D.setLayout(new GridLayout(1,1, 0, 0));
 
         GridBagConstraints c = new GridBagConstraints();
+
         c.weightx = 0;
         c.weighty = 0;
         c.gridx = 0;
@@ -45,12 +86,14 @@ public class DisplayView extends JFrame {
         c.gridx = 1;
         c.gridy = 0;
         mainPanel.add(Panel2D, c);
+
         c.weightx = 0;
         c.weighty = 0;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 2;
         mainPanel.add(footer, c);
+
 
         this.setResizable(false);
 
@@ -65,7 +108,15 @@ public class DisplayView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         label3D.setText("3D View of " + (currentDevice.getName() != ""?currentDevice.getName(): "replay"));
+        label3D.setFont(new Font("Serif", Font.PLAIN, 16));
         label2D.setText("Top down 2D View of " + currentDevice.getName());
+        label2D.setFont(new Font("Serif", Font.PLAIN, 16));
+        /*fileMenu.setVisible(true);
+        viewMenu.setVisible(true);
+        helpMenu.setVisible(true);
+        MenuBar.setVisible(true);
+
+         */
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);
@@ -74,21 +125,21 @@ public class DisplayView extends JFrame {
         controller.startEngines(Panel3D, Panel2D, mainPanel);
 
 
-        roamingView.addActionListener(new ActionListener() {
+        Roaming.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.freeRoamMode();
             }
         });
 
-        firstPersonView.addActionListener(new ActionListener() {
+        FirstPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.firstPersonMode();
             }
         });
 
-        TopDown.addActionListener(new ActionListener() {
+        TopDownView.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.topDownMode();
@@ -129,7 +180,7 @@ public class DisplayView extends JFrame {
             }
         });
 
-        help.addActionListener(new ActionListener() {
+        Help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(rootPane, "The display will continue to draw until the device is disconnected \n\n" +
@@ -141,6 +192,37 @@ public class DisplayView extends JFrame {
                         "Use the " + '"' + "Off-line replay" +'"'+" button once disconnected to re-trace the steps of the mouse\n" +
                         "Use the " + '"' + "Save to Drive button"+ '"' + " to create a file containing the MicroMouse outputs of this run");
 
+            }
+        });
+        Save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!controller.isDisconnected()) {
+                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating save sequence");
+                }
+                int x;
+                if(controller.isDisconnected()) {
+                    if ((x = controller.backupRunToFile()) > -1) {
+                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved to the backup" +x+".txt file int he resources folder of this app, please make a copy");
+                    }
+                }
+            }
+        });
+        Replay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!controller.isDisconnected()) {
+                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating replay sequence");
+                }
+                if(controller.isDisconnected()) {
+                    controller.replay();
+                }
+            }
+        });
+        Disconnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.disconnect();
             }
         });
     }

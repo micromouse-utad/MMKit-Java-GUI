@@ -7,6 +7,7 @@ import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Replays;
 import pt.globaltronic.microMouseGUI.views.WelcomeView;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -14,30 +15,32 @@ import java.util.LinkedHashSet;
 public class mainTest {
 
     public static void main(String[] args) {
+        JFrame frame;
+        JMenu jmenu;
+        JMenuItem menuItem;
+        JMenuBar menuBar;
 
-        int[] arr = {2,4,5,1,6,3};
-        ArrayList<Integer> polygon2DS = new ArrayList<>();
-        for (int i = 0; i < arr.length; i++){
-            polygon2DS.add(arr[i]);
-        }
-        System.out.println(polygon2DS.size());
 
-        int n = polygon2DS.size();
-        for (int i = 1; i < n; ++i) {
-            int key = polygon2DS.get(i);
-            int j = i - 1;
+        frame = new JFrame("Notepad");
 
-            while (j >= 0 && polygon2DS.get(j)< key) {
-                polygon2DS.set(j + 1, polygon2DS.get(j));
-                j = j - 1;
-            }
-            polygon2DS.set(j + 1, key);
-        }
-        System.out.println(polygon2DS.size());
-        for (int i = 0; i < polygon2DS.size(); i++){
-            System.out.println(polygon2DS.get(i));
-        }
+        menuBar = new JMenuBar();
+        menuBar.setVisible(true);
+        jmenu = new JMenu("Test");
+        menuItem = new JMenuItem("Open");
 
+        jmenu.add(menuItem);
+
+
+
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(new FlowLayout());
+        frame.setSize(660, 350);
+
+        // Set a main menu
+        frame.setJMenuBar(menuBar);
+        menuBar.add(jmenu);
+
+        frame.setVisible(true);
     }
 
 
