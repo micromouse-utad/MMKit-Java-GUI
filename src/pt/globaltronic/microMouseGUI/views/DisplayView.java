@@ -14,15 +14,9 @@ public class DisplayView extends JFrame {
     private JPanel Panel2D;
     private JPanel Panel3D;
     private JPanel footer;
-    private JButton roamingView;
-    private JButton help;
-    private JButton disconnect;
-    private JButton save;
-    private JButton firstPersonView;
-    private JButton replay;
-    private JButton TopDown;
     private JLabel label3D;
     private JLabel label2D;
+    private JLabel spacing;
     private JMenuBar MenuBar;
     private JMenu fileMenu;
     private JMenu viewMenu;
@@ -111,6 +105,8 @@ public class DisplayView extends JFrame {
         label3D.setFont(new Font("Serif", Font.PLAIN, 16));
         label2D.setText("Top down 2D View of " + currentDevice.getName());
         label2D.setFont(new Font("Serif", Font.PLAIN, 16));
+        spacing.setText("                                                                              ");
+        spacing.setFont(new Font("Serif", Font.PLAIN, 16));
         /*fileMenu.setVisible(true);
         viewMenu.setVisible(true);
         helpMenu.setVisible(true);
@@ -146,54 +142,21 @@ public class DisplayView extends JFrame {
             }
         });
 
-        disconnect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.disconnect();
-            }
-        });
-
-        replay.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!controller.isDisconnected()) {
-                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating replay sequence");
-                }
-                if(controller.isDisconnected()) {
-                    controller.replay();
-                }
-            }
-        });
-
-        save.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!controller.isDisconnected()) {
-                    JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating save sequence");
-                }
-                int x;
-                if(controller.isDisconnected()) {
-                    if ((x = controller.backupRunToFile()) > -1) {
-                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved to the backup" +x+".txt file int he resources folder of this app, please make a copy");
-                    }
-                }
-            }
-        });
-
         Help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(rootPane, "The display will continue to draw until the device is disconnected \n\n" +
-                        "While running you can switch camera styles by clicking on the buttons \n"+
+                        "While running you can switch camera styles by clicking on the View menu \n"+
                         '"'+ "Roaming View"+'"'+" use keys WASD to move and hold right-click to cursor pan\n" +
                         '"'+ "First Person View" +'"' + " default view that follows the MicroMouse around\n" +
                         '"'+ "TopDown View" +'"' + " to replicate a 2d view\n\n" +
-                        "Use the " + '"' + "End / Disconnect button" + '"' +" to shut down the feed\n" +
-                        "Use the " + '"' + "Off-line replay" +'"'+" button once disconnected to re-trace the steps of the mouse\n" +
-                        "Use the " + '"' + "Save to Drive button"+ '"' + " to create a file containing the MicroMouse outputs of this run");
+                        "Use the " + '"' + "Disconnect option in File" + '"' +" to shut down the feed\n" +
+                        "Use the " + '"' + "Replay option in File" +'"'+" button once disconnected to re-trace the steps of the mouse\n" +
+                        "Use the " + '"' + "Save option in File"+ '"' + " to create a file containing the MicroMouse outputs of this run");
 
             }
         });
+
         Save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -208,6 +171,7 @@ public class DisplayView extends JFrame {
                 }
             }
         });
+
         Replay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -219,6 +183,7 @@ public class DisplayView extends JFrame {
                 }
             }
         });
+
         Disconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

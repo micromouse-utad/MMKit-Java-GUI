@@ -14,14 +14,19 @@ public class ReplayView extends JFrame {
     private JPanel Panel2D;
     private JPanel Panel3D;
     private JPanel footer;
-    private JButton roamingView;
-    private JButton help;
-    private JButton disconnect;
-    private JButton firstPersonView;
-    private JButton replay;
-    private JButton TopDown;
     private JLabel label3D;
     private JLabel label2D;
+    private JLabel spacing;
+    private JMenuBar MenuBar;
+    private JMenu fileMenu;
+    private JMenu viewMenu;
+    private JMenu helpMenu;
+    private JMenuItem Disconnect;
+    private JMenuItem Replay;
+    private JMenuItem FirstPerson;
+    private JMenuItem Roaming;
+    private JMenuItem TopDownView;
+    private JMenuItem Help;
 
     private ReplayViewController controller;
 
@@ -63,8 +68,40 @@ public class ReplayView extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        MenuBar = new JMenuBar();
+        this.setJMenuBar(MenuBar);
+        fileMenu = new JMenu("File");
+        viewMenu = new JMenu("View");
+        helpMenu = new JMenu("Help");
+
+        Disconnect = new JMenuItem("End");
+        Replay = new JMenuItem("Replay");
+
+        FirstPerson = new JMenuItem("First Person");
+        Roaming = new JMenuItem("Free Roaming");
+        TopDownView = new JMenuItem("Top Down");
+
+        Help = new JMenuItem("Help");
+
+        fileMenu.add(Disconnect);
+        fileMenu.add(Replay);
+
+        viewMenu.add(FirstPerson);
+        viewMenu.add(Roaming);
+        viewMenu.add(TopDownView);
+
+        helpMenu.add(Help);
+
+        MenuBar.add(fileMenu);
+        MenuBar.add(viewMenu);
+        MenuBar.add(helpMenu);
+
         label3D.setText("3D View of " + (file.getName() != ""?file.getName(): "replay"));
         label2D.setText("Top down 2D View of " + (file.getName() != ""?file.getName(): "replay"));
+        label3D.setFont(new Font("Serif", Font.PLAIN, 16));
+        label2D.setFont(new Font("Serif", Font.PLAIN, 16));
+        spacing.setText("                                                                              ");
+        spacing.setFont(new Font("Serif", Font.PLAIN, 16));
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);
@@ -73,51 +110,51 @@ public class ReplayView extends JFrame {
         controller.startEngines(Panel3D, Panel2D, mainPanel);
 
 
-        roamingView.addActionListener(new ActionListener() {
+        Roaming.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.freeRoamMode();
             }
         });
 
-        firstPersonView.addActionListener(new ActionListener() {
+        FirstPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.firstPersonMode();
             }
         });
 
-        TopDown.addActionListener(new ActionListener() {
+        TopDownView.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.topDownMode();
             }
         });
 
-        disconnect.addActionListener(new ActionListener() {
+        Disconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.disconnect();
             }
         });
 
-        replay.addActionListener(new ActionListener() {
+        Replay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.restartReplay();
             }
         });
 
-        help.addActionListener(new ActionListener() {
+        Help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(rootPane, "The display will continue to draw until the feed is ended \n\n" +
-                        "While running you can switch camera styles by clicking on the buttons \n"+
+                        "While running you can switch camera styles by clicking on the view menus \n"+
                         '"'+ "Roaming View"+'"'+" use keys WASD to move and hold right-click to cursor pan\n" +
                         '"'+ "First Person View" +'"' + " default view that follows the MicroMouse around\n" +
                         '"'+ "TopDown View" +'"' + " to replicate a 2d view\n\n" +
-                        "Use the " + '"' + "End button" + '"' +" to shut down the feed\n" +
-                        "Use the " + '"' + "Restart Replay" +'"'+" button once disconnected to re-trace the steps of the mouse\n"
+                        "Use the " + '"' + "File menu End option" + '"' +" to shut down the feed\n" +
+                        "Use the " + '"' + "File menu Replay" +'"'+" button to restart the replay\n"
                         );
 
             }
