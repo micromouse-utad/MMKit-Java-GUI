@@ -96,12 +96,10 @@ public class Cube {
 
     void updatePoly()
     {
-        //using a speciality of the arrayList to add and remove the Polygons of the cube, remove() removes the first instance found in the list,
-        // the recently added will be at the end. The older instances will be deleted
         for(int i = 0; i < 6; i++)
         {
-            screen.getPolygon2DS().remove(Polys[i]);
-            screen.getPolygon2DS().add(Polys[i]);
+            int index = screen.getPolygon2DS().indexOf(Polys[i]);
+            screen.getPolygon2DS().set(index, Polys[i]);
         }
 
         double radius = Math.sqrt(width*width + length*length);

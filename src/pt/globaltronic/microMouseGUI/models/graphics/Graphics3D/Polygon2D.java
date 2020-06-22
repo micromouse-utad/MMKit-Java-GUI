@@ -45,8 +45,11 @@ public class Polygon2D {
             CalcPos = calculator.calculatePositionP(screen.getViewFrom(), screen.getViewTo(), x[i], y[i], z[i]);
             newX[i] = (screen.getScreenWidth()/2 - calculator.getCalcFocusPos()[0]) + CalcPos[0] * screen.getZoom();
             newY[i] = (screen.getScreenHeight()/2 - calculator.getCalcFocusPos()[1]) + CalcPos[1] * screen.getZoom();
-            if(calculator.getT() < 0)
-                draw = false;
+           if(calculator.getT() < 0) {
+               draw = false;
+           }
+
+
         }
 
         calcLighting();

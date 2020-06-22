@@ -117,6 +117,7 @@ public class Engine3D implements Runnable {
         panel.setMaximumSize(new Dimension(16 * 30, 16 * 30));
         grid = new Grid(cols, rows, cellSize);
         mouse = new Mouse(grid.getPosition(0, correction), new Pyramid(screen, 2.5, correction * size - 2.5, 1, 5, 5, 2, Color.BLUE), correction, size);
+        mouse.getMousePyr().setVisible(false);
         createWalls();
         createPositionsGraphics();
     }
@@ -209,18 +210,18 @@ public class Engine3D implements Runnable {
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i, j));
                 int x = hWalls[i][j].getPosition().getCol();
                 int y = hWalls[i][j].getPosition().getRow();
-                hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.WHITE));
+                hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 3, Color.WHITE));
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
 
                 if (j == 0) {
                     hWalls[i][j].getCube().removeCube();
-                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.WHITE));
+                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 3, Color.WHITE));
                     hWalls[i][j].setVisible(true);
                 }
                 if (j == rows) {
                     hWalls[i][j].getCube().removeCube();
-                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 1.5, Color.WHITE));
+                    hWalls[i][j].setCube(new Cube(screen, x * size, (correction + 1 - y) * size, 0, size, 1, 3, Color.WHITE));
                     hWalls[i][j].setVisible(true);
                 }
             }
@@ -234,18 +235,18 @@ public class Engine3D implements Runnable {
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i, j));
                 int x = vWalls[i][j].getPosition().getCol();
                 int y = vWalls[i][j].getPosition().getRow();
-                vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.WHITE));
+                vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 3, Color.WHITE));
                 vWalls[i][j].setVisible(false);
 
                 //always showing side walls.
                 if (i == 0) {
                     vWalls[i][j].getCube().removeCube();
-                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.WHITE));
+                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 3, Color.WHITE));
                     vWalls[i][j].setVisible(true);
                 }
                 if (i == cols) {
                     vWalls[i][j].getCube().removeCube();
-                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 1.5, Color.WHITE));
+                    vWalls[i][j].setCube(new Cube(screen, x * size, (correction - y) * size, 0, 1, size, 3, Color.WHITE));
                     vWalls[i][j].setVisible(true);
                 }
             }
@@ -342,8 +343,8 @@ public class Engine3D implements Runnable {
         double yAngleIncrement;
         double xDif = xFinal - xInitial;
         double yDif = yFinal - yInitial;
-        double xIncrement = xDif / 90;
-        double yIncrement = yDif / 90;
+        double xIncrement = xDif / 45;
+        double yIncrement = yDif / 45;
         Pyramid mousePyr = mouse.getMousePyr();
         double x = xInitial;
         double y = yInitial;
@@ -351,7 +352,6 @@ public class Engine3D implements Runnable {
         double incrementedYAngle = oldYAngle;
 
         if (mousePyr != null) {
-            /*
             yAngleIncrement = calculateYRotationAngle(direction) / 60;
             for (int i = 0; i < 60; i++) {
                 incrementedYAngle += yAngleIncrement;
@@ -369,27 +369,29 @@ public class Engine3D implements Runnable {
             }
 
 
-             */
 
-            for (int i = 0; i < 90; i++) {
+
+            for (int i = 0; i < 45; i++) {
                 x += xIncrement;
                 y += yIncrement;
                 mousePyr.setX(x + 0.25 + size / 4);
                 mousePyr.setY((correction) * size - y + 0.25 + size / 4);
                 mousePyr.setRotAdd();
+
+                if (firstPersonView) {
+                    screen.setCameraPositionForAnimatedMouseViewCentered(direction, x +0.25 + size/2, y - 0.25 - size/2, size);
+                }
+
                 mousePyr.updatePoly();
 
+                repaint();
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(20);
                 } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
 
 
-                if (firstPersonView) {
-                    screen.setCameraPositionForAnimatedMouseView(direction, x, y, size);
-                }
-                repaint();
             }
         }
     }
@@ -419,5 +421,9 @@ public class Engine3D implements Runnable {
 
     public void repaint(){
         screen.repaint();
+    }
+
+    public void setMouseVisible(boolean visible) {
+        mouse.getMousePyr().setVisible(visible);
     }
 }

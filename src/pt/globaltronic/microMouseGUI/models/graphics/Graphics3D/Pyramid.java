@@ -108,11 +108,10 @@ public class Pyramid {
 
     public void updatePoly()
     {
-        //using arraylist add and remove properties, add puts a new instance at the end of the list, remove removes the first instance found at the smallest index
         for(int i = 0; i < 5; i++)
         {
-            screen.getPolygon2DS().add(Polys[i]);
-            screen.getPolygon2DS().remove(Polys[i]);
+            int index = screen.getPolygon2DS().indexOf(Polys[i]);
+            screen.getPolygon2DS().set(index, Polys[i]);
         }
 
         double radius = Math.sqrt(width*width + length*length);

@@ -62,7 +62,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
     private double Checks = 0;
     //VertLook goes from 0.999 to -0.999, minus being looking down and + looking up, HorLook takes any number and goes round in radians
     //aimSight changes the size of the center-cross. The lower HorRotSpeed or VertRotSpeed, the faster the camera will rotate in those directions
-    private double VertLook = -0.2;
+    private double VertLook = -0.005;
     private double HorLook = 0;
     private double aimSight = 4;
     private double HorRotSpeed = 900;
@@ -151,6 +151,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
 
     }
+
+
 
     //make the toolkit mouse skin disappear when moused over the 3d Jpanel.
     void invisibleMouse()
@@ -376,6 +378,28 @@ public class Screen extends JPanel implements KeyListener, MouseListener, MouseM
 
     public void setHorLook(double horLook) {
         HorLook = horLook;
+    }
+
+    public void setCameraPositionForAnimatedMouseViewCentered(String direction, double x, double y, double size){
+        switch (direction){
+            case "N":
+                setViewFrom(new double[]{x, ((correction)*size - y), 4});
+                setHorLook(4.712388);
+                break;
+            case "E":
+                setViewFrom(new double[]{(x), ((correction)*size - y), 4});
+                setHorLook(0);
+                break;
+            case "S":
+                setViewFrom(new double[]{x, ((correction*size) - y), 4});
+                setHorLook(1.570796);
+                break;
+            case "W":
+                setViewFrom(new double[]{x, ((correction)*size -y), 4});
+                setHorLook(3.141592);
+                break;
+        }
+        updateView();
     }
 
     public void setCameraPositionForAnimatedMouseView(String direction, double x, double y, double size){

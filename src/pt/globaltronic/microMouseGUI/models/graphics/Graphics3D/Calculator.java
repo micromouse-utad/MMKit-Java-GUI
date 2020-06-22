@@ -74,6 +74,8 @@ public class Calculator {
         CalcFocusPos = calculatePositionP(screen.getViewFrom(), screen.getViewTo(), screen.getViewTo()[0], screen.getViewTo()[1], screen.getViewTo()[2]);
         CalcFocusPos[0] = screen.getZoom() * CalcFocusPos[0];
         CalcFocusPos[1] = screen.getZoom() * CalcFocusPos[1];
+
+
     }
 
     public double[] getCalcFocusPos() {

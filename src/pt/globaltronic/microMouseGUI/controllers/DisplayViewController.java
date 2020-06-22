@@ -80,15 +80,18 @@ public class DisplayViewController {
 
     public void freeRoamMode() {
         engine3D.setFirstPersonView(false);
+        engine3D.setMouseVisible(true);
     }
 
     public void firstPersonMode() {
         engine3D.setFirstPersonView(true);
-        engine3D.getScreen().setVertLook(-0.2);
+        engine3D.setMouseVisible(false);
+        engine3D.getScreen().setVertLook(-0.005);
     }
 
     public void topDownMode() {
         engine3D.setFirstPersonView(false);
+        engine3D.setMouseVisible(true);
         engine3D.getScreen().setVertLook(-0.999);
         engine3D.getScreen().setHorLook(3*Math.PI/2);
         engine3D.getScreen().setViewFrom(new double[]{engine3D.getCols() * engine3D.getSize() / 2, ((engine3D.getRows() * engine3D.getSize()) + engine3D.getScreen().getCorrection()) / 2, 350});
