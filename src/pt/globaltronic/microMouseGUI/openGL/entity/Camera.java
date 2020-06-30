@@ -8,6 +8,8 @@ public class Camera {
     private static final float RUN_SPEED = 20;
     private static final float TURN_SPEED = 160;
 
+    private float rotY = 0;
+
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
 
@@ -35,10 +37,14 @@ public class Camera {
 
     public void move(boolean freeroaming){
         increaseRotation(0, currentTurnSpeed * OpenGLEngine.getFrameTimeSeconds() , 0);
+        float theta = rotY + angleAroundPlayer;
         float distance = currentSpeed * OpenGLEngine.getFrameTimeSeconds();
-        float dx = (float) (distance * Math.sin(Math.toRadians(yaw)));
-        float dz = (float) (distance * Math.cos(Math.toRadians(yaw)));
-        increasePosition(-dx, 0, -dz);
+        float dx =(float) (distance * Math.sin(Math.toRadians(theta)));
+        float dy = (float) (distance * Math.sin(Math.toRadians(pitch)));
+        float dz =(float) (distance * Math.cos(Math.toRadians(theta)));
+        increasePosition(-dx, dy, -dz);
+        this.yaw = 180 -(rotY + angleAroundPlayer);
+
     }
 
     public void increasePosition(float dx, float dy, float dz){
@@ -49,7 +55,7 @@ public class Camera {
 
     public void increaseRotation(float dx, float dy, float dz){
         this.pitch += dx;
-        this.yaw += dy;
+        this.rotY += dy;
         this.roll += dz;
     }
 
@@ -94,8 +100,8 @@ public class Camera {
         position.x = mouseGFX.getPosition().x - offsetX;
         position.y = mouseGFX.getPosition().y + verticalDistance;
         position.z = mouseGFX.getPosition().z - offsetZ;
-
     }
+
 
     private float calculateHorizontalDistance(){
         return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));

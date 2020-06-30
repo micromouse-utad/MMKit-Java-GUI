@@ -75,8 +75,8 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     float zIncrement;
     int numbOfRotations = 0;
     int numbOfTranslation = 0;
-    boolean firstPersonView;
 
+    boolean firstPersonView = true;
     boolean cleared = true;
 
     private static long lastFrameTime = 0;
@@ -109,17 +109,16 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     @Override
     public void display(GLAutoDrawable glad) {
 
+        if(!firstPersonView){
+            camera.move(!firstPersonView);
+        }
         if (!cleared) {
             clear();
             cleared = true;
         }
         tick();
-        //mouseGFX.move();
         if(firstPersonView) {
             camera.move();
-        }
-        if(!firstPersonView){
-            camera.move(!firstPersonView);
         }
 
         for (Entity wall : VISIBLE_WALLS){
@@ -182,13 +181,13 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_W)
-            mouseGFX.setCurrentSpeed(1.0f);
+            camera.setCurrentSpeed(-1.0f);
         if (e.getKeyCode() == KeyEvent.VK_A)
-            mouseGFX.setCurrentTurnSpeed(1.0f);
+            camera.setCurrentTurnSpeed(1.0f);
         if (e.getKeyCode() == KeyEvent.VK_S)
-            mouseGFX.setCurrentSpeed(-1.0f);
+            camera.setCurrentSpeed(1.0f);
         if (e.getKeyCode() == KeyEvent.VK_D)
-            mouseGFX.setCurrentTurnSpeed(-1.0f);
+            camera.setCurrentTurnSpeed(-1.0f);
 
     }
 
@@ -224,7 +223,9 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             camera.setPitch(pitch + pitchChange);
 
             float angleChange = (arg0.getX() -width/2) * 0.1f;
-            camera.setAngleAroundPlayer(angleAroundPlayer + angleChange);
+            if(firstPersonView){camera.setAngleAroundPlayer(angleAroundPlayer + angleChange);}
+            if(!firstPersonView) {camera.setAngleAroundPlayer(angleAroundPlayer - angleChange);}
+
             CenterMouse(arg0);
         }
     }
