@@ -24,7 +24,6 @@ public class DisplayViewController {
     private DisplayView displayView;
     private MouseInputs mouseInputs;
     private Engine2D engine2D;
-    private Engine3D engine3D;
     private OpenGLEngine openGLEngine;
     private boolean disconnected = false;
     private Queue<String> History;
@@ -43,7 +42,7 @@ public class DisplayViewController {
 
     public void startEngines(JPanel Panel3D, JPanel Panel2D, JPanel mainPanel){
 
-        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, 16, 16, 10);
+        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, 16, 16, 10, 30);
         engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, 16,16, 30);
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
@@ -81,29 +80,29 @@ public class DisplayViewController {
     }
 
     public void freeRoamMode() {
-        engine3D.setFirstPersonView(false);
-        engine3D.setMouseVisible(true);
+        openGLEngine.setFirstPersonView(false);
     }
 
     public void firstPersonMode() {
-        engine3D.setFirstPersonView(true);
-        engine3D.setMouseVisible(false);
-        engine3D.getScreen().setVertLook(-0.005);
+        openGLEngine.setFirstPersonView(true);
     }
 
     public void topDownMode() {
-        engine3D.setFirstPersonView(false);
-        engine3D.setMouseVisible(true);
+        openGLEngine.setFirstPersonView(false);
+        /*
         engine3D.getScreen().setVertLook(-0.999);
         engine3D.getScreen().setHorLook(3*Math.PI/2);
         engine3D.getScreen().setViewFrom(new double[]{engine3D.getCols() * engine3D.getSize() / 2, ((engine3D.getRows() * engine3D.getSize()) + engine3D.getScreen().getCorrection()) / 2, 350});
+
+         */
+
     }
+
 
     public void replay() {
         if(!replayed) {
             History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
             replayInputFeeder = new ReplayInputFeeder(mouseInputs, History);
-            engine3D.replay();
             engine2D.replay();
             replayed = true;
             replayInputFeeder.start();
@@ -111,7 +110,7 @@ public class DisplayViewController {
         if(replayed){
             History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
             engine2D.reReplay();
-            engine3D.reReplay();
+            openGLEngine.replay();
             replayInputFeeder.reStart(History);
         }
     }

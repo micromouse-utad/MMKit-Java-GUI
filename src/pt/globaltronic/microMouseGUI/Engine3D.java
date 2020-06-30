@@ -74,11 +74,6 @@ public class Engine3D implements Runnable {
                 clear();
                 cleared = true;
             }
-            if (!replay) {
-                tick();
-                render();
-                continue;
-            }
             tick();
             render();
         }

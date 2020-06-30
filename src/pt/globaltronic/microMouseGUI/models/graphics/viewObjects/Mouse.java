@@ -1,5 +1,6 @@
 package pt.globaltronic.microMouseGUI.models.graphics.viewObjects;
 
+import com.sun.javafx.geom.Vec3f;
 import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Pyramid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Position;
 import pt.globaltronic.microMouseGUI.openGL.entity.Entity;
@@ -28,16 +29,19 @@ public class Mouse {
         this.cellSize = cellSize;
     }
 
+    public Mouse(Position position, Entity mouseGFX, double cellSize){
+        this.position = position;
+        this.mouseGFX = mouseGFX;
+        this.cellSize = cellSize;
+    }
+
 
     public void setPosition(Position position) {
         this.position = position;
-        /*
         if(mousePyr != null) {
             mousePyr.setX(position.getCol() * cellSize + cellSize/4 );
             mousePyr.setY((correction - position.getRow()) * cellSize + cellSize/4);
         }
-
-         */
     }
 
     public Position getPosition() {

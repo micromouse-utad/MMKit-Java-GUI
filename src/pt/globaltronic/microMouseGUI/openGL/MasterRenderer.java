@@ -21,6 +21,8 @@ public class MasterRenderer {
     private RendererEntity rendererEntity;
     private RendererTerrain rendererTerrain;
     private GL3 gl;
+    private int width;
+    private int height;
 
     private Map<TexturedModel, List<Entity>> entities;
     private List<Terrain> terrains = new ArrayList<>();
@@ -31,8 +33,10 @@ public class MasterRenderer {
     private float[] projectionMatrix;
 
 
-    public MasterRenderer(GL3 gl){
+    public MasterRenderer(GL3 gl, int width, int height){
         this.gl = gl;
+        this.width = width;
+        this.height = height;
         gl.glEnable(gl.GL_CULL_FACE);
         gl.glCullFace(gl.GL_BACK);
         entities = new HashMap<TexturedModel, List<Entity>>();
@@ -90,7 +94,7 @@ public class MasterRenderer {
     }
 
     private void createProjectionMatrix(){
-        float aspectRatio = (float) 1028 / 768;
+        float aspectRatio = (float) width/height;
         float y_scale = (float) ((1f / (Math.tan(Math.toRadians(FOV / 2f)))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;
