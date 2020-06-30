@@ -1,7 +1,7 @@
 package pt.globaltronic.microMouseGUI.openGL.entity;
 
 import com.sun.javafx.geom.Vec3f;
-import pt.globaltronic.microMouseGUI.openGL.OpenGLEngine;
+import pt.globaltronic.microMouseGUI.OpenGLEngine;
 import pt.globaltronic.microMouseGUI.openGL.models.TexturedModel;
 
 public class MouseGFX extends Entity{

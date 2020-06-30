@@ -9,7 +9,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.sun.javafx.geom.Vec3f;
 import pt.globaltronic.microMouseGUI.openGL.entity.Camera;
 import pt.globaltronic.microMouseGUI.openGL.entity.Light;
-import pt.globaltronic.microMouseGUI.openGL.toolbox.Maths;
+import pt.globaltronic.microMouseGUI.openGL.services.Maths;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

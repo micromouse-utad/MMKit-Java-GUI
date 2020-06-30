@@ -8,7 +8,7 @@ import pt.globaltronic.microMouseGUI.openGL.entity.Entity;
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
 import pt.globaltronic.microMouseGUI.openGL.models.TexturedModel;
 import pt.globaltronic.microMouseGUI.openGL.textures.ModelTexture;
-import pt.globaltronic.microMouseGUI.openGL.toolbox.Maths;
+import pt.globaltronic.microMouseGUI.openGL.services.Maths;
 
 import java.util.List;
 import java.util.Map;

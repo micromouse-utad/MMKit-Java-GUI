@@ -2,7 +2,7 @@ package pt.globaltronic.microMouseGUI.models.graphics.viewObjects;
 
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.HorizontalWallPosition;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.WallPosition;
-import pt.globaltronic.microMouseGUI.openGL.OpenGLEngine;
+import pt.globaltronic.microMouseGUI.OpenGLEngine;
 
 import java.awt.*;
 
@@ -26,9 +26,6 @@ public class HorizontalWalls extends Walls {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
-        if (getCube() != null) {
-            getCube().setVisible(visible);
-        }
         if (getEntity() != null) {
             if (visible) {
                 OpenGLEngine.VISIBLE_WALLS.add(this.getEntity());

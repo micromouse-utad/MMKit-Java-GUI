@@ -7,7 +7,7 @@ import com.sun.javafx.geom.Vec3f;
 
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
 import pt.globaltronic.microMouseGUI.openGL.terrain.Terrain;
-import pt.globaltronic.microMouseGUI.openGL.toolbox.Maths;
+import pt.globaltronic.microMouseGUI.openGL.services.Maths;
 
 import java.util.List;
 

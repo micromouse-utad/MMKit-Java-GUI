@@ -1,10 +1,9 @@
 package pt.globaltronic.microMouseGUI.controllers;
 
 import pt.globaltronic.microMouseGUI.Engine2D;
-import pt.globaltronic.microMouseGUI.Engine3D;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.services.ReplayInputFeeder;
-import pt.globaltronic.microMouseGUI.openGL.OpenGLEngine;
+import pt.globaltronic.microMouseGUI.OpenGLEngine;
 import pt.globaltronic.microMouseGUI.views.ReplayView;
 
 import javax.swing.*;

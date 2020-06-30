@@ -1,4 +1,4 @@
-package pt.globaltronic.microMouseGUI.openGL.toolbox;
+package pt.globaltronic.microMouseGUI.openGL.services;
 
 import com.jogamp.opengl.math.Matrix4;
 import com.sun.javafx.geom.Vec3f;

@@ -1,12 +1,11 @@
 package pt.globaltronic.microMouseGUI.controllers;
 
 import pt.globaltronic.microMouseGUI.Engine2D;
-import pt.globaltronic.microMouseGUI.Engine3D;
 import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputsReceiver;
 import pt.globaltronic.microMouseGUI.models.graphics.services.ReplayInputFeeder;
-import pt.globaltronic.microMouseGUI.openGL.OpenGLEngine;
+import pt.globaltronic.microMouseGUI.OpenGLEngine;
 import pt.globaltronic.microMouseGUI.views.DisplayView;
 
 import javax.microedition.io.StreamConnection;
@@ -41,7 +40,6 @@ public class DisplayViewController {
     }
 
     public void startEngines(JPanel Panel3D, JPanel Panel2D, JPanel mainPanel){
-
         openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, 16, 16, 10, 30);
         engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, 16,16, 30);
         Panel3D.setVisible(true);
@@ -97,7 +95,6 @@ public class DisplayViewController {
          */
 
     }
-
 
     public void replay() {
         if(!replayed) {

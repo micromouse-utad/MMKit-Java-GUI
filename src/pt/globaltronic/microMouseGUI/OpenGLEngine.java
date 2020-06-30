@@ -1,4 +1,4 @@
-package pt.globaltronic.microMouseGUI.openGL;
+package pt.globaltronic.microMouseGUI;
 
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
@@ -6,8 +6,6 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.sun.javafx.geom.Vec3f;
 
-import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Pyramid;
-import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Screen;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Grid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Position;
@@ -15,6 +13,9 @@ import pt.globaltronic.microMouseGUI.models.graphics.services.MouseInputsTransla
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.HorizontalWalls;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Mouse;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
+import pt.globaltronic.microMouseGUI.openGL.Loader;
+import pt.globaltronic.microMouseGUI.openGL.MasterRenderer;
+import pt.globaltronic.microMouseGUI.openGL.OBJLoader;
 import pt.globaltronic.microMouseGUI.openGL.entity.Camera;
 import pt.globaltronic.microMouseGUI.openGL.entity.Entity;
 import pt.globaltronic.microMouseGUI.openGL.entity.Light;

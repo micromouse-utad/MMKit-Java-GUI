@@ -1,7 +1,7 @@
 package pt.globaltronic.microMouseGUI.openGL.entity;
 
 import com.sun.javafx.geom.Vec3f;
-import pt.globaltronic.microMouseGUI.openGL.OpenGLEngine;
+import pt.globaltronic.microMouseGUI.OpenGLEngine;
 
 public class Camera {
 
@@ -113,16 +113,12 @@ public class Camera {
         return distanceFromPlayer;
     }
 
-    public MouseGFX getMouseGFX() {
-        return mouseGFX;
-    }
-
     public void setAngleAroundPlayer(float angleAroundPlayer) {
         this.angleAroundPlayer = angleAroundPlayer;
     }
 
     public void setDistanceFromPlayer(float distanceFromPlayer) {
-        if (distanceFromPlayer > 50) {
+        if (distanceFromPlayer > 300) {
             return;
         }
         this.distanceFromPlayer = distanceFromPlayer;
