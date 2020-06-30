@@ -20,20 +20,22 @@ public class HorizontalWalls extends Walls {
         visible = false;
     }
 
-    public HorizontalWallPosition getPosition(){
+    public HorizontalWallPosition getPosition() {
         return (HorizontalWallPosition) super.getPosition();
     }
 
     public void setVisible(boolean visible) {
         this.visible = visible;
-        if (getCube() != null){
+        if (getCube() != null) {
             getCube().setVisible(visible);
         }
-        if(visible){
-            OpenGLEngine.VISIBLE_WALLS.add(this.getEntity());
-        }
-        if(!visible){
-            OpenGLEngine.VISIBLE_WALLS.remove(this.getEntity());
+        if (getEntity() != null) {
+            if (visible) {
+                OpenGLEngine.VISIBLE_WALLS.add(this.getEntity());
+            }
+            if (!visible) {
+                OpenGLEngine.VISIBLE_WALLS.remove(this.getEntity());
+            }
         }
     }
 

@@ -29,11 +29,13 @@ public class VerticalWalls extends Walls{
         if (getCube() != null){
             getCube().setVisible(visible);
         }
-        if(visible){
-            OpenGLEngine.VISIBLE_WALLS.add(this.getEntity());
-        }
-        if(!visible){
-            OpenGLEngine.VISIBLE_WALLS.remove(this.getEntity());
+        if(getEntity() != null) {
+            if (visible) {
+                OpenGLEngine.VISIBLE_WALLS.add(this.getEntity());
+            }
+            if (!visible) {
+                OpenGLEngine.VISIBLE_WALLS.remove(this.getEntity());
+            }
         }
     }
 

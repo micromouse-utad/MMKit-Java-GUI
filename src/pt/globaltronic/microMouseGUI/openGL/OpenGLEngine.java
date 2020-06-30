@@ -7,6 +7,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.sun.javafx.geom.Vec3f;
 
 import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Pyramid;
+import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Screen;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Grid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Position;
@@ -33,6 +34,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
     //openGL variables
     private GLJPanel canvas;
+    private JPanel panel;
     private MasterRenderer renderer;
     private Loader loader;
     private RawModel model;
@@ -48,6 +50,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private Robot r;
 
     //"gameloop" variables
+    private Thread thread;
     private Grid grid;
     private Mouse mouse;
     private MouseInputs mouseInputs;
@@ -72,13 +75,35 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     float zIncrement;
     int numbOfRotations = 0;
     int numbOfTranslation = 0;
+    boolean firstPersonView;
+    boolean replay;
+    boolean cleared;
 
     private static long lastFrameTime = 0;
     private static float delta;
 
-    public OpenGLEngine(GLJPanel canvas){
-        this.canvas = canvas;
+    public OpenGLEngine(JPanel panel, MouseInputs mouseInputs, int cols, int rows, int cellSize) {
+        this.canvas = new GLJPanel();
+        this.panel = panel;
+        this.cellSize = cellSize;
+        this.mouseInputs = mouseInputs;
+        this.cols = cols;
+        this.rows = rows;
+        this.width = cols * cellSize;
+        this.height = rows * cellSize;
 
+
+        //add to implement because lost focus would not register.
+        canvas.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                e.getComponent().requestFocus();
+            }
+        });
     }
 
     @Override
@@ -111,6 +136,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
     @Override
     public void init(GLAutoDrawable glad) {
+
 
         grid = new Grid(cols,rows,cellSize);
         VISIBLE_WALLS = new HashSet<Entity>();
@@ -408,34 +434,95 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         return yAngleInitial - yAngleFinal;
     }
 
-    public static void main(String[] args) {
-        OpenGLEngine main = new OpenGLEngine();
-
-        JFrame frame = new JFrame("JOGL Events");
-        Toolkit t = Toolkit.getDefaultToolkit();
-        canvas = new GLJPanel();
-        //since the canvas is set as focusabled and requests focus, it needs to event listeners
-        canvas.addGLEventListener(main);
-        canvas.addKeyListener(main);
-        canvas.addMouseListener(main);
-        canvas.addMouseMotionListener(main);
-        canvas.addMouseWheelListener(main);
-        canvas.setFocusable(true);
-        canvas.requestFocus();
-        frame.add(canvas);
-        frame.setSize(1024, 768);
-        //frame.setLocationRelativeTo(null);
-        frame.setUndecorated(true);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-
-    }
-
     @Override
     public void run() {
+
+        panel.setPreferredSize(new Dimension(16 * 30, 16 * 30));
+        panel.setMinimumSize(new Dimension(16 * 30, 16 * 30));
+        panel.setMaximumSize(new Dimension(16 * 30, 16 * 30));
+
+
+        //since the canvas is set as focusabled and requests focus, it needs to event listeners
+        canvas.addGLEventListener(this);
+        canvas.addKeyListener(this);
+        canvas.addMouseListener(this);
+        canvas.addMouseMotionListener(this);
+        canvas.addMouseWheelListener(this);
+        canvas.setFocusable(true);
+        canvas.requestFocus();
+        panel.add(canvas);
+
+        //frame.setLocationRelativeTo(null);
+        panel.setVisible(true);
+
         FPSAnimator animator = new FPSAnimator(canvas, 60);
         animator.start();
     }
+
+    public synchronized void start() {
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    public void replay() {
+        replay = true;
+    }
+
+    public void reReplay() {
+        cleared = false;
+    }
+
+    void clear() {
+        for (int x = 0; x < cols; x++) {
+            for (int y = 0; y < rows; y++) {
+                Position pos = grid.getPosition(x, y);
+                pos.setVisited(false);
+            }
+        }
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows + 1; j++) {
+                int x = hWalls[i][j].getPosition().getCol();
+                int y = hWalls[i][j].getPosition().getRow();
+                hWalls[i][j].setVisible(false);
+                //always showing side walls.
+
+                if (j == 0) {
+                    hWalls[i][j].setVisible(true);
+                }
+                if (j == rows) {
+                    hWalls[i][j].setVisible(true);
+                }
+            }
+        }
+
+        for (int i = 0; i < cols + 1; i++) {
+            for (int j = 0; j < rows; j++) {
+                int x = vWalls[i][j].getPosition().getCol();
+                int y = vWalls[i][j].getPosition().getRow();
+                vWalls[i][j].setVisible(false);
+
+                //always showing side walls.
+                if (i == 0) {
+                    vWalls[i][j].setVisible(true);
+                }
+                if (i == cols) {
+                    vWalls[i][j].setVisible(true);
+                }
+            }
+        }
+    }
+
+    public void setFirstPersonView(boolean firstPersonView) {
+        this.firstPersonView = firstPersonView;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+
 }
