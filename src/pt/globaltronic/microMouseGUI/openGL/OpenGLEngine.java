@@ -67,9 +67,8 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     float zInitial;
     float xFinal;
     float zFinal;
-    private float oldYAngle = 0;
-    private float incrementedYAngle;
-    private float yAngleFinal;
+    private String previousDirection = "N";
+    private float yAngle;
     float yAngleIncrement;
     float xIncrement;
     float zIncrement;
@@ -157,11 +156,11 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
         model = OBJLoader.loadObjectModel("E 45 Aircraft", loader);
         //use the loader to get the id of the texture and pass it to the new texture
-        texture = new ModelTexture(loader.loadTexture("steel"));
+        texture = new ModelTexture(loader.loadTexture("image"));
         texturedModel = new TexturedModel(model, texture);
         texturedModel.getModelTexture().setReflectivity(1);
         texturedModel.getModelTexture().setShineDamper(10);
-        mouseGFX = new MouseGFX(texturedModel, new Vec3f(155f, 3, 5f), 0, 270, 0, 1.0f);
+        mouseGFX = new MouseGFX(texturedModel, new Vec3f(155f, 3, 5f), 0, 180, 0, 1.0f);
         mouse = new Mouse(grid.getPosition(0,0), mouseGFX, cellSize);
         camera = new Camera(mouseGFX);
         sun = new Light(new Vec3f(2000, 2000, 000), new Vec3f(1, 1, 1));
@@ -208,7 +207,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     void CenterMouse(MouseEvent e) {
         try {
             r = new Robot();
-            r.mouseMove((int)(e.getComponent().getLocationOnScreen().getX() + (1024)/2), (int)(e.getComponent().getLocationOnScreen().getY() + (768)/2));
+            r.mouseMove((int)(e.getComponent().getLocationOnScreen().getX() + (width)/2), (int)(e.getComponent().getLocationOnScreen().getY() + (height)/2));
         } catch (AWTException ex) {
             ex.printStackTrace();
         }
@@ -287,7 +286,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                 int x = cols -1 - hWalls[i][j].getPosition().getCol();
                 int z = hWalls[i][j].getPosition().getRow();
 
-                Entity hWall = new Entity(texturedWall, new Vec3f(x * cellSize, 0, z * cellSize),0,0,0,1);
+                Entity hWall = new Entity(texturedWall, new Vec3f(x * cellSize, 0, z * cellSize -1),0,0,0,1);
                 hWalls[i][j].setEntity(hWall);
                 hWalls[i][j].setVisible(false);
 
@@ -308,7 +307,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                 int x = cols - vWalls[i][j].getPosition().getCol();
                 int z = vWalls[i][j].getPosition().getRow()+1;
 
-                Entity vWall = new Entity(texturedWall, new Vec3f(x * cellSize, 0, z * cellSize),0,90,0,1);
+                Entity vWall = new Entity(texturedWall, new Vec3f(x * cellSize -1, 0, z * cellSize),0,90,0,1);
                 vWalls[i][j].setEntity(vWall);
                 vWalls[i][j].setVisible(false);
 
@@ -344,6 +343,8 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             String direction = MouseInputsTranslator.parseDirection(inputs);
 
             setupMouseAnimation(oldMousePosition, pos, direction);
+            previousDirection = direction;
+
 
             boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
@@ -351,7 +352,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
             switch (direction) {
                 case "N":
-                    oldYAngle = (float)(3 * Math.PI / 2);
                     //left wall when facing up is a vertical wall with its position same as mouse position
                     vWalls[col][row].setVisible(lWall);
                     //front wall when facing up is a horizontal wall at col and +1 row than current position
@@ -360,7 +360,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                     vWalls[col + 1][row].setVisible(rWall);
                     break;
                 case "E":
-                    oldYAngle = 0;
                     //facing east left wall will be horizontal wall at same col +1 row from position
                     hWalls[col][row + 1].setVisible(lWall);
                     //facing east front wall will be a vertical wall at +1 col and row as position
@@ -369,7 +368,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                     hWalls[col][row].setVisible(rWall);
                     break;
                 case "S":
-                    oldYAngle = (float)(Math.PI / 2);
                     // similar to N facing but reverted left wall will be the right wall
                     vWalls[col + 1][row].setVisible(lWall);
                     //front wall will be a horizontal wall at same postion as mouse position
@@ -378,7 +376,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                     vWalls[col][row].setVisible(rWall);
                     break;
                 case "W":
-                    oldYAngle = (float)(Math.PI);
                     //reverse of case east
                     //left wall will be a horizontal wall when facing west, with same position as mouse position
                     hWalls[col][row].setVisible(lWall);
@@ -400,13 +397,11 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         float zDif = zFinal - zInitial;
         xIncrement = xDif / 25;
         zIncrement = zDif / 25;
-        incrementedYAngle = oldYAngle;
         yAngleIncrement = (calculateYRotationAngle(direction) / 25);
     }
 
     public void mouseAnimation() {
         if(numbOfRotations < 25){
-            incrementedYAngle += yAngleIncrement;
             mouseGFX.increaseRotation(0, yAngleIncrement, 0);
             numbOfRotations++;
             return;
@@ -419,7 +414,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             numbOfTranslation++;
             return;
         }
-        if(numbOfRotations ==numbOfTranslation){
+        if(numbOfRotations == numbOfTranslation){
             numbOfRotations = 0;
             numbOfTranslation= 0;
             mouseAnimationFinished = true;
@@ -427,22 +422,19 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     }
 
     public float calculateYRotationAngle(String direction) {
-        float yAngleInitial = oldYAngle;
-        yAngleFinal = (direction.equals("E")) ? 0 : (direction.equals("S")) ? (float)(Math.PI / 2) : (direction.equals("W")) ? (float)(Math.PI) : (float)(3 * Math.PI / 2);
-
-        if (yAngleFinal > yAngleInitial) {
-            if ((yAngleFinal - yAngleInitial) > Math.PI) {
-                return (float)Math.toDegrees((-1) * (yAngleFinal - yAngleInitial - Math.PI));
-            }
-            return (float)Math.toDegrees(yAngleFinal - yAngleInitial);
+        if (previousDirection.equals("N")){
+            yAngle = (direction.equals("E")) ? -90 : (direction.equals("S")) ? 180 : (direction.equals("W")) ? 90 : 0;
         }
-        if (yAngleFinal < yAngleInitial) {
-            if ((yAngleInitial - yAngleFinal) > Math.PI) {
-                return (float)Math.toDegrees(yAngleInitial - yAngleFinal - Math.PI);
-            }
-            return (float)Math.toDegrees(yAngleFinal - yAngleInitial);
+        if (previousDirection.equals("E")){
+            yAngle = (direction.equals("E")) ? 0 : (direction.equals("S")) ? -90 : (direction.equals("W")) ? 180 : 90;
         }
-        return (float)Math.toDegrees(yAngleInitial - yAngleFinal);
+        if (previousDirection.equals("S")){
+            yAngle = (direction.equals("E")) ? 90 : (direction.equals("S")) ? 0 : (direction.equals("W")) ? -90 : 180;
+        }
+        if (previousDirection.equals("W")){
+            yAngle = (direction.equals("E")) ? 180 : (direction.equals("S")) ? 90 : (direction.equals("W")) ? 0 : -90;
+        }
+        return yAngle;
     }
 
     @Override

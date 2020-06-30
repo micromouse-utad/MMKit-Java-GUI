@@ -12,7 +12,7 @@ public class Camera {
     private float currentTurnSpeed = 0;
 
     private float distanceFromPlayer = 20;
-    private float angleAroundPlayer = 0;
+    private float angleAroundPlayer = 180;
 
     private Vec3f position = new Vec3f(0,100,0);
     private float pitch = 30;
@@ -30,7 +30,7 @@ public class Camera {
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
         calculateCameraPosition(horizontalDistance, verticalDistance);
-        this.yaw = 180 - (mouseGFX.getRotY() + angleAroundPlayer);
+        this.yaw = 180 -(mouseGFX.getRotY() + angleAroundPlayer);
     }
 
     public void move(boolean freeroaming){
@@ -38,7 +38,7 @@ public class Camera {
         float distance = currentSpeed * OpenGLEngine.getFrameTimeSeconds();
         float dx = (float) (distance * Math.sin(Math.toRadians(yaw)));
         float dz = (float) (distance * Math.cos(Math.toRadians(yaw)));
-        increasePosition(dx, 0, dz);
+        increasePosition(-dx, 0, -dz);
     }
 
     public void increasePosition(float dx, float dy, float dz){
@@ -122,6 +122,9 @@ public class Camera {
     }
 
     public void setDistanceFromPlayer(float distanceFromPlayer) {
+        if (distanceFromPlayer > 50) {
+            return;
+        }
         this.distanceFromPlayer = distanceFromPlayer;
     }
 
