@@ -86,6 +86,14 @@ public class Camera {
     }
 
     public void setPitch(float pitch) {
+        if (pitch > 90){
+            pitch = 90;
+            return;
+        }
+        if(pitch < -90){
+            pitch = -90;
+            return;
+        }
         this.pitch = pitch;
     }
 
@@ -127,6 +135,10 @@ public class Camera {
         if (distanceFromPlayer > 300) {
             return;
         }
+        if(distanceFromPlayer < 5){
+            this.distanceFromPlayer = 5.0f;
+            return;
+        }
         this.distanceFromPlayer = distanceFromPlayer;
     }
 
@@ -136,5 +148,9 @@ public class Camera {
 
     public void setPosition(Vec3f position) {
         this.position = position;
+    }
+
+    public void setRotY(float rotY) {
+        this.rotY = rotY;
     }
 }

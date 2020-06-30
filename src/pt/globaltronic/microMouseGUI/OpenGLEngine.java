@@ -146,7 +146,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     @Override
     public void init(GLAutoDrawable glad) {
 
-
         grid = new Grid(cols,rows,cellSize);
         VISIBLE_WALLS = new HashSet<Entity>();
 
@@ -515,6 +514,10 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
     public void setFirstPersonView(boolean firstPersonView) {
         this.firstPersonView = firstPersonView;
+        if(firstPersonView) {
+            camera.setDistanceFromPlayer(5.0f);
+            camera.setPitch(30);
+        }
     }
 
     public int getCols() {
@@ -525,5 +528,10 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         return rows;
     }
 
-
+    public void setTopDownView() {
+        camera.setPitch(89);
+        camera.setPosition(new Vec3f(80f, 125, 75f));
+        camera.setRotY(180);
+        camera.setAngleAroundPlayer(180);
+    }
 }
