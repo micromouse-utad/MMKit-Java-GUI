@@ -2,6 +2,7 @@ package pt.globaltronic.microMouseGUI.models.graphics.viewObjects;
 
 import pt.globaltronic.microMouseGUI.models.graphics.Graphics3D.Pyramid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Position;
+import pt.globaltronic.microMouseGUI.openGL.entity.Entity;
 
 import java.awt.*;
 
@@ -10,6 +11,7 @@ public class Mouse {
     private Position position;
     private Image image;
     private Pyramid mousePyr;
+    private Entity mouseGFX;
     private int correction;
     private double cellSize;
 
@@ -48,5 +50,13 @@ public class Mouse {
 
     public Pyramid getMousePyr() {
         return mousePyr;
+    }
+
+    public Entity getMouseGFX() {
+        return mouseGFX;
+    }
+
+    public void setMouseGFX(Entity mouseGFX) {
+        this.mouseGFX = mouseGFX;
     }
 }
