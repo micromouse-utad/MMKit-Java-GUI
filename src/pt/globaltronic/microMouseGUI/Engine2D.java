@@ -28,7 +28,7 @@ public class Engine2D implements Runnable{
     private int correction;
     private Thread thread;
     private boolean running;
-    private boolean cleared;
+    private boolean cleared = true;
     private boolean replay = false;
 
 
@@ -168,7 +168,7 @@ public class Engine2D implements Runnable{
         //initialize the drawing tools, and clearing the screen;
         g = bs.getDrawGraphics();
         g.clearRect(0,0, width, height);
-        g.setColor(Color.GRAY);
+        g.setColor(Color.BLACK);
         //g.setColor(new Color(140,180,180));
         g.fillRect(0,0, width, height);
 
@@ -184,14 +184,10 @@ public class Engine2D implements Runnable{
                 if (hWalls[i][j].isVisible()) {
                     int xPixel = grid.colToX(hWalls[i][j].getPosition().getCol());
                     int yPixel = grid.rowToY(correction + 1 - hWalls[i][j].getPosition().getRow());
-                    g.setColor(Color.BLACK);
+                    g.setColor(Color.RED);
                     //making last row of wall fit in the grid
                     if(j == 0){
-                        g.setColor(Color.RED);
                         g.fillRect(xPixel, yPixel-5, cellSize, 5);
-                    }
-                    if(j == rows){
-                        g.setColor(Color.RED);
                     }
                     g.fillRect(xPixel, yPixel, cellSize, 5);
                 }
@@ -204,14 +200,10 @@ public class Engine2D implements Runnable{
                     int xPixel = grid.colToX(vWalls[i][j].getPosition().getCol());
                     int yPixel = grid.colToX(correction - vWalls[i][j].getPosition().getRow());
                     //adjusting the last line of vertical walls to fit in the grid.
-                    g.setColor(Color.BLACK);
+                    g.setColor(Color.RED);
                     if (i == cols){
-                        g.setColor(Color.RED);
                         g.fillRect(xPixel-5, yPixel, 5, cellSize);
                         continue;
-                    }
-                    if (i == 0){
-                        g.setColor(Color.RED);
                     }
                     g.fillRect(xPixel, yPixel, 5, cellSize);
                 }
@@ -234,10 +226,7 @@ public class Engine2D implements Runnable{
             for (int j = 0; j < rows+1; j++){
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
                 //always showing side walls.
-                if(j == 0){
-                    hWalls[i][j].setVisible(true);
-                }
-                if(j == rows){
+                if(j == 0 || j == rows){
                     hWalls[i][j].setVisible(true);
                 }
             }
@@ -249,10 +238,11 @@ public class Engine2D implements Runnable{
             for (int j = 0; j < rows; j++){
                 vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
                 //always showing side walls.
-                if(i == 0){
+                if(i == 0 || i == cols){
                     vWalls[i][j].setVisible(true);
                 }
-                if(i == cols){
+                //always showing starting wall
+                if (i == 1 && j == 0){
                     vWalls[i][j].setVisible(true);
                 }
             }
@@ -286,6 +276,11 @@ public class Engine2D implements Runnable{
             for (int j = 0; j < rows; j++){
                 //leaving side walls up
                 if(i == cols || i == 0){
+                    vWalls[i][j].setVisible(true);
+                    continue;
+                }
+                //always showing starting wall
+                if (i == 1 && j == 0){
                     vWalls[i][j].setVisible(true);
                     continue;
                 }

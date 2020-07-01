@@ -308,6 +308,10 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                 if (i == 0 || i == cols) {
                     vWalls[i][j].setVisible(true);
                 }
+                //always showing starting wall
+                if (i == 1 && j == 0){
+                    vWalls[i][j].setVisible(true);
+                }
             }
         }
     }
@@ -422,7 +426,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         if(numbOfRotations < 25){
             mouseGFX.increaseRotation(0, yAngleIncrement, 0);
             numbOfRotations++;
-            //return;
+            return;
         }
         if(numbOfTranslation < 25) {
             xInitial += xIncrement;
@@ -512,6 +516,10 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                 vWalls[i][j].setVisible(false);
                 //always showing side walls.
                 if (i == 0 || i == cols) {
+                    vWalls[i][j].setVisible(true);
+                }
+                //always showing starting wall
+                if (i == 1 && j == 0){
                     vWalls[i][j].setVisible(true);
                 }
             }
