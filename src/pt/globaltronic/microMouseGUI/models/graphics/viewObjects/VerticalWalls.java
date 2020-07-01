@@ -4,16 +4,10 @@ import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.Vertica
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.WallPosition;
 import pt.globaltronic.microMouseGUI.OpenGLEngine;
 
-import java.awt.*;
 
 public class VerticalWalls extends Walls{
 
     private boolean visible;
-
-    public VerticalWalls(Image image, WallPosition position) {
-        super(image, position);
-        visible = false;
-    }
 
     public VerticalWalls(WallPosition position) {
         super(position);

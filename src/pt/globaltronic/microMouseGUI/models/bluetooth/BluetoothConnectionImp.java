@@ -13,7 +13,7 @@ public class BluetoothConnectionImp implements BluetoothConnection {
         StreamConnection conn = null;
         try {
 
-            //setting up the connection
+            //setting up the connection on port 1
             String deviceURL = remoteDevice.getURL();
             String URL = BluetoothURLBuilder.buildURL(deviceURL, 1);
             conn = (StreamConnection) Connector.open(URL);

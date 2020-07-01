@@ -1,12 +1,10 @@
 package pt.globaltronic.microMouseGUI.models.graphics.services;
 
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
-import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Mouse;
-
 import java.util.Queue;
 
 public class ReplayInputFeeder implements Runnable {
-
+    //class to simulate a microMouse to send mouseInputs from a replay every 3sec.
     private MouseInputs mouseInputs;
     private Queue<String> replayHistory;
     private boolean running;
@@ -22,10 +20,10 @@ public class ReplayInputFeeder implements Runnable {
         while (running){
             if(!replayHistory.isEmpty()){
                 try {
-                    Thread.sleep(3000);
                     String line = replayHistory.poll();
                     mouseInputs.replayPut(line);
                     System.out.println(line);
+                    Thread.sleep(3000);
                 }catch (InterruptedException ex){
                     System.out.println(ex.getMessage());
                 }

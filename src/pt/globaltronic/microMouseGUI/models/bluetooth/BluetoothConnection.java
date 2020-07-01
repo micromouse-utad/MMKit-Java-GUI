@@ -4,6 +4,6 @@ import javax.microedition.io.StreamConnection;
 
 public interface BluetoothConnection {
 
-    public StreamConnection connectToDevice(BluetoothDevice remoteDevice);
+    StreamConnection connectToDevice(BluetoothDevice remoteDevice);
 
 }

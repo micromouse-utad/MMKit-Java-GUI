@@ -1,6 +1,5 @@
 package pt.globaltronic.microMouseGUI.models.graphics.positionLogic;
 
-
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.HorizontalWallPosition;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.VerticalWallPosition;
 
@@ -56,27 +55,6 @@ public class Grid {
         }
     }
 
-    public int getCols() {
-        return cols;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCellSize() {
-        return cellSize;
-    }
-
-    //convert grid size to pixels
-    public int gridWidth(int cols){
-        return cols * cellSize;
-    }
-
-    public int gridHeight(int rows){
-        return rows * cellSize;
-    }
-
     //convert a position col to X pixels
     public int colToX(int col){
         return col * cellSize;
@@ -85,10 +63,6 @@ public class Grid {
     //convert a position row to Y pixels
     public int rowToY(int row){
         return row * cellSize;
-    }
-
-    public Position[][] getPositionsArray() {
-        return positions;
     }
 
     public Position getPosition(int col, int row){

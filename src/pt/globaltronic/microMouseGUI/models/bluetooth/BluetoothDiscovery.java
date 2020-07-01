@@ -4,6 +4,6 @@ import java.util.LinkedHashSet;
 
 public interface BluetoothDiscovery {
 
-    public LinkedHashSet<BluetoothDevice> scanForDevices();
+    LinkedHashSet<BluetoothDevice> scanForDevices();
 
 }

@@ -42,12 +42,6 @@ public class WelcomeViewController {
         return replays.getReplaysSet();
     }
 
-    public Vector<File> getReplaysVector(){
-        replays.lookForReplays();
-        return replays.getReplaysSetVector();
-
-    }
-
     public Vector<String> getReplaysStringVector(){
         replays.lookForReplays();
         Vector<String> replayNames = new Vector<String>();

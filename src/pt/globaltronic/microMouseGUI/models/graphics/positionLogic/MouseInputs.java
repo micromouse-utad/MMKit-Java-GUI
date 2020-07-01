@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class MouseInputs {
-
+    //class to store inputs from the microMouse or a replay, each engine will use an independent queue, the 3d and the 2d
+    //but the data they keep is identical
+    //mouse history is used to generate replays and backups, it only receives inputs and is not accessed during run
     private Queue<String> mouseInputHistory;
     private Queue<String> mouseInputQueue3D;
     private Queue<String> mouseInputQueue;
@@ -43,9 +45,5 @@ public class MouseInputs {
     public void replayPut(String replayInput){
         mouseInputQueue3D.offer(replayInput);
         mouseInputQueue.offer(replayInput);
-    }
-
-    public Queue<String> getMouseInputQueue() {
-        return mouseInputQueue;
     }
 }

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 
 public class MouseInputsReceiver implements Runnable{
 
+    //class to receive inputs from the bluetooth streamConnection.
     private MouseInputs mouseInputs;
     private StreamConnection connection;
     private boolean running;

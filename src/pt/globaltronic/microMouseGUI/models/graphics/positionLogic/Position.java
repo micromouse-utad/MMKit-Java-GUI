@@ -1,7 +1,5 @@
 package pt.globaltronic.microMouseGUI.models.graphics.positionLogic;
 
-import java.awt.*;
-
 public class Position {
 
     private int col;
@@ -21,14 +19,6 @@ public class Position {
 
     public int getRow() {
         return row;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
     }
 
     public boolean isVisited() {

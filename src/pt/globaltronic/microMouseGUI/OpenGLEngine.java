@@ -160,7 +160,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         texturedModel.getModelTexture().setReflectivity(1);
         texturedModel.getModelTexture().setShineDamper(10);
         mouseGFX = new MouseGFX(texturedModel, new Vec3f(155f, 3, 5f), 0, 180, 0, 1.0f);
-        mouse = new Mouse(grid.getPosition(0,0), mouseGFX, cellSize);
+        mouse = new Mouse(grid.getPosition(0,0), mouseGFX);
         camera = new Camera(mouseGFX);
         sun = new Light(new Vec3f(2000, 2000, 000), new Vec3f(1, 1, 1));
         terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("black")));

@@ -5,7 +5,6 @@ import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Position;
 import pt.globaltronic.microMouseGUI.models.graphics.services.MouseInputsTranslator;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Display;
-import pt.globaltronic.microMouseGUI.models.graphics.services.ImageLoader;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.HorizontalWalls;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.Mouse;
 import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
@@ -96,8 +95,7 @@ public class Engine2D implements Runnable{
         display = new Display(panel, title, width, height);
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
-        mouseImg = ImageLoader.loadImage("/mouse.png");
-        mouse = new Mouse(grid.getPosition(0,0),mouseImg);
+        mouse = new Mouse(grid.getPosition(0,0));
         createWalls();
     }
 
@@ -230,11 +228,10 @@ public class Engine2D implements Runnable{
 
     private void createWalls(){
         hWalls = new HorizontalWalls[cols][rows+1];
-        hWallImg = ImageLoader.loadImage("/wallhorizontal.png");
 
         for (int i = 0; i < cols; i++){
             for (int j = 0; j < rows+1; j++){
-                hWalls[i][j] = new HorizontalWalls(hWallImg, grid.getHWallPosition(i,j));
+                hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i,j));
                 //always showing side walls.
                 if(j == 0){
                     hWalls[i][j].setVisible(true);
@@ -246,11 +243,10 @@ public class Engine2D implements Runnable{
         }
 
         vWalls = new VerticalWalls[cols+1][rows];
-        vWallImg = ImageLoader.loadImage("/verticalwall.png");
 
         for (int i = 0; i < cols+1; i++){
             for (int j = 0; j < rows; j++){
-                vWalls[i][j] = new VerticalWalls(vWallImg, grid.getVWallPosition(i,j));
+                vWalls[i][j] = new VerticalWalls(grid.getVWallPosition(i,j));
                 //always showing side walls.
                 if(i == 0){
                     vWalls[i][j].setVisible(true);

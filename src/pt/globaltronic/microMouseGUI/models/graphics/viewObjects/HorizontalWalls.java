@@ -4,16 +4,9 @@ import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.Horizon
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.walls.WallPosition;
 import pt.globaltronic.microMouseGUI.OpenGLEngine;
 
-import java.awt.*;
-
 public class HorizontalWalls extends Walls {
 
     private boolean visible;
-
-    public HorizontalWalls(Image image, WallPosition position) {
-        super(image, position);
-        visible = false;
-    }
 
     public HorizontalWalls(WallPosition position) {
         super(position);

@@ -1,7 +1,5 @@
 package pt.globaltronic.microMouseGUI.models.graphics.positionLogic;
 
-import pt.globaltronic.microMouseGUI.models.bluetooth.BluetoothDevice;
-
 import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Vector;
@@ -19,13 +17,14 @@ public class Replays {
     public void lookForReplays(){
         File file = new File(filePath);
         if (!file.isDirectory()) {
-            System.out.println("Error with path to backups, path does not point to a directory");
+            System.out.println("Error within the path to backups, path does not point to a directory");
             return;
         }
+        //store all the files from the directory into an array.
         File[] arr = file.listFiles();
-        // a little crude, but it will look for replays from 1 to 200
         for(int i = 0; i < arr.length; ++i){
             File backupFile = arr[i];
+            //does not include directories
             if(!backupFile.isFile()){
                 continue;
             }
