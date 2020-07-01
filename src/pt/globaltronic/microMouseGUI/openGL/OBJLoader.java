@@ -12,12 +12,15 @@ import java.util.List;
 
 public class OBJLoader {
 
+    //process OBJ file, need to have the vertices, vertex normal, and textures as v, vn, vt appear first before the faces
+    //once faces appear it does not load anymore vertices.
+    //edit the file if necessary
     public static RawModel loadObjectModel(String fileName, Loader loader){
         FileReader fr = null;
         try{
             fr = new FileReader((new File("resources/" + fileName +".obj")));
         }catch(Exception ex){
-            System.err.println("Couldnt load obj file!");
+            System.err.println("Couldn't load obj file!");
             ex.printStackTrace();
         }
         BufferedReader reader = new BufferedReader(fr);
@@ -107,7 +110,5 @@ public class OBJLoader {
         normalsArray[currentVectexPointer*3] = currentNorm.x;
         normalsArray[currentVectexPointer*3 +1] = currentNorm.y;
         normalsArray[currentVectexPointer*3 +2] = currentNorm.z;
-
-
     }
 }

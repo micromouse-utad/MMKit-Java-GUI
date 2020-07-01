@@ -26,8 +26,6 @@ public class ReplayViewController {
         Queue<String> replayInputs = getMouseInputsFromReplayFile(selectedReplay);
         replayInputFeeder = new ReplayInputFeeder(mouseInputs, replayInputs);
 
-
-
         SwingUtilities.invokeLater(() -> {
             replayView = new ReplayView(selectedReplay, this);
             replayView.setVisible(true);
@@ -79,7 +77,6 @@ public class ReplayViewController {
 
     public void firstPersonMode() {
         openGLEngine.setFirstPersonView(true);
-        //need to implement the view change
     }
 
     public void topDownMode() {

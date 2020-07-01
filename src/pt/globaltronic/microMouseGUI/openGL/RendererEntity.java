@@ -16,9 +16,6 @@ import java.util.Map;
 public class RendererEntity {
 
     private GL3 gl;
-    private static final float FOV = 70f;
-    private static final float NEAR_PLANE = 0.5f;
-    private static final float FAR_PLANE = 1000.0f;
     private ShaderEntity shader;
 
     public RendererEntity(GL3 gl, ShaderEntity shader, float[] projectionMatrix){

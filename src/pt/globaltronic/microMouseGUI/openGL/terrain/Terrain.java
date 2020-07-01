@@ -21,7 +21,8 @@ public class Terrain {
         this.model = generateTerrain(loader);
     }
 
-
+    //creating the vertices of the terrain, to create the latice of the ground. y = 0 in our case becuase the
+    //micromouse mase is flat, no elevation is needed.
     private RawModel generateTerrain(Loader loader){
         int count = VERTEX_COUNT * VERTEX_COUNT;
         float[] vertices = new float[count * 3];

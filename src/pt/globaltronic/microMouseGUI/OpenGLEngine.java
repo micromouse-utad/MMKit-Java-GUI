@@ -19,12 +19,11 @@ import pt.globaltronic.microMouseGUI.openGL.OBJLoader;
 import pt.globaltronic.microMouseGUI.openGL.entity.Camera;
 import pt.globaltronic.microMouseGUI.openGL.entity.Entity;
 import pt.globaltronic.microMouseGUI.openGL.entity.Light;
-import pt.globaltronic.microMouseGUI.openGL.entity.MouseGFX;
+
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
 import pt.globaltronic.microMouseGUI.openGL.models.TexturedModel;
 import pt.globaltronic.microMouseGUI.openGL.terrain.Terrain;
 import pt.globaltronic.microMouseGUI.openGL.textures.ModelTexture;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +43,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private Camera camera;
     private Light sun;
     private Terrain terrain;
-    private MouseGFX mouseGFX;
+    private Entity mouseGFX;
 
     //eventlistener variables
     private boolean rightClickDown;
@@ -75,12 +74,12 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     float zIncrement;
     int numbOfRotations = 0;
     int numbOfTranslation = 0;
-
     boolean firstPersonView = true;
     boolean cleared = true;
-
+    //used to calculate the camera speed when wasd keys are pressed
     private static long lastFrameTime = 0;
     private static float delta;
+
 
     public OpenGLEngine(JPanel panel, MouseInputs mouseInputs, int cols, int rows, int cellSize, int size) {
         this.canvas = new GLJPanel();
@@ -92,8 +91,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         this.width = cols * size;
         this.height = rows * size;
 
-
-        //add to implement because lost focus would not register.
+        //implemented to combat errors when the mouse pointer leaves the canvas
         canvas.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -106,77 +104,69 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         });
     }
 
+    //JOGL GLeventListener draw method, acts as the defacto "gameloop". While the animator thread runs it will invoke display as if in a while loop
     @Override
     public void display(GLAutoDrawable glad) {
-
+        //checking which view has been selected, default is first person. (3rd overshoulder)
         if(!firstPersonView){
             camera.move(!firstPersonView);
         }
+        //checking if the data has been cleared, used when replaying.
         if (!cleared) {
             clear();
             cleared = true;
         }
+        //update the view
         tick();
+        //move the camera using firstperson move method
         if(firstPersonView) {
             camera.move();
         }
-
+        //render visible walls only
         for (Entity wall : VISIBLE_WALLS){
             renderer.processEntity(wall);
         }
+        //getting entities and terrain ready and rendering them
         renderer.processTerrain(terrain);
         renderer.processEntity(mouseGFX);
         renderer.render(sun, camera);
+        //calculating the time between frames, for movement purposes
         long currentFrameTime = System.currentTimeMillis();
         delta = (currentFrameTime - lastFrameTime) / 1000f;
         lastFrameTime = currentFrameTime;
     }
 
-    public static float getFrameTimeSeconds() {
-        return delta;
-    }
-
-
+    //JOGL GLeventlistener close method, here we just clean up the data from memory.
     @Override
     public void dispose(GLAutoDrawable arg0) {
         renderer.cleanUp();
         loader.cleanUpMemory();
     }
 
+    //JOGL GLevenlistener initiation method, here we create our objects. init of the jogl sequence
     @Override
     public void init(GLAutoDrawable glad) {
-
-        grid = new Grid(cols,rows,cellSize);
+        createGrid();
         VISIBLE_WALLS = new HashSet<Entity>();
-
         renderer = new MasterRenderer(glad.getGL().getGL3(), width, height);
         loader = new Loader(glad.getGL().getGL3());
         createWalls();
-
-        model = OBJLoader.loadObjectModel("E 45 Aircraft", loader);
-        //use the loader to get the id of the texture and pass it to the new texture
-        texture = new ModelTexture(loader.loadTexture("grey"));
-        texturedModel = new TexturedModel(model, texture);
-        texturedModel.getModelTexture().setReflectivity(1);
-        texturedModel.getModelTexture().setShineDamper(10);
-        mouseGFX = new MouseGFX(texturedModel, new Vec3f(155f, 3, 5f), 0, 180, 0, 1.0f);
-        mouse = new Mouse(grid.getPosition(0,0), mouseGFX);
-        camera = new Camera(mouseGFX);
-        sun = new Light(new Vec3f(2000, 2000, 000), new Vec3f(1, 1, 1));
-        terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("black")));
-
+        createEntities();
+        createTerrain();
     }
 
+    //JOGL GLeventlistener invoked on screen resizing, our app is unresizable, not use.
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-
+        //un-used our screen is never resized.
     }
 
-
+    //keylistener interface
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
+    //on key press alter the current speed of the camera for w and s, or rotation speed with a d
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_W)
@@ -187,9 +177,9 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             camera.setCurrentSpeed(1.0f);
         if (e.getKeyCode() == KeyEvent.VK_D)
             camera.setCurrentTurnSpeed(-1.0f);
-
     }
 
+    //on key release set 0 for the speeds to stop camera movement.
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_W)
@@ -202,7 +192,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             camera.setCurrentTurnSpeed(0f);
     }
 
-
+    //used to keep the mouse inside the canvas as the mouse is panned to alter camera angle
     void CenterMouse(MouseEvent e) {
         try {
             r = new Robot();
@@ -212,8 +202,9 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         }
     }
 
+    //mouseMotionListener
+    //mouse drag with right-click down will rotate the camera.
     public void mouseDragged(MouseEvent arg0) {
-
         if (rightClickDown) {
             float pitch = camera.getPitch();
             float angleAroundPlayer = camera.getAngleAroundMouse();
@@ -230,9 +221,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     }
 
 
-
     public void mouseMoved(MouseEvent arg0) {
-
     }
 
     public void mouseClicked(MouseEvent arg0) {
@@ -244,11 +233,12 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     public void mouseExited(MouseEvent arg0) {
     }
 
+    //mouse eventlistener, used to differentiate natural mouse movement, to those used to pan the camera
+    //on right click press over the GLcanvas camera is affected
     public void mousePressed(MouseEvent arg0) {
         if (arg0.getButton() == MouseEvent.BUTTON3) {
             rightClickDown = true;
         }
-
     }
 
     public void mouseReleased(MouseEvent arg0) {
@@ -257,6 +247,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         }
     }
 
+    //mousewheel eventlistener, used to zoom the camera in and out
     public void mouseWheelMoved(MouseWheelEvent arg0) {
         float distanceFromPlayer = camera.getDistanceFromMouse();
         if (arg0.getUnitsToScroll() > 0) {
@@ -268,6 +259,10 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         }
     }
 
+    private void createGrid(){
+        grid = new Grid(cols,rows,cellSize);
+    }
+
     private void createWalls() {
 
         //Loading models and textures to create the walls.
@@ -276,7 +271,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         TexturedModel texturedWall = new TexturedModel(wallRaw, wallTexture);
         texturedWall.getModelTexture().setReflectivity(1);
         texturedWall.getModelTexture().setShineDamper(10);
-
 
         //for the horizontal walls we need +1 row because to have 16squares you need 17 lines to close them.
         hWalls = new HorizontalWalls[cols][rows + 1];
@@ -292,13 +286,11 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                 hWalls[i][j].setVisible(false);
 
                 //always showing side walls.
-
                 if (j == 0 || j == rows) {
                     hWalls[i][j].setVisible(true);
                 }
             }
         }
-
         //likewise for the Vertical walls we need +1 col.
         vWalls = new VerticalWalls[cols + 1][rows];
 
@@ -320,33 +312,54 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         }
     }
 
+    private void createEntities(){
+        model = OBJLoader.loadObjectModel("E 45 Aircraft", loader);
+        //use the loader to get the id of the texture and pass it to the new texture
+        texture = new ModelTexture(loader.loadTexture("grey"));
+        texturedModel = new TexturedModel(model, texture);
+        texturedModel.getModelTexture().setReflectivity(1);
+        texturedModel.getModelTexture().setShineDamper(10);
+        mouseGFX = new Entity(texturedModel, new Vec3f(155f, 3, 5f), 0, 180, 0, 1.0f);
+        mouse = new Mouse(grid.getPosition(0,0), mouseGFX);
+        camera = new Camera(mouseGFX);
+        sun = new Light(new Vec3f(2000, 2000, 000), new Vec3f(1, 1, 1));
+    }
+
+    private void createTerrain(){
+        terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("black")));
+    }
+
     private void tick() {
-        //get the mouse inputs from the 3d queue
+        //if the mouse animation was started update the micromouse motion
         if (!mouseAnimationFinished){
             mouseAnimation();
             return;
         }
+        //get inputs from the mouseInputs 3d queue.
         String inputs = mouseInputs.getMouseInput3D();
 
-        //checking that we actual got a result and that it matches the length we need before we try to parse and extract data
+        //checking that we actually got a result and that it matches the length we need before we try to parse and extract data
         if (inputs != null && (inputs.length() > 9)) {
             int col = MouseInputsTranslator.parseCol(inputs);
             int row = MouseInputsTranslator.parseRow(inputs);
 
-            //getting the mouse current position
+            //getting the "live" micromouse current position in the maze
             Position pos = grid.getPosition(col, row);
+            //getting the old position from the modeled micromouse
             Position oldMousePosition = mouse.getPosition();
-            pos.setVisited(true);
-            //updating mouse position and its graphics
+            //updating modeled micromouse position
             mouse.setPosition(pos);
 
             //parsing the direction for "first person" camera view, and wall positioning
             String direction = MouseInputsTranslator.parseDirection(inputs);
 
+            //launches the mouse animation
             setupMouseAnimation(oldMousePosition, pos, direction);
+
+            //saving previous direction for angle calculation (rotation of the mouseAnimation)
             previousDirection = direction;
 
-
+            //parsing wall presence from inputs, and applying them to the model
             boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
             boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
@@ -380,7 +393,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                     //reverse of case east
                     //left wall will be a horizontal wall when facing west, with same position as mouse position
                     hWalls[col][row].setVisible(lWall);
-                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
+                    //facing west, front wall will be a vertical wall with the same position as current position
                     vWalls[col][row].setVisible(fWall);
                     //facing west, right wall will be a horizontal wall at col and +1 row as position
                     hWalls[col][row + 1].setVisible(rWall);
@@ -388,6 +401,9 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             }
         }
     }
+
+    //setting up the mouse animation, setting its boolean to false, and calculating the pixel locations and distances it will need to move
+    //dived in 25 increments, fps is set to be around 60fps. it will take 25 frames for the mouse animation, just under half second
     public void setupMouseAnimation(Position initialPos, Position finalPos, String direction){
         mouseAnimationFinished = false;
         xInitial = (-initialPos.getCol()) * cellSize;
@@ -401,13 +417,13 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         yAngleIncrement = (calculateYRotationAngle(direction) / 25);
     }
 
+    //cut into separated if statements and 2 variables, leaving the option to separate rotation from translation
     public void mouseAnimation() {
         if(numbOfRotations < 25){
             mouseGFX.increaseRotation(0, yAngleIncrement, 0);
             numbOfRotations++;
-            return;
+            //return;
         }
-
         if(numbOfTranslation < 25) {
             xInitial += xIncrement;
             zInitial += zIncrement;
@@ -415,13 +431,16 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             numbOfTranslation++;
             return;
         }
+        //end the animation and resets the variables to default 0 0 and true
         if(numbOfRotations == numbOfTranslation){
             numbOfRotations = 0;
-            numbOfTranslation= 0;
+            numbOfTranslation = 0;
             mouseAnimationFinished = true;
         }
     }
 
+    //calculating the angle the animation will rotate based on previous direction and current.
+    //clockwise turn is negative, counter positive.
     public float calculateYRotationAngle(String direction) {
         if (previousDirection.equals("N")){
             yAngle = (direction.equals("E")) ? -90 : (direction.equals("S")) ? 180 : (direction.equals("W")) ? 90 : 0;
@@ -438,15 +457,15 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         return yAngle;
     }
 
+    //runnable method run, invoked when the thread is created. we use it to set up the panel and canvas
     @Override
     public void run() {
-
+        //sizing the panel
         panel.setPreferredSize(new Dimension(width, height));
         panel.setMinimumSize(new Dimension(width, height));
         panel.setMaximumSize(new Dimension(width, height));
 
-
-        //since the canvas is set as focusabled and requests focus, it needs to event listeners
+        //setting up the canvas, requesting focus will make sure the canvas can listen to the mouse/key inputs
         canvas.addGLEventListener(this);
         canvas.addKeyListener(this);
         canvas.addMouseListener(this);
@@ -456,40 +475,33 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         canvas.requestFocus();
         panel.add(canvas);
 
-        //frame.setLocationRelativeTo(null);
         panel.setVisible(true);
 
+        //the animator class is what will keep the JOGL "loop" alive and keep invoking the necessary methods in our case display
+        // and dispose when the window is closed
         FPSAnimator animator = new FPSAnimator(canvas, 60);
         animator.start();
     }
 
+    //start method, when the thread starts the run method will be inoked.
     public synchronized void start() {
         thread = new Thread(this);
         thread.start();
     }
 
+    //replay method used to for the "game loop" to invoke the clear method
     public void replay() {
         cleared = false;
     }
 
+    //clear method used to setup for a replay of a live run, a re-replay.
     void clear() {
-        for (int x = 0; x < cols; x++) {
-            for (int y = 0; y < rows; y++) {
-                Position pos = grid.getPosition(x, y);
-                pos.setVisited(false);
-            }
-        }
+        //erasing walls
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows + 1; j++) {
-                int x = hWalls[i][j].getPosition().getCol();
-                int y = hWalls[i][j].getPosition().getRow();
                 hWalls[i][j].setVisible(false);
                 //always showing side walls.
-
-                if (j == 0) {
-                    hWalls[i][j].setVisible(true);
-                }
-                if (j == rows) {
+                if (j == 0 || j == rows) {
                     hWalls[i][j].setVisible(true);
                 }
             }
@@ -497,21 +509,21 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
         for (int i = 0; i < cols + 1; i++) {
             for (int j = 0; j < rows; j++) {
-                int x = vWalls[i][j].getPosition().getCol();
-                int y = vWalls[i][j].getPosition().getRow();
                 vWalls[i][j].setVisible(false);
-
                 //always showing side walls.
-                if (i == 0) {
-                    vWalls[i][j].setVisible(true);
-                }
-                if (i == cols) {
+                if (i == 0 || i == cols) {
                     vWalls[i][j].setVisible(true);
                 }
             }
         }
     }
 
+    public static float getFrameTimeSeconds() {
+        return delta;
+    }
+
+    //set up fake firstperson view aka 3rd person over the shoulder, setting up the distance from players to 5,
+    // to not enter the model, true first person shows the model
     public void setFirstPersonView(boolean firstPersonView) {
         this.firstPersonView = firstPersonView;
         if(firstPersonView) {
@@ -520,14 +532,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         }
     }
 
-    public int getCols() {
-        return cols;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
+    //set up the over the top view, the rotation is there to match 3d view and 2d view orientations
     public void setTopDownView() {
         camera.setPitch(89);
         camera.setPosition(new Vec3f(80f, 125, 75f));

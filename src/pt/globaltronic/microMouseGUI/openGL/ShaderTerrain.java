@@ -59,7 +59,6 @@ public class ShaderTerrain {
         location_viewMatrix = getUniformLocation("viewMatrix");
         location_lightPosition = getUniformLocation("lightPosition");
         location_lightColor = getUniformLocation("lightColor");
-
     }
 
     //used to get at the uniform variable in the shader code so we can modify it.
@@ -68,21 +67,8 @@ public class ShaderTerrain {
         return gl.glGetUniformLocation(programID, uniformName);
     }
 
-    //enables to modify a uniform variable and load a float to it. need id of location
-    protected void loadFloat(int location, float value){
-        gl.glUniform1f(location, value);
-    }
-
     protected void loadVector(int location, Vec3f vector){
         gl.glUniform3f(location, vector.x, vector.y, vector.z);
-    }
-
-    protected void loadBoolean(int location, boolean value){
-        float toLoad = 0;
-        if(value){
-            toLoad = 1;
-        }
-        gl.glUniform1f(location, toLoad);
     }
 
     protected void loadMatrix(int location, Matrix4 matrix){
@@ -145,55 +131,6 @@ public class ShaderTerrain {
         bindAttribute(0, "position");
         bindAttribute(1, "textureCoords");
         bindAttribute(2, "normal");
-    }
-
-    private int loadShader (String file, int type){
-        StringBuilder shaderSource = new StringBuilder();
-
-        try{
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = reader.readLine()) != null){
-                System.out.println(line);
-                shaderSource.append(line).append("\n");
-            }
-            reader.close();
-        }catch(IOException ex){
-            System.err.println("could not read file!");
-            ex.printStackTrace();
-            System.exit(-1);
-        }
-
-        String[] stringArr = shaderSource.toString().split("\n");
-
-
-        int shaderID = gl.glCreateShader(type);
-        System.out.println(shaderID);
-        int[] arrayOfLength = getStrLen(stringArr);
-        int[] compilingResult = new int[1];
-        gl.glShaderSource(shaderID,arrayOfLength.length,stringArr, arrayOfLength, 0);
-        gl.glCompileShader(shaderID);
-        gl.glGetShaderiv(shaderID, GL2ES2.GL_COMPILE_STATUS, IntBuffer.wrap(compilingResult));
-
-
-        if(compilingResult[0] == GL.GL_FALSE){
-            System.out.println("could not compile shader." + type);
-            System.exit(-1);
-        }
-        return shaderID;
-    }
-
-    int[] getStrLen(String[] arr){
-        int[] output = new int[arr.length];
-
-        for (int i = 0; i < arr.length; i++){
-            output[i] = arr[i].length();
-        }
-        return output;
-    }
-
-    public int getProgramID() {
-        return programID;
     }
 }
 

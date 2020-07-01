@@ -36,6 +36,7 @@ public class MasterRenderer {
         this.gl = gl;
         this.width = width;
         this.height = height;
+        //cull face to remove hidden triangles, less graphics to render.
         gl.glEnable(gl.GL_CULL_FACE);
         gl.glCullFace(gl.GL_BACK);
         entities = new HashMap<TexturedModel, List<Entity>>();
@@ -80,10 +81,6 @@ public class MasterRenderer {
     public void cleanUp(){
         shader.cleanUp();
         shaderTerrain.cleanUp();
-    }
-
-    public ShaderEntity getShader() {
-        return shader;
     }
 
     public void prepare(){

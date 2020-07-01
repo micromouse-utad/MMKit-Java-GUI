@@ -10,19 +10,20 @@ public class Camera {
     private float rotY = 0;
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
-    private float distanceFromMouse = 20;
+    private float distanceFromMouse = 5;
     private float angleAroundMouse = 180;
     private Vec3f position = new Vec3f(0,100,0);
     private float pitch = 30;
     private float yaw;
     private float roll;
 
-    private MouseGFX mouseGFX;
+    private Entity mouseGFX;
 
-    public Camera(MouseGFX mouseGFX){
+    public Camera(Entity mouseGFX){
         this.mouseGFX = mouseGFX;
     }
 
+    //move the camera relative to the micro mouse in pseudo firstperson (3rd over shoulder) view
     public void move(){
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
@@ -30,6 +31,7 @@ public class Camera {
         this.yaw = 180 -(mouseGFX.getRotY() + angleAroundMouse);
     }
 
+    //overload of the move method for free ranging camera movement "free roaming" view
     public void move(boolean freeroaming){
         increaseRotation(0, currentTurnSpeed * OpenGLEngine.getFrameTimeSeconds() , 0);
         float theta = rotY + angleAroundMouse;
@@ -78,6 +80,7 @@ public class Camera {
         return position;
     }
 
+    //limiting pitch to 90 and -90 to not end up with an upside down view
     public void setPitch(float pitch) {
         if (pitch > 90){
             this.pitch = 90;

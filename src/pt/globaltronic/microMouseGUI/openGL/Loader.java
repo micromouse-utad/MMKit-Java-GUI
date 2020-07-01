@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Loader {
 
-    GL3 gl;
+    private GL3 gl;
     private List<Integer> vaos = new ArrayList<Integer>();
     private List<Integer> vbos = new ArrayList<Integer>();
     private List<Integer> textures = new ArrayList<Integer>();
@@ -33,7 +33,7 @@ public class Loader {
         storeDataInAttributeList(1, 2, textureCoords);
         storeDataInAttributeList(2, 3, normals);
         unbindVAO();
-        return new RawModel(vaoID, indices.length); // triangles has triplets for position
+        return new RawModel(vaoID, indices.length);
     }
 
     public int loadTexture(String fileName){
@@ -93,7 +93,7 @@ public class Loader {
         vaos.add(vboIdArray[0]);
         //bind the buffer using the ID stored in our vboidArray
         gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, vboIdArray[0]);
-        //conver float[] data into a buffer and flipping it
+        //convert float[] data into a buffer and flipping it
         FloatBuffer buffer = storeDataInFloatBuffer(data);
         //store the data in the bound VBO using glBufferData  we need the size in bytes
         gl.glBufferData(GL3.GL_ARRAY_BUFFER, data.length*4, buffer, GL3.GL_STATIC_DRAW);

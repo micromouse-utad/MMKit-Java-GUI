@@ -55,27 +55,8 @@ public class Entity {
         return scale;
     }
 
-    public void setModel(TexturedModel model) {
-        this.model = model;
-    }
-
     public void setPosition(Vec3f position) {
         this.position = position;
     }
 
-    public void setRotX(float rotX) {
-        this.rotX = rotX;
-    }
-
-    public void setRotY(float rotY) {
-        this.rotY = rotY;
-    }
-
-    public void setRotZ(float rotZ) {
-        this.rotZ = rotZ;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
 }

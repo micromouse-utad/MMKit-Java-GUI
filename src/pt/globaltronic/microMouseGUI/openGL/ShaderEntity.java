@@ -83,30 +83,20 @@ public class ShaderEntity {
         gl.glUniform3f(location, vector.x, vector.y, vector.z);
     }
 
-    protected void loadBoolean(int location, boolean value){
-        float toLoad = 0;
-        if(value){
-            toLoad = 1;
-        }
-        gl.glUniform1f(location, toLoad);
-    }
-
     protected void loadMatrix(int location, Matrix4 matrix){
         matrixBuffer = FloatBuffer.wrap(matrix.getMatrix());
         matrixBuffer.flip();
-        //pass location, 1 for count of matrix to be modified (if locaiton poitns to an array of matrices you gotta say how many are changed), transpose boolean, buffer)
+        //pass location, 1 for count of matrix to be modified (if location points to an array of matrices you gotta say how many are changed), transpose boolean, buffer)
         gl.glUniformMatrix4fv(location, 1, false, matrixBuffer);
     }
 
     protected void loadMatrix(int location, float[] matrix){
         matrixBuffer = FloatBuffer.wrap(matrix);
         matrixBuffer.flip();
-        //pass location, 1 for count of matrix to be modified (if locaiton poitns to an array of matrices you gotta say how many are changed), transpose boolean, buffer)
+        //pass location, 1 for count of matrix to be modified (if location points to an array of matrices you gotta say how many are changed), transpose boolean, buffer)
         gl.glUniformMatrix4fv(location, 1, false, matrixBuffer);
     }
 
-
-    //supposed to be in the child class
     public void loadTransformationMatrix(Matrix4 matrix){
         loadMatrix(location_transformationMatrix, matrix);
     }
@@ -151,59 +141,11 @@ public class ShaderEntity {
     public void bindAttribute(int attribute, String variableName){
         gl.glBindAttribLocation(programID, attribute, variableName);
     }
-    // supposed oteb in child class super.bindattribute...
+
     public void bindAttributes(){
         bindAttribute(0, "position");
         bindAttribute(1, "textureCoords");
         bindAttribute(2, "normal");
     }
 
-    private int loadShader (String file, int type){
-        StringBuilder shaderSource = new StringBuilder();
-
-        try{
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = reader.readLine()) != null){
-                System.out.println(line);
-                shaderSource.append(line).append("\n");
-            }
-            reader.close();
-        }catch(IOException ex){
-            System.err.println("could not read file!");
-            ex.printStackTrace();
-            System.exit(-1);
-        }
-
-        String[] stringArr = shaderSource.toString().split("\n");
-
-
-        int shaderID = gl.glCreateShader(type);
-        System.out.println(shaderID);
-        int[] arrayOfLength = getStrLen(stringArr);
-        int[] compilingResult = new int[1];
-        gl.glShaderSource(shaderID,arrayOfLength.length,stringArr, arrayOfLength, 0);
-        gl.glCompileShader(shaderID);
-        gl.glGetShaderiv(shaderID, GL2ES2.GL_COMPILE_STATUS, IntBuffer.wrap(compilingResult));
-
-
-        if(compilingResult[0] == GL.GL_FALSE){
-            System.out.println("could not compile shader." + type);
-            //System.exit(-1);
-        }
-        return shaderID;
-    }
-
-    int[] getStrLen(String[] arr){
-        int[] output = new int[arr.length];
-
-        for (int i = 0; i < arr.length; i++){
-            output[i] = arr[i].length();
-        }
-        return output;
-    }
-
-    public int getProgramID() {
-        return programID;
-    }
 }

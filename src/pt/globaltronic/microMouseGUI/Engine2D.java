@@ -12,9 +12,8 @@ import pt.globaltronic.microMouseGUI.models.graphics.viewObjects.VerticalWalls;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
-import java.util.Queue;
+
 
 public class Engine2D implements Runnable{
 
@@ -31,7 +30,7 @@ public class Engine2D implements Runnable{
     private boolean running;
     private boolean cleared;
     private boolean replay = false;
-    private Queue<String> replayInputs;
+
 
     private Grid grid;
     private LinkedList<Position> visited;
@@ -42,9 +41,6 @@ public class Engine2D implements Runnable{
 
     private BufferStrategy bs;
     private Graphics g;
-    private BufferedImage mouseImg;
-    private BufferedImage hWallImg;
-    private BufferedImage vWallImg;
 
     public Engine2D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
         this.title = title;
@@ -62,12 +58,11 @@ public class Engine2D implements Runnable{
     public void run() {
         init();
         while (running) {
-            if (!replay) {
-                tick();
-                render();
-                continue;
+            if (!cleared) {
+                clear();
+                cleared = true;
             }
-            replayTick();
+            tick();
             render();
         }
     }
@@ -91,7 +86,6 @@ public class Engine2D implements Runnable{
     }
 
     private void init(){
-
         display = new Display(panel, title, width, height);
         visited = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
@@ -100,20 +94,25 @@ public class Engine2D implements Runnable{
     }
 
     private void tick(){
+        //getting inputs from the 2d queue
         String inputs = mouseInputs.getMouseInput();
+        //checking the length of the line to see if it is elligible for parsing
         if (inputs != null && (inputs.length() > 9)) {
+            //parsing positional data
             int col = MouseInputsTranslator.parseCol(inputs);
             int row = MouseInputsTranslator.parseRow(inputs);
+
+            //getting the given position, setting it as visited and setting it as the new mouse position
             Position pos = grid.getPosition(col, row);
             pos.setVisited(true);
             visited.add(pos);
             mouse.setPosition(pos);
 
+            //getting directional and wall presence inputs
             String direction = MouseInputsTranslator.parseDirection(inputs);
             Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
             Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
             Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
-
 
             switch (direction) {
                 case "N":
@@ -125,7 +124,7 @@ public class Engine2D implements Runnable{
                     vWalls[col+1][row].setVisible(rWall);
                     break;
                 case "E":
-                    //facing east left wall will be horizontal wall at same col +1 row from position
+                    //facing east left wall will be horizontal wall at same col, +1 row from position
                     hWalls[col][row + 1].setVisible(lWall);
                     //facing east front wall will be a vertical wall at +1 col and row as position
                     vWalls[col+1][row].setVisible(fWall);
@@ -144,7 +143,7 @@ public class Engine2D implements Runnable{
                     //reverse of case east
                     //left wall will be a horizontal wall when facing west, with same position as mouse position
                     hWalls[col][row].setVisible(lWall);
-                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
+                    //facing west, front wall will be a vertical wall at same col and row as current position
                     vWalls[col][row].setVisible(fWall);
                     //facing west, right wall will be a horizontal wall at col and +1 row as position
                     hWalls[col][row + 1].setVisible(rWall);
@@ -153,6 +152,7 @@ public class Engine2D implements Runnable{
         }
     }
 
+    //our drawing method
     private void render(){
         //getting or creating the buffer strategy of our display, setting to triple buffered
         bs = display.getCanvas().getBufferStrategy();
@@ -177,10 +177,8 @@ public class Engine2D implements Runnable{
         for (int i = 0; i < cols; i++){
             for (int j = 0; j < rows+1; j++){
                 if (hWalls[i][j].isVisible()) {
-                    //Image image1 = hWalls[i][j].getImage();
                     int xPixel = grid.colToX(hWalls[i][j].getPosition().getCol());
                     int yPixel = grid.rowToY(correction + 1 - hWalls[i][j].getPosition().getRow());
-                    //g.drawImage(image1, xPixel, yPixel, null);
                     g.setColor(Color.BLACK);
                     //making last row of wall fit in the grid
                     if(j == 0){
@@ -198,11 +196,8 @@ public class Engine2D implements Runnable{
         for (int i = 0; i < cols+1; i++){
             for (int j = 0; j < rows; j++){
                 if(vWalls[i][j].isVisible()) {
-                    //Image image2 = vWalls[i][j].getImage();
                     int xPixel = grid.colToX(vWalls[i][j].getPosition().getCol());
                     int yPixel = grid.colToX(correction - vWalls[i][j].getPosition().getRow());
-
-                    //g.drawImage(image2, xPixel, yPixel, null);
                     //adjusting the last line of vertical walls to fit in the grid.
                     g.setColor(Color.BLACK);
                     if (i == cols){
@@ -218,11 +213,12 @@ public class Engine2D implements Runnable{
             }
         }
 
-        //g.drawImage(mouse.getImage(), grid.colToX(mouse.getPosition().getCol()), grid.rowToY(mouse.getPosition().getRow()), null);
         g.setColor(Color.BLUE);
         g.fillRect(grid.colToX(mouse.getPosition().getCol()) + cellSize/3, grid.rowToY(correction - mouse.getPosition().getRow()) + cellSize/3, cellSize/2, cellSize/2);
 
+        //show the buffered data
         bs.show();
+        //dispose the drawing tool
         g.dispose();
     }
 
@@ -266,17 +262,15 @@ public class Engine2D implements Runnable{
         cleared = false;
     }
 
+    //clearing data, used when setting up for replay.
     void clear(){
         visited.forEach(position -> position.setVisited(false));
         visited.clear();
+        //clearing walls
         for (int i = 0; i < cols; i++){
             for (int j = 0; j < rows+1; j++){
                 //leaving side walls up.
-                if(j == 0){
-                    hWalls[i][j].setVisible(true);
-                    continue;
-                }
-                if(j == rows){
+                if(j == 0 || j == rows){
                     hWalls[i][j].setVisible(true);
                     continue;
                 }
@@ -286,11 +280,7 @@ public class Engine2D implements Runnable{
         for (int i = 0; i < cols+1; i++){
             for (int j = 0; j < rows; j++){
                 //leaving side walls up
-                if(i == 0){
-                    vWalls[i][j].setVisible(true);
-                    continue;
-                }
-                if(i == cols){
+                if(i == cols || i == 0){
                     vWalls[i][j].setVisible(true);
                     continue;
                 }
@@ -298,64 +288,4 @@ public class Engine2D implements Runnable{
             }
         }
     }
-
-    void replayTick(){
-        if (!cleared) {
-            clear();
-            cleared = true;
-        }
-
-        String inputs = mouseInputs.getMouseInput();
-        if (inputs != null && (inputs.length() > 9)) {
-            int col = MouseInputsTranslator.parseCol(inputs);
-            int row = MouseInputsTranslator.parseRow(inputs);
-            Position pos = grid.getPosition(col, row);
-            pos.setVisited(true);
-            visited.add(pos);
-            mouse.setPosition(pos);
-
-            String direction = MouseInputsTranslator.parseDirection(inputs);
-            Boolean lWall = MouseInputsTranslator.parseLeftWall(inputs);
-            Boolean fWall = MouseInputsTranslator.parseFrontWall(inputs);
-            Boolean rWall = MouseInputsTranslator.parseRightWall(inputs);
-
-
-            switch (direction) {
-                case "N":
-                    //left wall when facing up is a vertical wall with its position same as mouse position
-                    vWalls[col][row].setVisible(lWall);
-                    //front wall when facing up is a horizontal wall at col and +1 row than current position
-                    hWalls[col][row + 1].setVisible(fWall);
-                    //right wall when facing up is a vertical wall at +1 col and same row as position
-                    vWalls[col+1][row].setVisible(rWall);
-                    break;
-                case "E":
-                    //facing east left wall will be horizontal wall at same col +1 row from position
-                    hWalls[col][row + 1].setVisible(lWall);
-                    //facing east front wall will be a vertical wall at +1 col and row as position
-                    vWalls[col+1][row].setVisible(fWall);
-                    //facing east right wall will be a horizontal wall at position same  as mouse position
-                    hWalls[col][row].setVisible(rWall);
-                    break;
-                case "S":
-                    // similar to N facing but reverted left wall will be the right wall
-                    vWalls[col+1][row].setVisible(lWall);
-                    //front wall will be a horizontal wall at same postion as mouse position
-                    hWalls[col][row].setVisible(fWall);
-                    //right wall will be left wall of N case
-                    vWalls[col][row].setVisible(rWall);
-                    break;
-                case "W":
-                    //reverse of case east
-                    //left wall will be a horizontal wall when facing west, with same position as mouse position
-                    hWalls[col][row].setVisible(lWall);
-                    //facing west, front wall will be a vertical wall at col + 1 and same row as current position
-                    vWalls[col][row].setVisible(fWall);
-                    //facing west, right wall will be a horizontal wall at col and +1 row as position
-                    hWalls[col][row + 1].setVisible(rWall);
-                    break;
-            }
-        }
-    }
-
 }
