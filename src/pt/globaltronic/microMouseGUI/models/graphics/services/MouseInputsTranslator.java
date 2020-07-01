@@ -7,7 +7,6 @@ public class MouseInputsTranslator {
     X and Y in hexadecimal giving the position of the mouse 16x16 grid 0 to 255 positions
     D written as N W E S for north west east south
     W=000 W stands for walls, and the walls come in binary from left to right.
-
     */
     public static int parseCol(String mouseInput){
         String xStr = mouseInput.substring(0,1);
