@@ -54,7 +54,6 @@ public class WelcomeViewController {
         LinkedHashSet<File> replaysSet = replays.getReplaysSet();
 
         replaysSet.forEach(file -> replayNames.addElement(file.getName()));
-        System.out.println(replayNames.size());
 
         return replayNames;
     }

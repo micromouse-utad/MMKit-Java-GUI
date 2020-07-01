@@ -155,7 +155,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
         model = OBJLoader.loadObjectModel("E 45 Aircraft", loader);
         //use the loader to get the id of the texture and pass it to the new texture
-        texture = new ModelTexture(loader.loadTexture("image"));
+        texture = new ModelTexture(loader.loadTexture("grey"));
         texturedModel = new TexturedModel(model, texture);
         texturedModel.getModelTexture().setReflectivity(1);
         texturedModel.getModelTexture().setShineDamper(10);
@@ -163,7 +163,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         mouse = new Mouse(grid.getPosition(0,0), mouseGFX, cellSize);
         camera = new Camera(mouseGFX);
         sun = new Light(new Vec3f(2000, 2000, 000), new Vec3f(1, 1, 1));
-        terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("blacktiles")));
+        terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("black")));
 
     }
 
@@ -216,14 +216,14 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
         if (rightClickDown) {
             float pitch = camera.getPitch();
-            float angleAroundPlayer = camera.getAngleAroundPlayer();
+            float angleAroundPlayer = camera.getAngleAroundMouse();
 
             float pitchChange = (arg0.getY() - height/2) * 0.1f;
             camera.setPitch(pitch + pitchChange);
 
             float angleChange = (arg0.getX() -width/2) * 0.1f;
-            if(firstPersonView){camera.setAngleAroundPlayer(angleAroundPlayer + angleChange);}
-            if(!firstPersonView) {camera.setAngleAroundPlayer(angleAroundPlayer - angleChange);}
+            if(firstPersonView){camera.setAngleAroundMouse(angleAroundPlayer + angleChange);}
+            if(!firstPersonView) {camera.setAngleAroundMouse(angleAroundPlayer - angleChange);}
 
             CenterMouse(arg0);
         }
@@ -258,7 +258,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     }
 
     public void mouseWheelMoved(MouseWheelEvent arg0) {
-        float distanceFromPlayer = camera.getDistanceFromPlayer();
+        float distanceFromPlayer = camera.getDistanceFromMouse();
         if (arg0.getUnitsToScroll() > 0) {
                 camera.setDistanceFromPlayer(distanceFromPlayer +1 * arg0.getUnitsToScroll());
         } else {
@@ -532,6 +532,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         camera.setPitch(89);
         camera.setPosition(new Vec3f(80f, 125, 75f));
         camera.setRotY(180);
-        camera.setAngleAroundPlayer(180);
+        camera.setAngleAroundMouse(180);
     }
 }

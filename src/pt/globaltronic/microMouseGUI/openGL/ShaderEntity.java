@@ -7,6 +7,7 @@ import com.jogamp.opengl.math.Matrix4;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.sun.javafx.geom.Vec3f;
+
 import pt.globaltronic.microMouseGUI.openGL.entity.Camera;
 import pt.globaltronic.microMouseGUI.openGL.entity.Light;
 import pt.globaltronic.microMouseGUI.openGL.services.Maths;
@@ -17,8 +18,10 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class TerrainShader {
 
+public class ShaderEntity {
+        // this class is a bit weird, in the tutorial it was abstract and dude created an extending class to put
+    //the class specific methods, like the loadtransformationmatrix() where the matrix id is a local variable of child class.
     private int programID;
     private int vertexshaderID;
     private int fragmentShaderID;
@@ -30,15 +33,15 @@ public class TerrainShader {
     private int location_viewMatrix;
     private int location_lightPosition;
     private int location_lightColor;
+    private int location_shineDamper;
+    private int location_reflectivity;
 
-
-
-    public TerrainShader(GL3 gl){
+    public ShaderEntity(GL3 gl){
         this.gl = gl;
 
         //using new methods to get shadercode, importing the shaders. type, quantity, class, folder name, string in array necessary if importing mroe than 1, null, path to bin, name of shader, null, true
-        ShaderCode vpO = ShaderCode.create(gl, gl.GL_VERTEX_SHADER, 1, this.getClass(), "shaders", new String[]{"terrainVertexShader"}, null, "shaders/bin", "vertexShader", null, true);
-        ShaderCode fp0 = ShaderCode.create(gl, gl.GL_FRAGMENT_SHADER, 1, this.getClass(), "shaders", new String[]{"terrainFragmentShader"}, null, "shaders/bin", "fragmentShader", null, true);
+        ShaderCode vpO = ShaderCode.create(gl, gl.GL_VERTEX_SHADER, 1, this.getClass(), "shaders", new String[]{"vertexShader"}, null, "shaders/bin", "vertexShader", null, true);
+        ShaderCode fp0 = ShaderCode.create(gl, gl.GL_FRAGMENT_SHADER, 1, this.getClass(), "shaders", new String[]{"fragmentShader"}, null, "shaders/bin", "fragmentShader", null, true);
 
         //creating a new shaderprogram and adding the shaders
         ShaderProgram sp0 = new ShaderProgram();
@@ -54,14 +57,15 @@ public class TerrainShader {
         getAllUniformLocations();
 
     }
-    //supposed to be in child class
+
     protected void getAllUniformLocations(){
         location_transformationMatrix = getUniformLocation("transformationMatrix");
         location_projectionMatrix = getUniformLocation("projectionMatrix");
         location_viewMatrix = getUniformLocation("viewMatrix");
         location_lightPosition = getUniformLocation("lightPosition");
         location_lightColor = getUniformLocation("lightColor");
-
+        location_shineDamper = getUniformLocation("shineDamper");
+        location_reflectivity = getUniformLocation("reflectivity");
     }
 
     //used to get at the uniform variable in the shader code so we can modify it.
@@ -119,6 +123,11 @@ public class TerrainShader {
     public void loadLight(Light light){
         loadVector(location_lightPosition, light.getPosition());
         loadVector(location_lightColor, light.getColor());
+    }
+
+    public void loadShineVariable(float damper, float reflectivity){
+        loadFloat(location_shineDamper, damper);
+        loadFloat(location_reflectivity, reflectivity);
     }
 
 
@@ -198,4 +207,3 @@ public class TerrainShader {
         return programID;
     }
 }
-

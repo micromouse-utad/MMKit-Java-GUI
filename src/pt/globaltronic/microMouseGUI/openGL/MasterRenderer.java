@@ -15,9 +15,8 @@ import java.util.Map;
 
 public class MasterRenderer {
 
-
-    private StaticShader shader;
-    private TerrainShader shaderTerrain;
+    private ShaderEntity shader;
+    private ShaderTerrain shaderTerrain;
     private RendererEntity rendererEntity;
     private RendererTerrain rendererTerrain;
     private GL3 gl;
@@ -40,8 +39,8 @@ public class MasterRenderer {
         gl.glEnable(gl.GL_CULL_FACE);
         gl.glCullFace(gl.GL_BACK);
         entities = new HashMap<TexturedModel, List<Entity>>();
-        shader = new StaticShader(gl);
-        shaderTerrain = new TerrainShader(gl);
+        shader = new ShaderEntity(gl);
+        shaderTerrain = new ShaderTerrain(gl);
         createProjectionMatrix();
         rendererEntity = new RendererEntity(gl, shader, projectionMatrix);
         rendererTerrain = new RendererTerrain(gl, shaderTerrain, projectionMatrix);
@@ -83,7 +82,7 @@ public class MasterRenderer {
         shaderTerrain.cleanUp();
     }
 
-    public StaticShader getShader() {
+    public ShaderEntity getShader() {
         return shader;
     }
 

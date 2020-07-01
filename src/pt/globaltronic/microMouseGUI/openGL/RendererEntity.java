@@ -15,18 +15,15 @@ import java.util.Map;
 
 public class RendererEntity {
 
-    GL3 gl;
+    private GL3 gl;
     private static final float FOV = 70f;
     private static final float NEAR_PLANE = 0.5f;
     private static final float FAR_PLANE = 1000.0f;
+    private ShaderEntity shader;
 
-
-    private StaticShader shader;
-
-    public RendererEntity(GL3 gl, StaticShader shader, float[] projectionMatrix){
+    public RendererEntity(GL3 gl, ShaderEntity shader, float[] projectionMatrix){
         this.shader = shader;
         this.gl = gl;
-
 
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);

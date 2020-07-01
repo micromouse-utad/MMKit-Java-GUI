@@ -43,8 +43,8 @@ public class Terrain {
             }
         }
         int pointer = 0;
-        for(int gz=0;gz<VERTEX_COUNT-1;gz++){
-            for(int gx=0;gx<VERTEX_COUNT-1;gx++){
+        for(int gz=0; gz<VERTEX_COUNT-1; gz++){
+            for(int gx=0; gx<VERTEX_COUNT-1; gx++){
                 int topLeft = (gz*VERTEX_COUNT)+gx;
                 int topRight = topLeft + 1;
                 int bottomLeft = ((gz+1)*VERTEX_COUNT)+gx;

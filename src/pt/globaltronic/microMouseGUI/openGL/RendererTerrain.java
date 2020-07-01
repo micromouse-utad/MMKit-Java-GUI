@@ -13,10 +13,10 @@ import java.util.List;
 
 public class RendererTerrain {
 
-    private TerrainShader shader;
+    private ShaderTerrain shader;
     private GL3 gl;
 
-    public RendererTerrain(GL3 gl, TerrainShader shader, float[] projMatrix){
+    public RendererTerrain(GL3 gl, ShaderTerrain shader, float[] projMatrix){
         this.shader = shader;
         this.gl = gl;
         shader.start();

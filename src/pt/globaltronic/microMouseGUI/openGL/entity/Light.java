@@ -24,7 +24,4 @@ public class Light {
         return color;
     }
 
-    public void setColor(Vec3f color) {
-        this.color = color;
-    }
 }

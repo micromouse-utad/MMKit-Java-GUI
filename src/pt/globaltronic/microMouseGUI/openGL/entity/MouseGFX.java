@@ -24,7 +24,6 @@ public class MouseGFX extends Entity{
         super.increasePosition(dx, 0, dz);
     }
 
-
     public void setCurrentSpeed(float currentSpeed) {
         this.currentSpeed = currentSpeed * RUN_SPEED;
     }
