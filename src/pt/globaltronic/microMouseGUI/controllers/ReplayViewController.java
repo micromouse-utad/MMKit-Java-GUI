@@ -61,6 +61,7 @@ public class ReplayViewController {
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);
+
         openGLEngine.start();
         engine2D.start();
     }

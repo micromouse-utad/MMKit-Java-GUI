@@ -191,5 +191,4 @@ public class WelcomeView extends JFrame {
     public LinkedHashSet<BluetoothDevice> getBluetoothDevices(){
         return bluetoothDevices;
     }
-
 }

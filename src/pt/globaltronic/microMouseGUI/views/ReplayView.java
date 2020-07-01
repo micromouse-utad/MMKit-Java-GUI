@@ -161,16 +161,9 @@ public class ReplayView extends JFrame {
         });
     }
 
-    public JPanel getPanel3D() {
-        return Panel3D;
-    }
-
-    public JPanel getPanel2D() {
-        return Panel2D;
-    }
-
-    public JPanel getMainPanel() {
-        return mainPanel;
+    public void formatError() {
+        JOptionPane.showMessageDialog(rootPane, "The replay you selected caused an error, its formatting may not be to convention");
+        System.exit(-1);
     }
 
 }

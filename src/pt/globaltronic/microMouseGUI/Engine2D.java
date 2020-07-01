@@ -62,7 +62,12 @@ public class Engine2D implements Runnable{
                 clear();
                 cleared = true;
             }
-            tick();
+            try {
+                tick();
+            }catch (NumberFormatException ex){
+                JOptionPane.showMessageDialog(panel, "The replay you selected caused an error, its formatting may not be to convention");
+                System.exit(-1);
+            }
             render();
         }
     }
