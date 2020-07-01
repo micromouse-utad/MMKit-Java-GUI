@@ -31,6 +31,12 @@ public class WelcomeView extends JFrame {
     private JButton playReplayButton;
     private JButton refresh;
     private JButton deleteReplayButton;
+    private JTextField colsText;
+    private JTextField rowsText;
+    private JTextField colsTextReplay;
+    private JTextField rowsTextReplay;
+    private JTextField a16TextField1;
+    private JTextField a16TextField;
 
     private WelcomeViewController welcomeViewController;
     private LinkedHashSet<BluetoothDevice> bluetoothDevices;
