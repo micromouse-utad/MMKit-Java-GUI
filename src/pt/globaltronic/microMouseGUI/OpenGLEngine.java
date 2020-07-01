@@ -30,6 +30,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashSet;
 
+
 public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, Runnable {
 
     //openGL variables
@@ -42,7 +43,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private TexturedModel texturedModel;
     private Camera camera;
     private Light sun;
-    private Terrain terrain;
+    private HashSet<Terrain> terrains;
     private Entity mouseGFX;
 
     //eventlistener variables
@@ -61,6 +62,8 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private int cellSize;
     private int width;
     private int height;
+    private int panelWidth = 480;
+    private int panelHeight = 480;
     public static HashSet<Entity> VISIBLE_WALLS;
     private boolean mouseAnimationFinished = true;
     float xInitial;
@@ -81,15 +84,15 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private static float delta;
 
 
-    public OpenGLEngine(JPanel panel, MouseInputs mouseInputs, int cols, int rows, int cellSize, int size) {
+    public OpenGLEngine(JPanel panel, MouseInputs mouseInputs, int cols, int rows, int cellSize) {
         this.canvas = new GLJPanel();
         this.panel = panel;
         this.cellSize = cellSize;
         this.mouseInputs = mouseInputs;
         this.cols = cols;
         this.rows = rows;
-        this.width = cols * size;
-        this.height = rows * size;
+        this.width = cols * cellSize;
+        this.height = rows * cellSize;
 
         //implemented to combat errors when the mouse pointer leaves the canvas
         canvas.addFocusListener(new FocusListener() {
@@ -127,7 +130,9 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             renderer.processEntity(wall);
         }
         //getting entities and terrain ready and rendering them
-        renderer.processTerrain(terrain);
+        for (Terrain terrain : terrains){
+            renderer.processTerrain(terrain);
+        }
         renderer.processEntity(mouseGFX);
         renderer.render(sun, camera);
         //calculating the time between frames, for movement purposes
@@ -148,11 +153,12 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     public void init(GLAutoDrawable glad) {
         createGrid();
         VISIBLE_WALLS = new HashSet<Entity>();
+        terrains = new HashSet<>();
         renderer = new MasterRenderer(glad.getGL().getGL3(), width, height);
         loader = new Loader(glad.getGL().getGL3());
         createWalls();
         createEntities();
-        createTerrain();
+        createTerrain(cols, rows);
     }
 
     //JOGL GLeventlistener invoked on screen resizing, our app is unresizable, not use.
@@ -323,14 +329,25 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         texturedModel = new TexturedModel(model, texture);
         texturedModel.getModelTexture().setReflectivity(1);
         texturedModel.getModelTexture().setShineDamper(10);
-        mouseGFX = new Entity(texturedModel, new Vec3f(155f, 3, 5f), 0, 180, 0, 1.0f);
+        mouseGFX = new Entity(texturedModel, new Vec3f(cols * cellSize - cellSize / 2, 3, 5f), 0, 180, 0, 1.0f);
         mouse = new Mouse(grid.getPosition(0,0), mouseGFX);
         camera = new Camera(mouseGFX);
         sun = new Light(new Vec3f(2000, 2000, 000), new Vec3f(1, 1, 1));
     }
 
-    private void createTerrain(){
-        terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("black")));
+    private void createTerrain(int cols, int rows){
+        for (int i = 0; i < cols; i++){
+            for (int j = 0; j < rows; j++){
+                if(cols == rows && cols == 16) {
+                    if (((i == 7) || (i == 8)) && ((j == 7) || (j == 8))) {
+                        terrains.add(new Terrain(i, j, loader, new ModelTexture(loader.loadTexture("green"))));
+                        continue;
+                    }
+                }
+                terrains.add(new Terrain(i, j, loader, new ModelTexture(loader.loadTexture("black"))));
+            }
+        }
+
     }
 
     private void tick() {
@@ -465,9 +482,9 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     @Override
     public void run() {
         //sizing the panel
-        panel.setPreferredSize(new Dimension(width, height));
-        panel.setMinimumSize(new Dimension(width, height));
-        panel.setMaximumSize(new Dimension(width, height));
+        panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+        panel.setMinimumSize(new Dimension(panelWidth, panelHeight));
+        panel.setMaximumSize(new Dimension(panelWidth, panelHeight));
 
         //setting up the canvas, requesting focus will make sure the canvas can listen to the mouse/key inputs
         canvas.addGLEventListener(this);

@@ -6,8 +6,8 @@ import pt.globaltronic.microMouseGUI.openGL.textures.ModelTexture;
 
 public class Terrain {
 
-    private static final float SIZE = 160;
-    private static final int VERTEX_COUNT = 128;
+    private static final float SIZE = 10;
+    private static final int VERTEX_COUNT = 8;
 
     private float x;
     private float z;

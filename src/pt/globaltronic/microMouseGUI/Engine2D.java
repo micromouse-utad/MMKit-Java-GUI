@@ -23,8 +23,8 @@ public class Engine2D implements Runnable{
     private int cols;
     private int rows;
     private int cellSize;
-    private int width;
-    private int height;
+    private int width = 480;
+    private int height = 480;
     private int correction;
     private Thread thread;
     private boolean running;
@@ -34,6 +34,7 @@ public class Engine2D implements Runnable{
 
     private Grid grid;
     private LinkedList<Position> visited;
+    private LinkedList<Position> goal;
     private Mouse mouse;
     private MouseInputs mouseInputs;
     private HorizontalWalls[][] hWalls;
@@ -42,15 +43,13 @@ public class Engine2D implements Runnable{
     private BufferStrategy bs;
     private Graphics g;
 
-    public Engine2D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows, int cellSize){
+    public Engine2D(JPanel panel, String title, MouseInputs mouseInputs, int cols, int rows){
         this.title = title;
         this.panel = panel;
         this.mouseInputs = mouseInputs;
         this.cols = cols;
         this.rows = rows;
-        this.cellSize = cellSize;
-        this.width = cols * cellSize;
-        this.height = rows * cellSize;
+        this.cellSize = 480 / cols;
         this.correction = rows -1;
     }
 
@@ -93,7 +92,14 @@ public class Engine2D implements Runnable{
     private void init(){
         display = new Display(panel, title, width, height);
         visited = new LinkedList<Position>();
+        goal = new LinkedList<Position>();
         grid = new Grid(cols, rows, cellSize);
+        if(cols == rows && cols == 16) {
+            goal.add(grid.getPosition(7, 7));
+            goal.add(grid.getPosition(7, 8));
+            goal.add(grid.getPosition(8, 7));
+            goal.add(grid.getPosition(8, 8));
+        }
         mouse = new Mouse(grid.getPosition(0,0));
         createWalls();
     }
@@ -172,6 +178,12 @@ public class Engine2D implements Runnable{
         //g.setColor(new Color(140,180,180));
         g.fillRect(0,0, width, height);
 
+        if(cols == rows && cols == 16) {
+            goal.forEach((position -> {
+                g.setColor(Color.GREEN);
+                g.fillRect(grid.colToX(position.getCol()), grid.rowToY(correction - position.getRow()), cellSize, cellSize);
+            }));
+        }
         visited.forEach((position -> {
             g.setColor(Color.lightGray);
             if (position.isVisited()) {
