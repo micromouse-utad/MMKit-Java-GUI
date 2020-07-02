@@ -35,8 +35,8 @@ public class WelcomeView extends JFrame {
     private JTextField rowsText;
     private JTextField colsTextReplay;
     private JTextField rowsTextReplay;
-    private JTextField a16TextField1;
-    private JTextField a16TextField;
+    private JTextField rowsTextSelected;
+    private JTextField colsTextSelected;
 
     private WelcomeViewController welcomeViewController;
     private LinkedHashSet<BluetoothDevice> bluetoothDevices;
@@ -86,7 +86,24 @@ public class WelcomeView extends JFrame {
                 getBluetoothDevices().toArray(deviceArray);
                 BluetoothDevice selectedDevice = deviceArray[selectedIndex];
 
-                connectAndLaunchEngine(selectedDevice);
+                int cols;
+                int rows;
+                try {
+                    cols = Math.abs(Integer.parseInt(colsTextSelected.getText()));
+                    rows = Math.abs(Integer.parseInt(rowsTextSelected.getText()));
+                    if (cols < 2  || rows < 2){
+                        JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows cannot be smaller than 2");
+                        return;
+                    }
+                    if (cols > 16 || rows > 16){
+                        JOptionPane.showMessageDialog(rootPane, "Columns or rows cannot exceed 16");
+                        return;
+                    }
+                } catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows need to be integer and in digits");
+                    return;
+                }
+                connectAndLaunchEngine(selectedDevice, cols, rows);
             }
         });
 
@@ -100,7 +117,24 @@ public class WelcomeView extends JFrame {
                 syncedDevicesSet.toArray(deviceArray);
                 BluetoothDevice selectedDevice = deviceArray[selectedIndex];
 
-                connectAndLaunchEngine(selectedDevice);
+                int cols;
+                int rows;
+                try {
+                    cols = Math.abs(Integer.parseInt(colsText.getText()));
+                    rows = Math.abs(Integer.parseInt(rowsText.getText()));
+                    if (cols < 2  || rows < 2){
+                        JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows cannot be smaller than 2");
+                        return;
+                    }
+                    if (cols > 16 || rows > 16){
+                        JOptionPane.showMessageDialog(rootPane, "Columns or rows cannot exceed 16");
+                        return;
+                    }
+                } catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows need to be integer and in digits");
+                    return;
+                }
+                connectAndLaunchEngine(selectedDevice, cols, rows);
 
             }
         });
@@ -142,8 +176,25 @@ public class WelcomeView extends JFrame {
                 File[] fileArray = new File[replaySet.size()];
                 replaySet.toArray(fileArray);
                 File selectedReplay = fileArray[selectedIndex];
+                int cols;
+                int rows;
+                try {
+                    cols = Math.abs(Integer.parseInt(colsTextReplay.getText()));
+                    rows = Math.abs(Integer.parseInt(rowsTextReplay.getText()));
+                    if (cols < 2  || rows < 2){
+                        JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows cannot be smaller than 2");
+                        return;
+                    }
+                    if (cols > 16 || rows > 16){
+                        JOptionPane.showMessageDialog(rootPane, "Columns or rows cannot exceed 16");
+                        return;
+                    }
+                } catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows need to be integer and in digits");
+                    return;
+                }
 
-                welcomeViewController.startReplayView(selectedReplay);
+                welcomeViewController.startReplayView(selectedReplay, cols, rows);
             }
         });
         deleteReplayButton.addActionListener(new ActionListener() {
@@ -180,13 +231,13 @@ public class WelcomeView extends JFrame {
         syncedDevicesList.setListData(FriendlyNameGetter.getFriendlyName(syncedDevices));
     }
 
-    public void connectAndLaunchEngine(BluetoothDevice selectedDevice){
+    public void connectAndLaunchEngine(BluetoothDevice selectedDevice, int cols, int rows){
         connection = welcomeViewController.connectToDevice(selectedDevice);
         if(connection == null){
             System.out.println("Failed to connect try again");
             return;
         }
-        welcomeViewController.startDisplayView(connection, selectedDevice);
+        welcomeViewController.startDisplayView(connection, selectedDevice, cols, rows);
     }
 
     public void setBluetoothDevices(LinkedHashSet<BluetoothDevice> bluetoothDevices) {

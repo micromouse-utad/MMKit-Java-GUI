@@ -49,7 +49,7 @@ public class Engine2D implements Runnable{
         this.mouseInputs = mouseInputs;
         this.cols = cols;
         this.rows = rows;
-        this.cellSize = 480 / cols;
+        this.cellSize = Math.min(480 / cols, 480 / rows);
         this.correction = rows -1;
     }
 
@@ -63,8 +63,9 @@ public class Engine2D implements Runnable{
             }
             try {
                 tick();
-            }catch (NumberFormatException ex){
-                JOptionPane.showMessageDialog(panel, "The replay you selected caused an error, its formatting may not be to convention");
+            }catch (NumberFormatException | ArrayIndexOutOfBoundsException ex){
+                JOptionPane.showMessageDialog(panel, "Critical error, erroneous grid sizing and/or erroneous micro-mouse input caused the program to abruptly shutdown." +
+                        "\n Error Message: " + ex.getClass());
                 System.exit(-1);
             }
             render();
@@ -175,27 +176,29 @@ public class Engine2D implements Runnable{
         g = bs.getDrawGraphics();
         g.clearRect(0,0, width, height);
         g.setColor(Color.BLACK);
-        //g.setColor(new Color(140,180,180));
-        g.fillRect(0,0, width, height);
+        //since adapting for cols / rows selection the size of the rectangle display needs to adapt to non square setups
+        int xOffset = ((width - (cols * cellSize)) / 2);
+        int yOffset = ((height - (rows * cellSize)) / 2);
+        g.fillRect(xOffset , yOffset, cols * cellSize, rows * cellSize);
 
         if(cols == rows && cols == 16) {
             goal.forEach((position -> {
                 g.setColor(Color.GREEN);
-                g.fillRect(grid.colToX(position.getCol()), grid.rowToY(correction - position.getRow()), cellSize, cellSize);
+                g.fillRect(xOffset+ grid.colToX(position.getCol()), yOffset + grid.rowToY(correction - position.getRow()), cellSize, cellSize);
             }));
         }
         visited.forEach((position -> {
             g.setColor(Color.lightGray);
             if (position.isVisited()) {
-                g.fillRect(grid.colToX(position.getCol()), grid.rowToY(correction - position.getRow()), cellSize, cellSize);
+                g.fillRect(xOffset + grid.colToX(position.getCol()), yOffset + grid.rowToY(correction - position.getRow()), cellSize, cellSize);
             }
         }));
 
         for (int i = 0; i < cols; i++){
             for (int j = 0; j < rows+1; j++){
                 if (hWalls[i][j].isVisible()) {
-                    int xPixel = grid.colToX(hWalls[i][j].getPosition().getCol());
-                    int yPixel = grid.rowToY(correction + 1 - hWalls[i][j].getPosition().getRow());
+                    int xPixel = xOffset + grid.colToX(hWalls[i][j].getPosition().getCol());
+                    int yPixel = yOffset + grid.rowToY(correction + 1 - hWalls[i][j].getPosition().getRow());
                     g.setColor(Color.RED);
                     //making last row of wall fit in the grid
                     if(j == 0){
@@ -209,8 +212,8 @@ public class Engine2D implements Runnable{
         for (int i = 0; i < cols+1; i++){
             for (int j = 0; j < rows; j++){
                 if(vWalls[i][j].isVisible()) {
-                    int xPixel = grid.colToX(vWalls[i][j].getPosition().getCol());
-                    int yPixel = grid.colToX(correction - vWalls[i][j].getPosition().getRow());
+                    int xPixel = xOffset + grid.colToX(vWalls[i][j].getPosition().getCol());
+                    int yPixel = yOffset + grid.colToX(correction - vWalls[i][j].getPosition().getRow());
                     //adjusting the last line of vertical walls to fit in the grid.
                     g.setColor(Color.RED);
                     if (i == cols){
@@ -223,7 +226,7 @@ public class Engine2D implements Runnable{
         }
 
         g.setColor(Color.BLUE);
-        g.fillRect(grid.colToX(mouse.getPosition().getCol()) + cellSize/3, grid.rowToY(correction - mouse.getPosition().getRow()) + cellSize/3, cellSize/2, cellSize/2);
+        g.fillRect(xOffset + grid.colToX(mouse.getPosition().getCol()) + cellSize/3, yOffset + grid.rowToY(correction - mouse.getPosition().getRow()) + cellSize/3, cellSize/2, cellSize/2);
 
         //show the buffered data
         bs.show();

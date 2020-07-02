@@ -107,12 +107,7 @@ public class DisplayView extends JFrame {
         label2D.setFont(new Font("Serif", Font.PLAIN, 16));
         spacing.setText("                                                                              ");
         spacing.setFont(new Font("Serif", Font.PLAIN, 16));
-        /*fileMenu.setVisible(true);
-        viewMenu.setVisible(true);
-        helpMenu.setVisible(true);
-        MenuBar.setVisible(true);
 
-         */
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);

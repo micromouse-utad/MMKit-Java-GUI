@@ -60,8 +60,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private int cols;
     private int rows;
     private int cellSize;
-    private int width;
-    private int height;
     private int panelWidth = 480;
     private int panelHeight = 480;
     public static HashSet<Entity> VISIBLE_WALLS;
@@ -91,8 +89,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         this.mouseInputs = mouseInputs;
         this.cols = cols;
         this.rows = rows;
-        this.width = cols * cellSize;
-        this.height = rows * cellSize;
+
 
         //implemented to combat errors when the mouse pointer leaves the canvas
         canvas.addFocusListener(new FocusListener() {
@@ -154,7 +151,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         createGrid();
         VISIBLE_WALLS = new HashSet<Entity>();
         terrains = new HashSet<>();
-        renderer = new MasterRenderer(glad.getGL().getGL3(), width, height);
+        renderer = new MasterRenderer(glad.getGL().getGL3(), panelWidth, panelHeight);
         loader = new Loader(glad.getGL().getGL3());
         createWalls();
         createEntities();
@@ -202,7 +199,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     void CenterMouse(MouseEvent e) {
         try {
             r = new Robot();
-            r.mouseMove((int)(e.getComponent().getLocationOnScreen().getX() + (width)/2), (int)(e.getComponent().getLocationOnScreen().getY() + (height)/2));
+            r.mouseMove((int)(e.getComponent().getLocationOnScreen().getX() + (panelWidth)/2), (int)(e.getComponent().getLocationOnScreen().getY() + (panelHeight)/2));
         } catch (AWTException ex) {
             ex.printStackTrace();
         }
@@ -215,10 +212,10 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
             float pitch = camera.getPitch();
             float angleAroundPlayer = camera.getAngleAroundMouse();
 
-            float pitchChange = (arg0.getY() - height/2) * 0.1f;
+            float pitchChange = (arg0.getY() - panelHeight/2) * 0.1f;
             camera.setPitch(pitch + pitchChange);
 
-            float angleChange = (arg0.getX() -width/2) * 0.1f;
+            float angleChange = (arg0.getX() -panelWidth/2) * 0.1f;
             if(firstPersonView){camera.setAngleAroundMouse(angleAroundPlayer + angleChange);}
             if(!firstPersonView) {camera.setAngleAroundMouse(angleAroundPlayer - angleChange);}
 

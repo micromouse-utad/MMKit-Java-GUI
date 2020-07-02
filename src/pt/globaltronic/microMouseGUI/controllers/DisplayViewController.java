@@ -28,6 +28,8 @@ public class DisplayViewController {
     private Queue<String> History;
     private boolean replayed = false;
     private ReplayInputFeeder replayInputFeeder;
+    private int cols;
+    private int rows;
 
     public DisplayViewController(){
     }
@@ -40,8 +42,8 @@ public class DisplayViewController {
     }
 
     public void startEngines(JPanel Panel3D, JPanel Panel2D, JPanel mainPanel){
-        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, 10, 10, 10);
-        engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, 10,10);
+        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, cols, rows, 10);
+        engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, cols,rows);
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);
@@ -140,5 +142,13 @@ public class DisplayViewController {
 
     public boolean tryToCreateFile(File file) throws IOException{
         return file.createNewFile();
+    }
+
+    public void setCols(int cols) {
+        this.cols = cols;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 }
