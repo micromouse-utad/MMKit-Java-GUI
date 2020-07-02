@@ -148,14 +148,16 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     //JOGL GLevenlistener initiation method, here we create our objects. init of the jogl sequence
     @Override
     public void init(GLAutoDrawable glad) {
-        createGrid();
-        VISIBLE_WALLS = new HashSet<Entity>();
+        hWalls = new HorizontalWalls[cols][rows + 1];
+        vWalls = new VerticalWalls[cols + 1][rows];
         terrains = new HashSet<>();
         renderer = new MasterRenderer(glad.getGL().getGL3(), panelWidth, panelHeight);
         loader = new Loader(glad.getGL().getGL3());
-        createWalls();
+        VISIBLE_WALLS = new HashSet<Entity>();
+        createGrid();
+        VISIBLE_WALLS = new HashSet<Entity>();
         createEntities();
-        createTerrain(cols, rows);
+
     }
 
     //JOGL GLeventlistener invoked on screen resizing, our app is unresizable, not use.
@@ -263,7 +265,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     }
 
     private void createGrid(){
-        grid = new Grid(cols,rows,cellSize);
+        grid = new Grid(cols,rows,cellSize, this);
     }
 
     private void createWalls() {
@@ -440,7 +442,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         if(numbOfRotations < 25){
             mouseGFX.increaseRotation(0, yAngleIncrement, 0);
             numbOfRotations++;
-            return;
+            //return;
         }
         if(numbOfTranslation < 25) {
             xInitial += xIncrement;
@@ -542,6 +544,22 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
 
     public static float getFrameTimeSeconds() {
         return delta;
+    }
+
+    public HashSet<Terrain> getTerrains() {
+        return terrains;
+    }
+
+    public Loader getLoader() {
+        return loader;
+    }
+
+    public HorizontalWalls[][] gethWalls() {
+        return hWalls;
+    }
+
+    public VerticalWalls[][] getvWalls() {
+        return vWalls;
     }
 
     //set up fake firstperson view aka 3rd person over the shoulder, setting up the distance from players to 5,

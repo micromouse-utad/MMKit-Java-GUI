@@ -31,19 +31,19 @@ public class DisplayViewController {
     private int cols;
     private int rows;
 
-    public DisplayViewController(){
+    public DisplayViewController() {
     }
 
-    public void startView(BluetoothDevice selectedDevice){
+    public void startView(BluetoothDevice selectedDevice) {
         SwingUtilities.invokeLater(() -> {
             displayView = new DisplayView(selectedDevice, this);
             displayView.setVisible(true);
         });
     }
 
-    public void startEngines(JPanel Panel3D, JPanel Panel2D, JPanel mainPanel){
+    public void startEngines(JPanel Panel3D, JPanel Panel2D, JPanel mainPanel) {
         openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, cols, rows, 10);
-        engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, cols,rows);
+        engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, cols, rows);
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);
@@ -51,13 +51,13 @@ public class DisplayViewController {
         engine2D.start();
     }
 
-    public void disconnect(){
+    public void disconnect() {
         if (connection != null) {
             try {
                 receiver.stop();
                 connection.close();
                 disconnected = true;
-                if(replayInputFeeder != null){
+                if (replayInputFeeder != null) {
                     replayInputFeeder.stop();
                 }
 
@@ -93,14 +93,14 @@ public class DisplayViewController {
     }
 
     public void replay() {
-        if(!replayed) {
+        if (!replayed) {
             History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
             replayInputFeeder = new ReplayInputFeeder(mouseInputs, History);
             engine2D.replay();
             replayed = true;
             replayInputFeeder.start();
         }
-        if(replayed){
+        if (replayed) {
             History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
             engine2D.reReplay();
             openGLEngine.replay();
@@ -108,25 +108,22 @@ public class DisplayViewController {
         }
     }
 
-    public boolean isDisconnected(){
+    public boolean isDisconnected() {
         return disconnected;
     }
 
-    public int backupRunToFile(){
+    public String backupRunToFile(String name) {
         History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-        String pathWithoutTxt = "resources/backups/backup";
-        boolean created = false;
-        int i = 1;
-        File backupFile = null;
-        while (!created) {
-            backupFile = new File(pathWithoutTxt + i++ + ".txt");
-            try{
-                if (tryToCreateFile(backupFile)) {
-                    created = true;
-                }
-            } catch(IOException ex){
-                System.out.println(ex.getMessage());
+        String pathWithoutTxt = "resources/backups/";
+        String fileName = pathWithoutTxt + name + "Grid" + cols + "x" + rows + ".txt";
+        File backupFile = new File(fileName);
+        String outputString = "";
+        try {
+            if (tryToCreateFile(backupFile)) {
+                outputString = fileName;
             }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
         try {
             PrintWriter pWriter = new PrintWriter(backupFile.getAbsoluteFile());
@@ -134,13 +131,14 @@ public class DisplayViewController {
                 pWriter.println(input);
                 pWriter.flush();
             });
-        } catch (IOException ex){
+        } catch (
+                IOException ex) {
             System.out.println(ex.getMessage());
         }
-        return i-1;
+        return outputString;
     }
 
-    public boolean tryToCreateFile(File file) throws IOException{
+    public boolean tryToCreateFile(File file) throws IOException {
         return file.createNewFile();
     }
 

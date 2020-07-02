@@ -158,10 +158,13 @@ public class DisplayView extends JFrame {
                 if(!controller.isDisconnected()) {
                     JOptionPane.showMessageDialog(rootPane, "You need to disconnect from the live feed before initiating save sequence");
                 }
-                int x;
                 if(controller.isDisconnected()) {
-                    if ((x = controller.backupRunToFile()) > -1) {
-                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved to the backup" +x+".txt file int he resources folder of this app, please make a copy");
+                    String backupName = JOptionPane.showInputDialog("Enter a backupName");
+                    String fileName = controller.backupRunToFile(backupName);
+                    if(fileName.equals("")) {
+                        JOptionPane.showMessageDialog(rootPane, "Error backing up, try again with another file name");
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved " + fileName + " file in the resources folder of this app, please make a copy");
                     }
                 }
             }
@@ -185,18 +188,6 @@ public class DisplayView extends JFrame {
                 controller.disconnect();
             }
         });
-    }
-
-    public JPanel getPanel3D() {
-        return Panel3D;
-    }
-
-    public JPanel getPanel2D() {
-        return Panel2D;
-    }
-
-    public JPanel getMainPanel() {
-        return mainPanel;
     }
 
 }
