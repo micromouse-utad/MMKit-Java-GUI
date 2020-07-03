@@ -7,6 +7,9 @@ import pt.globaltronic.microMouseGUI.models.bluetooth.*;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Replays;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Wiring {
 
     public void bootstrap(WelcomeViewController welcomeViewController, DisplayViewController displayViewController, ReplayViewController replayViewController) {
@@ -29,5 +32,24 @@ public class Wiring {
         displayViewController.setMouseInputs(mouseInputs);
         replayViewController.setMouseInputs(mouseInputs);
 
+    }
+
+    public void fileSystem() {
+        File file = new File ("microMouseFiles");
+        if(!file.exists()) {
+            if(!file.mkdir()){
+                System.out.println("cannot create microMouseFiles Folder, this folder is needed for the app to sava data");
+            }
+        }
+        File backups = new File("microMouseFiles/backups");
+        if(!backups.exists()) {
+            backups.mkdir();
+        }
+        File synced = new File("microMouseFiles/synced.txt");
+        try {
+            synced.createNewFile();
+        } catch (IOException ex){
+            ex.printStackTrace();
+        }
     }
 }

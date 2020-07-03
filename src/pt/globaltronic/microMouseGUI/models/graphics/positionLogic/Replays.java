@@ -6,7 +6,7 @@ import java.util.Vector;
 
 public class Replays {
     private LinkedHashSet<File> replaysSet;
-    private String filePath = "resources/backups/";
+    private String filePath = "./microMouseFiles/backups/";
     private Vector<File> replaysSetVector;
 
     public Replays(){

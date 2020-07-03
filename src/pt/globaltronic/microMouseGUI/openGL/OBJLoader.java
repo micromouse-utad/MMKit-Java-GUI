@@ -7,6 +7,7 @@ import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,10 @@ public class OBJLoader {
     //process OBJ file, need to have the vertices, vertex normal, and textures as v, vn, vt appear first before the faces
     //once faces appear it does not load anymore vertices.
     //edit the file if necessary
-    public static RawModel loadObjectModel(String fileName, Loader loader){
-        FileReader fr = null;
+    public RawModel loadObjectModel(String fileName, Loader loader){
+        InputStreamReader fr = null;
         try{
-            fr = new FileReader((new File("resources/" + fileName +".obj")));
+            fr = new InputStreamReader(this.getClass().getResourceAsStream("/" +fileName +".obj"));
         }catch(Exception ex){
             System.err.println("Couldn't load obj file!");
             ex.printStackTrace();

@@ -164,7 +164,7 @@ public class DisplayView extends JFrame {
                     if(fileName.equals("")) {
                         JOptionPane.showMessageDialog(rootPane, "Error backing up, try again with another file name");
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved " + fileName + " file in the resources folder of this app, please make a copy");
+                        JOptionPane.showMessageDialog(rootPane, "Your run was succesfully saved " + fileName + " file in the microMouseFiles/backups folder");
                     }
                 }
             }

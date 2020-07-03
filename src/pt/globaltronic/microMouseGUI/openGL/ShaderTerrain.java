@@ -30,8 +30,8 @@ public class ShaderTerrain {
         this.gl = gl;
 
         //using new methods to get shadercode, importing the shaders. type, quantity, class, folder name, string in array necessary if importing mroe than 1, null, path to bin, name of shader, null, true
-        ShaderCode vpO = ShaderCode.create(gl, gl.GL_VERTEX_SHADER, 1, this.getClass(), "shaders", new String[]{"terrainVertexShader"}, null, "shaders/bin", "vertexShader", null, true);
-        ShaderCode fp0 = ShaderCode.create(gl, gl.GL_FRAGMENT_SHADER, 1, this.getClass(), "shaders", new String[]{"terrainFragmentShader"}, null, "shaders/bin", "fragmentShader", null, true);
+        ShaderCode vpO = ShaderCode.create(gl, gl.GL_VERTEX_SHADER, 1, this.getClass(), "shaders", new String[]{"terrainVertexShader"}, null, "./shaders/bin", "vertexShader", null, true);
+        ShaderCode fp0 = ShaderCode.create(gl, gl.GL_FRAGMENT_SHADER, 1, this.getClass(), "shaders", new String[]{"terrainFragmentShader"}, null, "./shaders/bin", "fragmentShader", null, true);
 
         //creating a new shaderprogram and adding the shaders
         ShaderProgram sp0 = new ShaderProgram();

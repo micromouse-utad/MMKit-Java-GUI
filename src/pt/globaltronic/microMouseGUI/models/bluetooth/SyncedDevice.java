@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 public class SyncedDevice {
 
     private LinkedHashSet<BluetoothDevice> syncedDeviceSet;
-    private String filePath = "resources\\synced.txt";
+    private String filePath = "./microMouseFiles/synced.txt";
 
     public SyncedDevice(){
         this.syncedDeviceSet = new LinkedHashSet<BluetoothDevice>();

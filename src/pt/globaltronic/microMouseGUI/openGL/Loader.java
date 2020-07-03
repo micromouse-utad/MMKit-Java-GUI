@@ -5,10 +5,12 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
+import pt.globaltronic.microMouseGUI.Main;
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -39,10 +41,11 @@ public class Loader {
     public int loadTexture(String fileName){
         Texture texture = null;
         int textureId = 0;
+        InputStream is = this.getClass().getResourceAsStream("/" + fileName + ".png");
 
         try{
             //making new texture with the .newTexture (inputsteam, mipmap, suffix);
-            texture = TextureIO.newTexture(new FileInputStream("resources/" + fileName + ".PNG"), false, ".PNG");
+            texture = TextureIO.newTexture(is, false, ".PNG");
             texture.setTexParameteri(gl, GL3.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR);
             texture.setTexParameteri(gl, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR);
             texture.setTexParameteri(gl, gl.GL_TEXTURE_WRAP_S, gl.GL_CLAMP_TO_EDGE);

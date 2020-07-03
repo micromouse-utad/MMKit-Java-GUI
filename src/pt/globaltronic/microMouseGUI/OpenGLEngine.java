@@ -38,6 +38,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private JPanel panel;
     private MasterRenderer renderer;
     private Loader loader;
+    private OBJLoader objectLoader;
     private RawModel model;
     private ModelTexture texture;
     private TexturedModel texturedModel;
@@ -148,16 +149,15 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     //JOGL GLevenlistener initiation method, here we create our objects. init of the jogl sequence
     @Override
     public void init(GLAutoDrawable glad) {
-        hWalls = new HorizontalWalls[cols][rows + 1];
-        vWalls = new VerticalWalls[cols + 1][rows];
         terrains = new HashSet<>();
         renderer = new MasterRenderer(glad.getGL().getGL3(), panelWidth, panelHeight);
         loader = new Loader(glad.getGL().getGL3());
+        objectLoader = new OBJLoader();
         VISIBLE_WALLS = new HashSet<Entity>();
         createGrid();
-        VISIBLE_WALLS = new HashSet<Entity>();
+        createWalls();
+        createTerrain(cols, rows);
         createEntities();
-
     }
 
     //JOGL GLeventlistener invoked on screen resizing, our app is unresizable, not use.
@@ -271,7 +271,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     private void createWalls() {
 
         //Loading models and textures to create the walls.
-        RawModel wallRaw = OBJLoader.loadObjectModel("wall", loader);
+        RawModel wallRaw = objectLoader.loadObjectModel("wall", loader);
         ModelTexture wallTexture = new ModelTexture(loader.loadTexture("myTexture"));
         TexturedModel texturedWall = new TexturedModel(wallRaw, wallTexture);
         texturedWall.getModelTexture().setReflectivity(1);
@@ -322,7 +322,7 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     }
 
     private void createEntities(){
-        model = OBJLoader.loadObjectModel("E 45 Aircraft", loader);
+        model = objectLoader.loadObjectModel("E 45 Aircraft", loader);
         //use the loader to get the id of the texture and pass it to the new texture
         texture = new ModelTexture(loader.loadTexture("grey"));
         texturedModel = new TexturedModel(model, texture);
@@ -432,19 +432,19 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
         zFinal = finalPos.getRow() * cellSize;
         float xDif = xFinal - xInitial;
         float zDif = zFinal - zInitial;
-        xIncrement = xDif / 25;
-        zIncrement = zDif / 25;
-        yAngleIncrement = (calculateYRotationAngle(direction) / 25);
+        xIncrement = xDif / 10;
+        zIncrement = zDif / 10;
+        yAngleIncrement = (calculateYRotationAngle(direction) / 10);
     }
 
     //cut into separated if statements and 2 variables, leaving the option to separate rotation from translation
     public void mouseAnimation() {
-        if(numbOfRotations < 25){
+        if(numbOfRotations < 10){
             mouseGFX.increaseRotation(0, yAngleIncrement, 0);
             numbOfRotations++;
-            //return;
+            return;
         }
-        if(numbOfTranslation < 25) {
+        if(numbOfTranslation < 10) {
             xInitial += xIncrement;
             zInitial += zIncrement;
             mouseGFX.increasePosition(xIncrement, 0, zIncrement);

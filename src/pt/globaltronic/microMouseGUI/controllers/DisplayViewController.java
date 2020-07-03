@@ -114,9 +114,10 @@ public class DisplayViewController {
 
     public String backupRunToFile(String name) {
         History = new LinkedList<String>(mouseInputs.getMouseInputHistory());
-        String pathWithoutTxt = "resources/backups/";
-        String fileName = pathWithoutTxt + name + "Grid" + cols + "x" + rows + ".txt";
-        File backupFile = new File(fileName);
+        String pathWithoutTxt = "./microMouseFiles/backups/";
+        String path =  pathWithoutTxt + name + "Grid" + cols + "x" + rows + ".txt";
+        String fileName = name + "Grid" + cols + "x" + rows + ".txt";
+        File backupFile = new File(path);
         String outputString = "";
         try {
             if (tryToCreateFile(backupFile)) {
