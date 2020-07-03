@@ -51,7 +51,7 @@ public class DisplayViewController {
     }
 
     public void startEngines(JPanel Panel3D, JPanel Panel2D, JPanel mainPanel) {
-        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, cols, rows, 10);
+        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, false, cols, rows, 10);
         engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, cols, rows);
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
@@ -61,7 +61,7 @@ public class DisplayViewController {
     }
 
     public void startEngines(JPanel Panel3D, JPanel mainPanel) {
-        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, cols, rows, 10);
+        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, true, cols, rows, 10);
         Panel3D.setVisible(true);
         mainPanel.setVisible(true);
         openGLEngine.start();

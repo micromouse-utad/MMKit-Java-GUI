@@ -3,7 +3,6 @@ package pt.globaltronic.microMouseGUI.views;
 import pt.globaltronic.microMouseGUI.controllers.ReplayViewController;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +46,7 @@ public class Replay3DOnlyView extends JFrame {
         mainPanel.add(footer, c);
 
         this.setResizable(false);
+        this.setUndecorated(true);
         Dimension fullScreen = Toolkit.getDefaultToolkit().getScreenSize();
         mainPanel.setPreferredSize(fullScreen);
         mainPanel.setMinimumSize(fullScreen);

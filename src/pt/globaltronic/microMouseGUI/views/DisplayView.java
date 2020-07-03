@@ -90,6 +90,7 @@ public class DisplayView extends JFrame {
 
 
         this.setResizable(false);
+        this.setUndecorated(true);
 
         mainPanel.setPreferredSize(new Dimension(16*30*2 + 10, 16*30 + 50));
         mainPanel.setMinimumSize(new Dimension(16*30*2, 16*30));
