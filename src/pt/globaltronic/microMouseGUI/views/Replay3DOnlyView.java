@@ -38,13 +38,6 @@ public class Replay3DOnlyView extends JFrame {
         c.gridy = 0;
         mainPanel.add(Panel3D, c);
 
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridwidth = 2;
-        mainPanel.add(footer, c);
-
         this.setResizable(false);
         this.setUndecorated(true);
         Dimension fullScreen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -86,8 +79,6 @@ public class Replay3DOnlyView extends JFrame {
         MenuBar.add(viewMenu);
         MenuBar.add(helpMenu);
 
-        label3D.setText("3D View of " + (file.getName() != ""?file.getName(): "replay"));
-        label3D.setFont(new Font("Serif", Font.PLAIN, 16));
         Panel3D.setVisible(true);
         mainPanel.setVisible(true);
         setVisible(true);

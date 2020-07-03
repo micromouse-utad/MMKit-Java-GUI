@@ -8,14 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import static java.awt.GridBagConstraints.EAST;
+
 public class ReplayView extends JFrame {
     private JPanel mainPanel;
     private JPanel Panel2D;
     private JPanel Panel3D;
-    private JPanel footer;
-    private JLabel label3D;
-    private JLabel label2D;
-    private JLabel spacing;
     private JMenuBar MenuBar;
     private JMenu fileMenu;
     private JMenu viewMenu;
@@ -32,39 +30,26 @@ public class ReplayView extends JFrame {
     public ReplayView(File file, ReplayViewController controller){
 
         this.controller = controller;
-        mainPanel.setLayout(new GridBagLayout());
-
-        Panel2D.setLayout(new GridLayout(1, 1));
+        mainPanel.setLayout(new GridLayout(1, 2, 0,0));
+        Box box = Box.createHorizontalBox();
+        Panel2D.setLayout(new GridLayout(1, 1, 0,0));
         Panel3D.setLayout(new GridLayout(1,1, 0, 0));
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 0;
-        c.gridy = 0;
-        mainPanel.add(Panel3D, c);
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 1;
-        c.gridy = 0;
-        mainPanel.add(Panel2D, c);
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridwidth = 2;
-        mainPanel.add(footer, c);
+
+        box.add(Panel3D);
+        box.add(Panel2D);
+        mainPanel.add(box);
 
         this.setResizable(false);
+        this.setUndecorated(true);
 
-        mainPanel.setPreferredSize(new Dimension(16*30*2 + 10, 16*30 + 50));
-        mainPanel.setMinimumSize(new Dimension(16*30*2, 16*30));
-        mainPanel.setMaximumSize(new Dimension(16*30*2, 16*30));
-
+        Dimension fullScreen = Toolkit.getDefaultToolkit().getScreenSize();
+        mainPanel.setPreferredSize(fullScreen);
+        mainPanel.setMaximumSize(fullScreen);
+        mainPanel.setMinimumSize(fullScreen);
 
         add(mainPanel);
         setTitle("Welcome to MicroMouse Views");
-        pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         MenuBar = new JMenuBar();
@@ -95,12 +80,7 @@ public class ReplayView extends JFrame {
         MenuBar.add(viewMenu);
         MenuBar.add(helpMenu);
 
-        label3D.setText("3D View of " + (file.getName() != ""?file.getName(): "replay"));
-        label2D.setText("Top down 2D View of " + (file.getName() != ""?file.getName(): "replay"));
-        label3D.setFont(new Font("Serif", Font.PLAIN, 16));
-        label2D.setFont(new Font("Serif", Font.PLAIN, 16));
-        spacing.setText("                                                                              ");
-        spacing.setFont(new Font("Serif", Font.PLAIN, 16));
+        pack();
         Panel3D.setVisible(true);
         Panel2D.setVisible(true);
         mainPanel.setVisible(true);

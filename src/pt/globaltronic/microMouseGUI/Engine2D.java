@@ -23,8 +23,8 @@ public class Engine2D implements Runnable{
     private int cols;
     private int rows;
     private int cellSize;
-    private int width = 480;
-    private int height = 480;
+    private int width;
+    private int height;
     private int correction;
     private Thread thread;
     private boolean running;
@@ -40,6 +40,7 @@ public class Engine2D implements Runnable{
     private HorizontalWalls[][] hWalls;
     private VerticalWalls[][] vWalls;
 
+
     private BufferStrategy bs;
     private Graphics g;
 
@@ -49,7 +50,9 @@ public class Engine2D implements Runnable{
         this.mouseInputs = mouseInputs;
         this.cols = cols;
         this.rows = rows;
-        this.cellSize = Math.min(480 / cols, 480 / rows);
+        width = panel.getWidth();
+        height = panel.getHeight();
+        this.cellSize = Math.min(width / cols, height / rows);
         this.correction = rows -1;
     }
 

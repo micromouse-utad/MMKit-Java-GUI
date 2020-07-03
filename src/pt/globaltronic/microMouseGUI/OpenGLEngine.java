@@ -487,10 +487,10 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     @Override
     public void run() {
         //sizing the panel
-        if(only3D){
-            panelWidth = panel.getParent().getWidth();
-            panelHeight = panel.getParent().getHeight();
-        }
+
+        panelWidth = panel.getWidth();
+        panelHeight = panel.getHeight();
+
 
         Dimension panelSize = new Dimension(panelWidth, panelHeight);
         panel.setPreferredSize(panelSize);

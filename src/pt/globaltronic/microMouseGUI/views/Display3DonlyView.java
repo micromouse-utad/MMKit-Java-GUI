@@ -71,14 +71,6 @@ public class Display3DonlyView extends JFrame{
         c.gridy = 0;
         mainPanel.add(Panel3D, c);
 
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridwidth = 2;
-        mainPanel.add(footer, c);
-
-
         this.setResizable(false);
         this.setUndecorated(true);
 
@@ -91,9 +83,6 @@ public class Display3DonlyView extends JFrame{
         setTitle("Welcome to MicroMouse Views");
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        label3D.setText("3D View of " + (currentDevice.getName() != ""?currentDevice.getName(): "replay"));
-        label3D.setFont(new Font("Serif", Font.PLAIN, 16));
 
         Panel3D.setVisible(true);
         mainPanel.setVisible(true);
