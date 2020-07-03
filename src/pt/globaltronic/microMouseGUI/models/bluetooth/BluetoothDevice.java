@@ -5,11 +5,22 @@ public class BluetoothDevice {
     private String name;
     private String URL;
 
-    public boolean equals(BluetoothDevice device) {
-        if(this.URL.equals(device.URL)){
+    //overriding equals and hashcode to be able to keep them in hashsets
+    @Override
+    public boolean equals(Object device) {
+        if(device == null){
+            return false;
+        }
+        BluetoothDevice ph = (BluetoothDevice) device;
+        if(this.URL.equals(ph.URL)){
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     @Override
