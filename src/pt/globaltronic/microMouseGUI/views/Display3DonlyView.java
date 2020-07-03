@@ -7,11 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 public class Display3DonlyView extends JFrame{
     private JPanel mainPanel;
-    private JLabel label3D;
-    private JPanel footer;
     private JPanel Panel3D;
     private JMenuBar MenuBar;
     private JMenu fileMenu;
@@ -20,6 +19,7 @@ public class Display3DonlyView extends JFrame{
     private JMenuItem Disconnect;
     private JMenuItem Replay;
     private JMenuItem Save;
+    private JMenuItem Quit;
     private JMenuItem FirstPerson;
     private JMenuItem Roaming;
     private JMenuItem TopDownView;
@@ -40,6 +40,7 @@ public class Display3DonlyView extends JFrame{
         Disconnect = new JMenuItem("Disconnect");
         Replay = new JMenuItem("Replay");
         Save = new JMenuItem("Save");
+        Quit = new JMenuItem("Quit");
 
         FirstPerson = new JMenuItem("First Person");
         Roaming = new JMenuItem("Free Roaming");
@@ -50,6 +51,7 @@ public class Display3DonlyView extends JFrame{
         fileMenu.add(Disconnect);
         fileMenu.add(Replay);
         fileMenu.add(Save);
+        fileMenu.add(Quit);
 
         viewMenu.add(FirstPerson);
         viewMenu.add(Roaming);
@@ -74,10 +76,10 @@ public class Display3DonlyView extends JFrame{
         this.setResizable(false);
         this.setUndecorated(true);
 
-        mainPanel.setPreferredSize(new Dimension(16*30*2 + 10, 16*30 + 50));
-        mainPanel.setMinimumSize(new Dimension(16*30*2, 16*30));
-        mainPanel.setMaximumSize(new Dimension(16*30*2, 16*30));
-
+        Dimension fullScreen = Toolkit.getDefaultToolkit().getScreenSize();
+        mainPanel.setPreferredSize(fullScreen);
+        mainPanel.setMaximumSize(fullScreen);
+        mainPanel.setMinimumSize(fullScreen);
 
         add(mainPanel);
         setTitle("Welcome to MicroMouse Views");
@@ -163,5 +165,15 @@ public class Display3DonlyView extends JFrame{
                 controller.disconnect();
             }
         });
+
+        Quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                close();
+            }
+        });
+    }
+    public void close(){
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 }

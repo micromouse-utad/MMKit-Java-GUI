@@ -487,15 +487,23 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
     @Override
     public void run() {
         //sizing the panel
+        //square when along side the 2d
+        panelWidth = panel.getParent().getWidth() / 2;
+        panelHeight = panel.getParent().getWidth() / 2;
 
-        panelWidth = panel.getWidth();
-        panelHeight = panel.getHeight();
+        if(only3D){
+            //full screen when full screen
+            panelWidth = panel.getParent().getWidth();
+            panelHeight = panel.getParent().getHeight();
+        }
 
 
         Dimension panelSize = new Dimension(panelWidth, panelHeight);
         panel.setPreferredSize(panelSize);
         panel.setMinimumSize(panelSize);
         panel.setMaximumSize(panelSize);
+
+
 
 
         //setting up the canvas, requesting focus will make sure the canvas can listen to the mouse/key inputs

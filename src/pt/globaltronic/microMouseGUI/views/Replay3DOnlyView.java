@@ -6,23 +6,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 public class Replay3DOnlyView extends JFrame {
     private JPanel mainPanel;
     private JPanel Panel3D;
-    private JPanel footer;
     private JMenuBar MenuBar;
     private JMenu fileMenu;
     private JMenu viewMenu;
     private JMenu helpMenu;
     private JMenuItem Disconnect;
+    private JMenuItem Quit;
     private JMenuItem Replay;
     private JMenuItem FirstPerson;
     private JMenuItem Roaming;
     private JMenuItem TopDownView;
     private JMenuItem Help;
-    private JLabel label3D;
 
 
     public Replay3DOnlyView(File file, ReplayViewController controller){
@@ -32,8 +32,6 @@ public class Replay3DOnlyView extends JFrame {
         Panel3D.setLayout(new GridLayout(1,1, 0, 0));
 
         GridBagConstraints c = new GridBagConstraints();
-        c.weightx = 0;
-        c.weighty = 0;
         c.gridx = 0;
         c.gridy = 0;
         mainPanel.add(Panel3D, c);
@@ -57,8 +55,10 @@ public class Replay3DOnlyView extends JFrame {
         viewMenu = new JMenu("View");
         helpMenu = new JMenu("Help");
 
+
         Disconnect = new JMenuItem("End");
         Replay = new JMenuItem("Replay");
+        Quit = new JMenuItem("Quit");
 
         FirstPerson = new JMenuItem("First Person");
         Roaming = new JMenuItem("Free Roaming");
@@ -68,6 +68,7 @@ public class Replay3DOnlyView extends JFrame {
 
         fileMenu.add(Disconnect);
         fileMenu.add(Replay);
+        fileMenu.add(Quit);
 
         viewMenu.add(FirstPerson);
         viewMenu.add(Roaming);
@@ -121,6 +122,13 @@ public class Replay3DOnlyView extends JFrame {
             }
         });
 
+        Quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                close();
+            }
+        });
+
         Help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,5 +148,9 @@ public class Replay3DOnlyView extends JFrame {
     public void formatError() {
         JOptionPane.showMessageDialog(rootPane, "The replay you selected caused an error, its formatting may not be to convention");
         System.exit(-1);
+    }
+
+    public void close(){
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 }

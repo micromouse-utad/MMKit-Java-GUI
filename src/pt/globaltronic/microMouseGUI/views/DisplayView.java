@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 public class DisplayView extends JFrame {
     private JPanel mainPanel;
@@ -20,6 +21,7 @@ public class DisplayView extends JFrame {
     private JMenuItem Disconnect;
     private JMenuItem Replay;
     private JMenuItem Save;
+    private JMenuItem Quit;
     private JMenuItem FirstPerson;
     private JMenuItem Roaming;
     private JMenuItem TopDownView;
@@ -48,6 +50,7 @@ public class DisplayView extends JFrame {
         Disconnect = new JMenuItem("Disconnect");
         Replay = new JMenuItem("Replay");
         Save = new JMenuItem("Save");
+        Quit = new JMenuItem("Quit");
 
         FirstPerson = new JMenuItem("First Person");
         Roaming = new JMenuItem("Free Roaming");
@@ -58,6 +61,7 @@ public class DisplayView extends JFrame {
         fileMenu.add(Disconnect);
         fileMenu.add(Replay);
         fileMenu.add(Save);
+        fileMenu.add(Quit);
 
         viewMenu.add(FirstPerson);
         viewMenu.add(Roaming);
@@ -162,6 +166,15 @@ public class DisplayView extends JFrame {
                 controller.disconnect();
             }
         });
-    }
 
+        Quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                close();
+            }
+        });
+    }
+    public void close(){
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
 }
