@@ -3,19 +3,16 @@ package pt.globaltronic.microMouseGUI.views;
 import pt.globaltronic.microMouseGUI.controllers.ReplayViewController;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class ReplayView extends JFrame {
+public class Replay3DOnlyView extends JFrame {
     private JPanel mainPanel;
-    private JPanel Panel2D;
     private JPanel Panel3D;
     private JPanel footer;
-    private JLabel label3D;
-    private JLabel label2D;
-    private JLabel spacing;
     private JMenuBar MenuBar;
     private JMenu fileMenu;
     private JMenu viewMenu;
@@ -26,15 +23,13 @@ public class ReplayView extends JFrame {
     private JMenuItem Roaming;
     private JMenuItem TopDownView;
     private JMenuItem Help;
+    private JLabel label3D;
 
-    private ReplayViewController controller;
 
-    public ReplayView(File file, ReplayViewController controller){
+    public Replay3DOnlyView(File file, ReplayViewController controller){
 
-        this.controller = controller;
         mainPanel.setLayout(new GridBagLayout());
 
-        Panel2D.setLayout(new GridLayout(1, 1));
         Panel3D.setLayout(new GridLayout(1,1, 0, 0));
 
         GridBagConstraints c = new GridBagConstraints();
@@ -43,11 +38,7 @@ public class ReplayView extends JFrame {
         c.gridx = 0;
         c.gridy = 0;
         mainPanel.add(Panel3D, c);
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 1;
-        c.gridy = 0;
-        mainPanel.add(Panel2D, c);
+
         c.weightx = 0;
         c.weighty = 0;
         c.gridx = 0;
@@ -56,10 +47,10 @@ public class ReplayView extends JFrame {
         mainPanel.add(footer, c);
 
         this.setResizable(false);
-
-        mainPanel.setPreferredSize(new Dimension(16*30*2 + 10, 16*30 + 50));
-        mainPanel.setMinimumSize(new Dimension(16*30*2, 16*30));
-        mainPanel.setMaximumSize(new Dimension(16*30*2, 16*30));
+        Dimension fullScreen = Toolkit.getDefaultToolkit().getScreenSize();
+        mainPanel.setPreferredSize(fullScreen);
+        mainPanel.setMinimumSize(fullScreen);
+        mainPanel.setMaximumSize(fullScreen);
 
 
         add(mainPanel);
@@ -96,17 +87,12 @@ public class ReplayView extends JFrame {
         MenuBar.add(helpMenu);
 
         label3D.setText("3D View of " + (file.getName() != ""?file.getName(): "replay"));
-        label2D.setText("Top down 2D View of " + (file.getName() != ""?file.getName(): "replay"));
         label3D.setFont(new Font("Serif", Font.PLAIN, 16));
-        label2D.setFont(new Font("Serif", Font.PLAIN, 16));
-        spacing.setText("                                                                              ");
-        spacing.setFont(new Font("Serif", Font.PLAIN, 16));
         Panel3D.setVisible(true);
-        Panel2D.setVisible(true);
         mainPanel.setVisible(true);
         setVisible(true);
 
-        controller.startEngines(Panel3D, Panel2D, mainPanel);
+        controller.startEngines(Panel3D, mainPanel);
 
 
         Roaming.addActionListener(new ActionListener() {
@@ -154,7 +140,7 @@ public class ReplayView extends JFrame {
                         '"'+ "TopDown View" +'"' + " to replicate a 2d view\n\n" +
                         "Use the " + '"' + "File menu End option" + '"' +" to shut down the feed\n" +
                         "Use the " + '"' + "File menu Replay" +'"'+" button to restart the replay\n"
-                        );
+                );
 
             }
         });
@@ -164,6 +150,4 @@ public class ReplayView extends JFrame {
         JOptionPane.showMessageDialog(rootPane, "The replay you selected caused an error, its formatting may not be to convention");
         System.exit(-1);
     }
-
 }
-

@@ -6,6 +6,7 @@ import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputsReceiver;
 import pt.globaltronic.microMouseGUI.models.graphics.services.ReplayInputFeeder;
 import pt.globaltronic.microMouseGUI.OpenGLEngine;
+import pt.globaltronic.microMouseGUI.views.Display3DonlyView;
 import pt.globaltronic.microMouseGUI.views.DisplayView;
 
 import javax.microedition.io.StreamConnection;
@@ -21,6 +22,7 @@ public class DisplayViewController {
     private StreamConnection connection;
     private MouseInputsReceiver receiver;
     private DisplayView displayView;
+    private Display3DonlyView display3DonlyView;
     private MouseInputs mouseInputs;
     private Engine2D engine2D;
     private OpenGLEngine openGLEngine;
@@ -41,6 +43,13 @@ public class DisplayViewController {
         });
     }
 
+    public void start3DonlyView(BluetoothDevice selectedDevice) {
+        SwingUtilities.invokeLater(() -> {
+            display3DonlyView = new Display3DonlyView(selectedDevice, this);
+            display3DonlyView.setVisible(true);
+        });
+    }
+
     public void startEngines(JPanel Panel3D, JPanel Panel2D, JPanel mainPanel) {
         openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, cols, rows, 10);
         engine2D = new Engine2D(Panel2D, "Mouse Trial", mouseInputs, cols, rows);
@@ -49,6 +58,13 @@ public class DisplayViewController {
         mainPanel.setVisible(true);
         openGLEngine.start();
         engine2D.start();
+    }
+
+    public void startEngines(JPanel Panel3D, JPanel mainPanel) {
+        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, cols, rows, 10);
+        Panel3D.setVisible(true);
+        mainPanel.setVisible(true);
+        openGLEngine.start();
     }
 
     public void disconnect() {

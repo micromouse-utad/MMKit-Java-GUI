@@ -4,6 +4,7 @@ import pt.globaltronic.microMouseGUI.Engine2D;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
 import pt.globaltronic.microMouseGUI.models.graphics.services.ReplayInputFeeder;
 import pt.globaltronic.microMouseGUI.OpenGLEngine;
+import pt.globaltronic.microMouseGUI.views.Replay3DOnlyView;
 import pt.globaltronic.microMouseGUI.views.ReplayView;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ public class ReplayViewController {
     private ReplayInputFeeder replayInputFeeder;
     private MouseInputs mouseInputs;
     private ReplayView replayView;
+    private Replay3DOnlyView replay3DOnlyView;
     private OpenGLEngine openGLEngine;
     private Engine2D engine2D;
     private File file;
@@ -34,6 +36,18 @@ public class ReplayViewController {
             replayInputFeeder.start();
         });
 
+    }
+
+    public void start3DonlyView(File selectedReplay){
+        this.file = selectedReplay;
+        Queue<String> replayInputs = getMouseInputsFromReplayFile(selectedReplay);
+        replayInputFeeder = new ReplayInputFeeder(mouseInputs, replayInputs);
+
+        SwingUtilities.invokeLater(() -> {
+            replay3DOnlyView = new Replay3DOnlyView(selectedReplay, this);
+            replay3DOnlyView.setVisible(true);
+            replayInputFeeder.start();
+        });
     }
 
     public Queue<String> getMouseInputsFromReplayFile(File file) {
@@ -66,6 +80,14 @@ public class ReplayViewController {
 
         openGLEngine.start();
         engine2D.start();
+    }
+
+    public void startEngines(JPanel Panel3D, JPanel mainPanel) {
+        openGLEngine = new OpenGLEngine(Panel3D, mouseInputs, cols, rows, 10);
+        Panel3D.setVisible(true);
+        mainPanel.setVisible(true);
+
+        openGLEngine.start();
     }
 
     public void restartReplay(){

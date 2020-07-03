@@ -67,19 +67,27 @@ public class WelcomeViewController {
         return conn;
     }
 
-    public void startDisplayView(StreamConnection connection, BluetoothDevice selectedDevice, int cols, int rows){
+    public void startDisplayView(StreamConnection connection, boolean only3D, BluetoothDevice selectedDevice, int cols, int rows){
         MouseInputsReceiver receiver = new MouseInputsReceiver(mouseInputs, connection);
         receiver.start();
         displayViewController.setConnection(connection);
         displayViewController.setMouseInputsReceiver(receiver);
         displayViewController.setCols(cols);
         displayViewController.setRows(rows);
+        if(only3D){
+            displayViewController.start3DonlyView(selectedDevice);
+            return;
+        }
         displayViewController.startView(selectedDevice);
     }
 
-    public void startReplayView(File selectedReplay, int cols, int rows){
+    public void startReplayView(File selectedReplay, boolean only3D, int cols, int rows){
         replayViewController.setCols(cols);
         replayViewController.setRows(rows);
+        if(only3D){
+            replayViewController.start3DonlyView(selectedReplay);
+            return;
+        }
         replayViewController.startView(selectedReplay);
     }
 

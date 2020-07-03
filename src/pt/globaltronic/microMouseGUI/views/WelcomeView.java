@@ -6,6 +6,7 @@ import pt.globaltronic.microMouseGUI.models.bluetooth.services.FriendlyNameGette
 
 import javax.microedition.io.StreamConnection;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -37,6 +38,10 @@ public class WelcomeView extends JFrame {
     private JTextField rowsTextReplay;
     private JTextField rowsTextSelected;
     private JTextField colsTextSelected;
+    private JRadioButton only3DScan;
+    private JRadioButton only3DSynced;
+    private JRadioButton only3DReplay;
+    private Boolean only3D = false;
 
     private WelcomeViewController welcomeViewController;
     private LinkedHashSet<BluetoothDevice> bluetoothDevices;
@@ -45,13 +50,18 @@ public class WelcomeView extends JFrame {
 
     public WelcomeView(WelcomeViewController welcomeViewController){
         this.welcomeViewController = welcomeViewController;
-
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException ex){
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        }
         add(mainPanel);
         setTitle("Welcome to MicroMouse GUI");
+
         //minimum size needed to display all the data
         pack();
         setResizable(false);
-        //setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Using the discoverButton of the WelcomeView will discover devices and assign them to the view vector
@@ -103,7 +113,8 @@ public class WelcomeView extends JFrame {
                     JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows need to be integer and in digits");
                     return;
                 }
-                connectAndLaunchEngine(selectedDevice, cols, rows);
+                only3D = only3DScan.isSelected();
+                connectAndLaunchEngine(selectedDevice, only3D, cols, rows);
             }
         });
 
@@ -134,7 +145,8 @@ public class WelcomeView extends JFrame {
                     JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows need to be integer and in digits");
                     return;
                 }
-                connectAndLaunchEngine(selectedDevice, cols, rows);
+                only3D = only3DSynced.isSelected();
+                connectAndLaunchEngine(selectedDevice, only3D, cols, rows);
 
             }
         });
@@ -193,8 +205,8 @@ public class WelcomeView extends JFrame {
                     JOptionPane.showMessageDialog(rootPane, "Invalid number of columns or rows, columns and rows need to be integer and in digits");
                     return;
                 }
-
-                welcomeViewController.startReplayView(selectedReplay, cols, rows);
+                only3D = only3DReplay.isSelected();
+                welcomeViewController.startReplayView(selectedReplay, only3D, cols, rows);
             }
         });
         deleteReplayButton.addActionListener(new ActionListener() {
@@ -231,13 +243,13 @@ public class WelcomeView extends JFrame {
         syncedDevicesList.setListData(FriendlyNameGetter.getFriendlyName(syncedDevices));
     }
 
-    public void connectAndLaunchEngine(BluetoothDevice selectedDevice, int cols, int rows){
+    public void connectAndLaunchEngine(BluetoothDevice selectedDevice, Boolean only3D, int cols, int rows){
         connection = welcomeViewController.connectToDevice(selectedDevice);
         if(connection == null){
             System.out.println("Failed to connect try again");
             return;
         }
-        welcomeViewController.startDisplayView(connection, selectedDevice, cols, rows);
+        welcomeViewController.startDisplayView(connection, only3D, selectedDevice, cols, rows);
     }
 
     public void setBluetoothDevices(LinkedHashSet<BluetoothDevice> bluetoothDevices) {
