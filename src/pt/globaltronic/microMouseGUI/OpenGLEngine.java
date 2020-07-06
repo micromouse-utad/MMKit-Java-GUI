@@ -4,7 +4,6 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
-import com.sun.javafx.geom.Vec3f;
 
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.Grid;
 import pt.globaltronic.microMouseGUI.models.graphics.positionLogic.MouseInputs;
@@ -22,6 +21,7 @@ import pt.globaltronic.microMouseGUI.openGL.entity.Light;
 
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
 import pt.globaltronic.microMouseGUI.openGL.models.TexturedModel;
+import pt.globaltronic.microMouseGUI.openGL.services.Vec3f;
 import pt.globaltronic.microMouseGUI.openGL.terrain.Terrain;
 import pt.globaltronic.microMouseGUI.openGL.textures.ModelTexture;
 
@@ -291,7 +291,6 @@ public class OpenGLEngine implements GLEventListener, KeyListener, MouseListener
                 hWalls[i][j] = new HorizontalWalls(grid.getHWallPosition(i, j));
                 int x = cols - 1 - hWalls[i][j].getPosition().getCol();
                 int z = hWalls[i][j].getPosition().getRow();
-
                 Entity hWall = new Entity(texturedWall, new Vec3f(x * cellSize, 0, z * cellSize - 1), 0, 0, 0, 1);
                 hWalls[i][j].setEntity(hWall);
                 hWalls[i][j].setVisible(false);

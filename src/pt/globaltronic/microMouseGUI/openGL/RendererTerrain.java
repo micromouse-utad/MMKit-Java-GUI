@@ -3,9 +3,9 @@ package pt.globaltronic.microMouseGUI.openGL;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.math.Matrix4;
-import com.sun.javafx.geom.Vec3f;
 
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
+import pt.globaltronic.microMouseGUI.openGL.services.Vec3f;
 import pt.globaltronic.microMouseGUI.openGL.terrain.Terrain;
 import pt.globaltronic.microMouseGUI.openGL.services.Maths;
 

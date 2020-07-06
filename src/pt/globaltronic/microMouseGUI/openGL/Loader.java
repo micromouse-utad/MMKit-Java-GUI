@@ -5,10 +5,8 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
-import pt.globaltronic.microMouseGUI.Main;
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;

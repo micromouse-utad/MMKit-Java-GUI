@@ -4,10 +4,10 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.math.Matrix4;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
-import com.sun.javafx.geom.Vec3f;
 import pt.globaltronic.microMouseGUI.openGL.entity.Camera;
 import pt.globaltronic.microMouseGUI.openGL.entity.Light;
 import pt.globaltronic.microMouseGUI.openGL.services.Maths;
+import pt.globaltronic.microMouseGUI.openGL.services.Vec3f;
 
 import java.nio.FloatBuffer;
 

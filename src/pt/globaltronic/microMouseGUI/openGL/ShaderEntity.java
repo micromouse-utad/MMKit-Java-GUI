@@ -1,22 +1,17 @@
 package pt.globaltronic.microMouseGUI.openGL;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2ES2;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.math.Matrix4;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
-import com.sun.javafx.geom.Vec3f;
 
 import pt.globaltronic.microMouseGUI.openGL.entity.Camera;
 import pt.globaltronic.microMouseGUI.openGL.entity.Light;
 import pt.globaltronic.microMouseGUI.openGL.services.Maths;
+import pt.globaltronic.microMouseGUI.openGL.services.Vec3f;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+
 
 
 public class ShaderEntity {

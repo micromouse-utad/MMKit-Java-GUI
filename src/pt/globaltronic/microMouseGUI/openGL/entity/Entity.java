@@ -1,7 +1,7 @@
 package pt.globaltronic.microMouseGUI.openGL.entity;
 
-import com.sun.javafx.geom.Vec3f;
 import pt.globaltronic.microMouseGUI.openGL.models.TexturedModel;
+import pt.globaltronic.microMouseGUI.openGL.services.Vec3f;
 
 public class Entity {
 

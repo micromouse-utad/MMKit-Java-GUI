@@ -1,12 +1,10 @@
 package pt.globaltronic.microMouseGUI.openGL;
 
-import com.sun.javafx.geom.Vec2f;
-import com.sun.javafx.geom.Vec3f;
 import pt.globaltronic.microMouseGUI.openGL.models.RawModel;
+import pt.globaltronic.microMouseGUI.openGL.services.Vec2f;
+import pt.globaltronic.microMouseGUI.openGL.services.Vec3f;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
